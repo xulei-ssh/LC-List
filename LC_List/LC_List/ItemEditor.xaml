@@ -1,0 +1,28 @@
+﻿<Window x:Class="LC_List.ItemEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LC_List"
+        mc:Ignorable="d"
+        Title="项目详情" Height="326" Width="650" Closing="Window_Closing" ShowInTaskbar="False" WindowStyle="ToolWindow" ResizeMode="NoResize">
+    <Grid>
+        <DataGrid x:Name="grid" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="276" Margin="10,10,0,0" VerticalAlignment="Top" Width="608" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" CanUserAddRows="False" Unloaded="grid_Unloaded">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="Lot" Header="批号" Width="200" Binding="{Binding Lot, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+                <DataGridCheckBoxColumn x:Name="Col1" Width="100" Binding="{Binding Item1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+                <DataGridCheckBoxColumn x:Name="Col2" Width="100" Binding="{Binding Item2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+                <DataGridCheckBoxColumn x:Name="Col3" Width="100" Binding="{Binding Item3, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+                <DataGridCheckBoxColumn x:Name="Col4" Width="100" Binding="{Binding Item4, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+
+
+
+
+
+            </DataGrid.Columns>
+
+
+        </DataGrid>
+
+    </Grid>
+</Window>
