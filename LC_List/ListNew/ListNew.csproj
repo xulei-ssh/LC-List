@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0AF868CA-E6C9-4FFE-9760-57C33AB58F51}</ProjectGuid>
+    <ProjectGuid>{8A28BE2E-ECAB-4F95-91A0-2C0BE7ABB67B}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>LC_List</RootNamespace>
-    <AssemblyName>LC_List</AssemblyName>
+    <RootNamespace>ListNew</RootNamespace>
+    <AssemblyName>ListNew</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -53,18 +53,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ItemCategory.cs" />
-    <Compile Include="ItemEditor.xaml.cs">
-      <DependentUpon>ItemEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ListEntry.cs" />
-    <Compile Include="SubList.cs" />
-    <Compile Include="TaskSet.cs" />
-    <Compile Include="XmlParser.cs" />
-    <Page Include="ItemEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -73,21 +61,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Inj.cs" />
-    <Compile Include="Item.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="MethodEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MethodEditor.xaml.cs">
-      <DependentUpon>MethodEditor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

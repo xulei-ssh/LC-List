@@ -1,0 +1,19 @@
+﻿<Window x:Name="about" x:Class="Empower_List.About"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Empower_List"
+        mc:Ignorable="d"
+        Title="About" Height="471.311" Width="449.727" WindowStyle="ToolWindow" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closing="about_Closing">
+    <Grid>
+        <Label Content="Empower List Wizard -- Eisai Edition" HorizontalAlignment="Left" Height="31" Margin="81,29,0,0" VerticalAlignment="Top" Width="275" FontSize="15" HorizontalContentAlignment="Center" FontFamily="Segoe UI"/>
+        <Label Content="Author:    Xu Lei" HorizontalAlignment="Left" Margin="161,102,0,0" VerticalAlignment="Top" FontSize="15" FontFamily="Segoe UI"/>
+        <Label x:Name="ver" Content="" HorizontalAlignment="Left" Margin="189,65,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" FontFamily="Segoe UI"/>
+        <GroupBox Header="GUN General Public Licence" HorizontalAlignment="Left" Height="226" Margin="28,156,0,0" VerticalAlignment="Top" Width="391" FontFamily="Segoe UI">
+            <TextBox x:Name="t" HorizontalAlignment="Left" Height="190" Margin="4,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="371" AllowDrop="False" IsReadOnly="True" AcceptsReturn="True" BorderThickness="0" IsTabStop="False" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto"/>
+        </GroupBox>
+        <Button Content="Close" HorizontalAlignment="Left" Height="32" Margin="189,401,0,0" VerticalAlignment="Top" Width="72" Click="Button_Click" FontFamily="Segoe UI"/>
+
+    </Grid>
+</Window>

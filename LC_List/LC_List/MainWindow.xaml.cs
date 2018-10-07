@@ -172,6 +172,7 @@ namespace LC_List
         string changeValidator = "";
         bool requireDifferentStd = false;
         List<int> stdTypes;
+        
         private void Generate()
         {
             //由品名、批号、项目生成字符串，用于判断是否改变，若改变，则全部重新生成ts, lots, itemsToDo
@@ -223,32 +224,7 @@ namespace LC_List
             //特殊情况2：GL有关物质若与含量合编，TW为STD2的瓶号
             //特殊情况3：CDN溶出样品后跟STD1为新瓶子
             currentAvailVial = 1;
-
-            if (!((comboProj.SelectedValue.ToString() == "PRT" && itemsToDo.Contains("有关物质") && (itemsToDo.Contains("含量均匀度") || itemsToDo.Contains("耐酸力"))) ||
-                (comboProj.SelectedValue.ToString() == "GL(甘草酸苷)" && itemsToDo.Contains("含量")) ||
-                (comboProj.SelectedValue.ToString() == "CDN" && itemsToDo.Contains("溶出度"))))
-            {
-                //一般情况
-                foreach (var item in itemsToDo)
-                {
-                    var injs = currentDataset.Find(x => x.Name == MethodEditor.Trans(item)).Injs;
-                    foreach (var inj in injs)
-                    {
-                        if (!inj.Name.Contains("sp"))
-                        {
-                            while (skipVial.Contains(currentAvailVial)) currentAvailVial++;
-                            list.Add (new ListEntry (currentAvailVial,inj,))
-                        }
-                    }
-
-
-                }
-
-
-
-            }
-
-
+            Dictionary<int, int> currentSTD1Vial = new Dictionary<int, int>();
 
 
         }
@@ -320,5 +296,22 @@ namespace LC_List
             skip.SelectionStart = skip.Text.Length;
 
         }
+
+        //private SubList GenListDissolution(List<string> lots, ref int startVial, Item currentItem, bool sampleNewVial, List<int> skipVial, string config = "")
+        //{
+        //    SubList sl = new SubList();
+        //    sl.StdType = currentItem.StdType;
+        //    for (int i = 0; i < currentItem.Injs.Count; i++)
+        //    {
+        //        if (!currentItem.Injs[i].Name.Contains("sp"))
+        //        {
+        //            while(skipVial!=)
+        //            sl.Add(startVial, currentItem.Injs[i]);
+        //            startVial++;
+        //        }
+        //    }
+            
+            
+        //}
     }   
 }

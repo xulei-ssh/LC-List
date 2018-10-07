@@ -1,0 +1,46 @@
+﻿<Window x:Class="Empower_List.ProjSelect"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Empower_List"
+        mc:Ignorable="d"
+        Title="Empower List Editor -- Basic Settings" Height="537.868" Width="886.4" WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow" ResizeMode="NoResize" FontFamily="Comic Sans MS">
+    <Grid>
+        <Label Content="Project" HorizontalAlignment="Left" Height="31" Margin="10,10,0,0" VerticalAlignment="Top" Width="68" FontSize="13" FontFamily="Segoe UI"/>
+        <ComboBox x:Name="comboProj" HorizontalAlignment="Left" Height="31" Margin="78,10,0,0" VerticalAlignment="Top" Width="164" VerticalContentAlignment="Center" SelectionChanged="comboProj_SelectionChanged" FontFamily="Segoe UI" FontSize="13"/>
+        <Label x:Name="lblProtocol" Content="" HorizontalAlignment="Left" Height="31" Margin="247,10,0,0" VerticalAlignment="Top" Width="187" FontSize="13" FontFamily="Segoe UI"/>
+        <Label Content="Lot #" HorizontalAlignment="Left" Height="31" Margin="10,46,0,0" VerticalAlignment="Top" Width="68" FontSize="13" FontFamily="Segoe UI"/>
+        <TextBox x:Name="textLots" HorizontalAlignment="Left" Height="330" Margin="10,82,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250" AcceptsReturn="True" FontSize="13" FontFamily="Segoe UI" LostFocus="textLots_LostFocus"/>
+        <ListBox x:Name="listItems" HorizontalAlignment="Left" Height="249" Margin="273,123,0,0" VerticalAlignment="Top" Width="169" FontSize="13" SelectionChanged="listItems_SelectionChanged" FontFamily="Segoe UI" LostFocus="listItems_LostFocus"/>
+        <ComboBox x:Name="comboItems" HorizontalAlignment="Left" Height="36" Margin="273,82,0,0" VerticalAlignment="Top" Width="169" VerticalContentAlignment="Center" SelectionChanged="comboItems_SelectionChanged" FontSize="13" FontFamily="Segoe UI"/>
+        <Label Content="Item(s)" HorizontalAlignment="Left" Height="31" Margin="265,46,0,0" VerticalAlignment="Top" Width="68" FontSize="13" FontFamily="Segoe UI"/>
+        <Label Content="Skip Vial(s)" HorizontalAlignment="Left" Height="31" Margin="273,381,0,0" VerticalAlignment="Top" Width="90" FontSize="13" FontFamily="Segoe UI"/>
+        <TextBox x:Name="textSkip" HorizontalAlignment="Left" Height="31" Margin="368,380,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="74" FontSize="13" VerticalContentAlignment="Center" FontFamily="Segoe UI" TextChanged="textSkip_TextChanged"/>
+        <GroupBox x:Name="preview" Header="Method Preview" HorizontalAlignment="Left" Height="402" Margin="457,10,0,0" VerticalAlignment="Top" Width="413" FontSize="13" FontFamily="Segoe UI">
+            <Grid HorizontalAlignment="Left" Height="374" Margin="4,0,0,0" VerticalAlignment="Top" Width="392">
+                <RadioButton x:Name="radioNormal" Content="Normal" HorizontalAlignment="Left" Margin="143,16,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" IsChecked="True" Click="radioNormal_Click"/>
+                <RadioButton x:Name="radioNew" Content="Sample at new line" HorizontalAlignment="Left" Margin="218,16,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Click="radioNew_Click"/>
+                <Label Content="Numbering Mode" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                <DataGrid x:Name="methodGrid" HorizontalAlignment="Left" Height="282" Margin="19,82,0,0" VerticalAlignment="Top" Width="363" AutoGenerateColumns="False" CanUserResizeColumns="False" CanUserSortColumns="False" CanUserResizeRows="False" CanUserReorderColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn x:Name="injVol" Header="Volume" Width="70" Binding="{Binding Volume, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+                        <DataGridTextColumn x:Name="injCount" Header="# of Inj" Width="80" Binding="{Binding Count, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+                        <DataGridTextColumn x:Name="injName" Header="Name" Width="125" Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+                        <DataGridTextColumn x:Name="injTime" Header="Run Time" Width="80" Binding="{Binding Time, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+                    </DataGrid.Columns>
+
+                </DataGrid>
+                <Label Content="Uniform Run Time" HorizontalAlignment="Left" Margin="10,46,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="uTime" HorizontalAlignment="Left" Height="27" Margin="156,50,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="77" RenderTransformOrigin="-0.181,0.333" VerticalContentAlignment="Center" TextChanged="uTime_TextChanged"/>
+                <Button x:Name="SetTime" Content="Set" HorizontalAlignment="Left" Height="27" Margin="245,50,0,0" VerticalAlignment="Top" Width="46" Click="SetTime_Click"/>
+            </Grid>
+        </GroupBox>
+        <Button x:Name="btnLotDetail" Content="Customize Applied Items" HorizontalAlignment="Left" Height="35" Margin="516,445,0,0" VerticalAlignment="Top" Width="169" FontFamily="Segoe UI" FontSize="13" Click="btnLotDetail_Click"/>
+        <Button x:Name="btnGen" Content="Generate" HorizontalAlignment="Left" Height="35" Margin="738,445,0,0" VerticalAlignment="Top" Width="79" FontFamily="Segoe UI" FontSize="13" Click="btnGen_Click"/>
+        <GroupBox Header="Tip" FontSize="13" FontFamily="Segoe UI" HorizontalAlignment="Left" Height="84" Margin="10,417,0,0" VerticalAlignment="Top" Width="450">
+            <TextBox x:Name="tip" HorizontalAlignment="Left" Height="65" TextWrapping="Wrap" VerticalAlignment="Top" Width="430" Margin="0,0,0,0" AcceptsReturn="True" AllowDrop="False" IsReadOnly="True" BorderThickness="0"/>
+        </GroupBox>
+
+    </Grid>
+</Window>

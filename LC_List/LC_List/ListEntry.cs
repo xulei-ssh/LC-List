@@ -17,20 +17,13 @@ namespace LC_List
             Name = name;
             Time = time;
         }
-        public ListEntry(int vial, Inj inj, string STDType, bool diffenentSTD = false)
+        public ListEntry(int vial, Inj inj)
         {
             Vial = vial;
             Volume = inj.Volume;
             InjCount = inj.Count;
+            Name = inj.Name;
             Time = inj.Time;
-            if (diffenentSTD == false)
-            {
-                Name = inj.Name;
-            }
-            else
-            {
-                Name = inj.Name + "-" + STDType;
-            }
         }
 
         public int CompareTo(ListEntry other)

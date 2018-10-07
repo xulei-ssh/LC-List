@@ -1,0 +1,26 @@
+﻿<Window x:Class="Empower_List.FinalList"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Empower_List"
+        mc:Ignorable="d"
+        Title="Final List" Height="727.8" Width="428" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Grid>
+        <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Left" Height="30" Margin="10,10,0,0" VerticalAlignment="Top" Width="85"/>
+        <Button x:Name="btnCopyA" Content="Copy Col 1-4" HorizontalAlignment="Left" Height="30" Margin="100,10,0,0" VerticalAlignment="Top" Width="85"/>
+        <Button x:Name="btnCopyB" Content="Copy Col 5" HorizontalAlignment="Left" Height="30" Margin="190,10,0,0" VerticalAlignment="Top" Width="85"/>
+        <Button x:Name="btnCopyC" Content="Copy Col All" HorizontalAlignment="Left" Height="30" Margin="280,10,0,0" VerticalAlignment="Top" Width="85"/>
+        <DataGrid x:Name="finalList" HorizontalAlignment="Left" Height="645" Margin="10,45,0,0" VerticalAlignment="Top" Width="403" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="Vial" Header="Vial" Width="40" Binding="{Binding Vial, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+                <DataGridTextColumn x:Name="Vol" Header="Vol" Width="50" Binding="{Binding Vol, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+                <DataGridTextColumn x:Name="Count"  Header="# of injs" Width="60" Binding="{Binding Count, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+                <DataGridTextColumn x:Name="Name"  Header="Sample Name" Width="200" Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+                <DataGridTextColumn x:Name="Time"  Header="Time" Width="50" Binding="{Binding Time, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+            </DataGrid.Columns>
+
+
+        </DataGrid>
+    </Grid>
+</Window>
