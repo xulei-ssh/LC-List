@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Empower_List"
         mc:Ignorable="d"
-        Title="Login" Height="196.995" Width="385.246" ResizeMode="NoResize" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen">
+        Title="Login" Height="196.995" Width="385.246" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Label Content="Username" HorizontalAlignment="Left" Height="30" Margin="35,23,0,0" VerticalAlignment="Top" Width="88" FontSize="14"/>
         <Label Content="Password" HorizontalAlignment="Left" Margin="35,63,0,0" VerticalAlignment="Top" FontSize="14" Width="88"/>
-        <TextBox x:Name="tName" HorizontalAlignment="Left" Height="30" Margin="142,23,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" VerticalContentAlignment="Center" AllowDrop="False" TabIndex="1" KeyUp="tName_KeyUp"/>
+        <TextBox x:Name="tName" HorizontalAlignment="Left" Height="30" Margin="142,23,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" VerticalContentAlignment="Center" AllowDrop="False" TabIndex="1" KeyUp="tConfirm"/>
         <Button x:Name="btnOK" Content="OK" HorizontalAlignment="Left" Height="30" Margin="71,113,0,0" VerticalAlignment="Top" Width="90" IsDefault="True" Click="btnOK_Click" TabIndex="3"/>
         <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Left" Height="30" Margin="211,113,0,0" VerticalAlignment="Top" Width="90" IsCancel="True" Click="btnCancel_Click" TabIndex="4"/>
-        <PasswordBox x:Name="tPass" HorizontalAlignment="Left" Margin="142,63,0,0" VerticalAlignment="Top" Width="199" Height="30" VerticalContentAlignment="Center" TabIndex="2" KeyUp="tPass_KeyUp"/>
+        <PasswordBox x:Name="tPass" HorizontalAlignment="Left" Margin="142,63,0,0" VerticalAlignment="Top" Width="199" Height="30" VerticalContentAlignment="Center" TabIndex="2" KeyUp="tConfirm"/>
 
     </Grid>
 </Window>

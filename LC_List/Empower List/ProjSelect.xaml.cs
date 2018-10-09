@@ -11,7 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-
+using System.IO;
 namespace Empower_List
 {
     /// <summary>
@@ -22,11 +22,19 @@ namespace Empower_List
         Dictionary<string, ProjectInfo> database;
         List<TaskSet> tasks;
         bool openedDetails = false;
+        new MainWindow Parent { get; set; }
         //Dictionary<string, string[]> ItemEachLot;
-        public ProjSelect()
+        public ProjSelect(MainWindow parent)
         {
             InitializeComponent();
-            database = ConfigParser.Parse(@"D:\c");
+            Parent = parent;
+            if(!File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + @"ds"))
+            {
+                MessageBox.Show("Cannot find database file.");
+                Hide();
+                return;
+            }
+            database = ConfigParser.Parse(System.AppDomain.CurrentDomain.BaseDirectory + @"ds");
             comboProj.Items.Clear();
             database.Keys.ToList().ForEach(x => comboProj.Items.Add(x));
             tip.Text = "1: Item priority in sequence: Related Substance > Assay > Others.\n2: Use braces like (25*60, 18M) in Lot to indicate stability batches.\n3: CDN Dissolution cannot be carried out using a single list.";
@@ -61,6 +69,10 @@ namespace Empower_List
                 }
             }
             UpdateItemEachLot();
+            if (listItems.HasItems)
+            {
+                listItems.SelectedIndex = listItems.Items.Count - 1;
+            }
 
         }
         private void listItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -68,7 +80,6 @@ namespace Empower_List
             if (listItems.Items != null && listItems.SelectedIndex != -1)
             {
                 preview.Header = comboProj.SelectedValue.ToString() + " -- " + listItems.SelectedValue.ToString();
-                methodGrid.ItemsSource = null;
                 methodGrid.ItemsSource = database[comboProj.SelectedValue.ToString()][listItems.SelectedValue.ToString()].Injs;
                 radioNew.IsChecked = database[comboProj.SelectedValue.ToString()][listItems.SelectedValue.ToString()].NewLine;
                 radioNormal.IsChecked = !database[comboProj.SelectedValue.ToString()][listItems.SelectedValue.ToString()].NewLine;
@@ -89,27 +100,29 @@ namespace Empower_List
             {
                 preview.Header = "Method Preview";
                 uTime.Text = "";
+                methodGrid.ItemsSource = null;
             }
         }
         private void SetTime_Click(object sender, RoutedEventArgs e)
         {
-            if (methodGrid.Items.Count != 0)
-            {
-                double time = double.Parse(uTime.Text);
-                foreach (Inj item in methodGrid.Items)
-                {
-                    item.Time = time;
-                }
-            }
-            listItems_SelectionChanged(this, null);
-        }
-        private void uTime_TextChanged(object sender, TextChangedEventArgs e)
-        {
             double temp;
             if (!double.TryParse(uTime.Text, out temp))
             {
-                uTime.Text = uTime.Text.Substring(0, uTime.Text.Length - 1);
-                uTime.SelectionStart = uTime.Text.Length;
+                MessageBox.Show("Invalid time", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                uTime.SelectAll();
+                uTime.Focus();
+            }
+            else
+            {
+                if (methodGrid.Items.Count != 0)
+                {
+                    double time = double.Parse(uTime.Text);
+                    foreach (Inj item in database[comboProj.SelectedValue.ToString()][listItems.SelectedValue.ToString()].Injs)
+                    {
+                        item.Time = time;
+                    }
+                }
+                methodGrid.ItemsSource = database[comboProj.SelectedValue.ToString()][listItems.SelectedValue.ToString()].Injs;
             }
         }
         private void radioNormal_Click(object sender, RoutedEventArgs e)
@@ -125,22 +138,8 @@ namespace Empower_List
         }
         protected override void OnClosing(CancelEventArgs e)
         {
-            Hide();
-            e.Cancel = true;
+            Parent.Show();
         }
-        protected override void OnClosed(EventArgs e)
-        {
-            var collections = Application.Current.Windows;
-
-            foreach (Window window in collections)
-            {
-                if (window != this)
-                    window.Close();
-            }
-
-            base.OnClosed(e);
-        }
-
         private void btnLotDetail_Click(object sender, RoutedEventArgs e)
         {
             if (tasks == null || textLots.Text == "" || listItems.Items == null || listItems.Items.Count == 0) return;
@@ -189,10 +188,18 @@ namespace Empower_List
         {
             UpdateItemEachLot();
         }
-
         private void btnGen_Click(object sender, RoutedEventArgs e)
         {
             if (tasks == null || textLots.Text == "" || listItems.Items == null || listItems.Items.Count == 0) return;
+            int temp;
+            if (textSkip.Text != "" && !int.TryParse(textSkip.Text, out temp))
+            {
+                MessageBox.Show("Invalid skipped vial", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                textSkip.SelectAll();
+                textSkip.Focus();
+                return;
+            }
+
             if (MessageBox.Show("Please confirm Lot, Item and Method information before generating.\nNo further change could be made if continue.", "Confirm", MessageBoxButton.OKCancel, MessageBoxImage.Information) == MessageBoxResult.OK)
             {
                 if (openedDetails == false)
@@ -212,16 +219,12 @@ namespace Empower_List
             }
 
         }
-
-        private void textSkip_TextChanged(object sender, TextChangedEventArgs e)
+        private void uTime_KeyUp(object sender, KeyEventArgs e)
         {
-            int temp;
-            if (!int.TryParse(textSkip.Text, out temp))
+            if (e.Key == Key.Enter)
             {
-                textSkip.Text = textSkip.Text.Substring(0, textSkip.Text.Length - 1);
-                textSkip.SelectionStart = textSkip.Text.Length;
+                SetTime_Click(this, null);
             }
-
         }
     }
 }

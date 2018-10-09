@@ -11,7 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-
+using System.IO;
 namespace Empower_List
 {
     /// <summary>
@@ -19,32 +19,44 @@ namespace Empower_List
     /// </summary>
     public partial class Auth : Window
     {
-        public MainWindow Parent { get; set; }
+        public new MainWindow Parent { get; set; }
         public MethodEditor ME { get; set; }
-        public Auth(MainWindow parent,MethodEditor me)
+        private bool displayMain;
+        public Auth(MainWindow parent)
         {
-            InitializeComponent();
             Parent = parent;
-            ME = me;
+            InitializeComponent();
             tName.Focus();
-
+            displayMain = true;
         }
+        
         
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            Parent.IsEnabled = true;
-            Parent.Show();
-            this.Close();
-
+            Close();
         }
         protected override void OnClosing(CancelEventArgs e)
         {
-            Parent.IsEnabled = true;
-            Parent.Show();
-            base.OnClosing(e);
+            if (displayMain)
+            {
+                Parent.IsEnabled = true;
+                Parent.Show();
+            }
         }
 
         private void btnOK_Click(object sender, RoutedEventArgs e)
+        {
+            Verify();
+
+        }
+        private void tConfirm(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                Verify();
+            }
+        }
+        private void Verify()
         {
             List<string> passes = new List<string>();
             for (int i = -2; i < 3; i++)
@@ -53,31 +65,19 @@ namespace Empower_List
             }
             if (tName.Text == "root" && passes.Contains(tPass.Password))
             {
+                ME = new MethodEditor(Parent);
                 ME.Show();
-                this.Close();
+                ME.Focus();
+                displayMain = false;
+                Close();
             }
             else
             {
+                tName.KeyUp -= tConfirm;
+                tPass.KeyUp -= tConfirm;
                 MessageBox.Show("Invalid username and/or password.", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-            
-
-        }
-
-        private void tName_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                btnOK_Click(this, null);
-            }
-        }
-
-        private void tPass_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                btnOK_Click(this, null);
+                //tName.KeyUp += tConfirm;
+                //tPass.KeyUp += tConfirm;
             }
 
         }

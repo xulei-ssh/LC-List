@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Empower_List"
         mc:Ignorable="d"
-        Title="Empower List Wizard - Eisai Edition" Height="327.6" Width="400" WindowStyle="ToolWindow" HorizontalAlignment="Left" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+        Title="Empower List Wizard - Eisai Edition" Height="334.8" Width="400" HorizontalAlignment="Left" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Window.Background>
         <ImageBrush ImageSource="/Resources/bg.jpg" Opacity="50"/>
     </Window.Background>
@@ -24,8 +24,8 @@
                 </LinearGradientBrush>
             </Ellipse.Fill>
         </Ellipse>
-        <Label x:Name="btnList" Content="Edit Injection List" HorizontalAlignment="Left" Height="38" Margin="100,182,0,0" VerticalAlignment="Top" Width="249" FontSize="20" FontFamily="Comic Sans MS" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" MouseMove="btnList_MouseMove" MouseLeave="btnList_MouseLeave" MouseUp="btnList_MouseUp"/>
-        <Label x:Name="btnMethod" Content="Edit Method" HorizontalAlignment="Left" Height="38" Margin="100,122,0,0" VerticalAlignment="Top" Width="249" FontSize="20" FontFamily="Comic Sans MS" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" MouseMove="btnMethod_MouseMove" MouseLeave="btnMethod_MouseLeave" MouseUp="btnMethod_MouseUp"/>
+        <Label x:Name="btnList" Content="Edit Injection List" HorizontalAlignment="Left" Height="38" Margin="100,182,0,0" VerticalAlignment="Top" Width="284" FontSize="20" FontFamily="Comic Sans MS" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" MouseMove="btnList_MouseMove" MouseLeave="btnList_MouseLeave" MouseUp="btnList_MouseUp"/>
+        <Label x:Name="btnMethod" Content="Edit Method (In Developing)" HorizontalAlignment="Left" Height="38" Margin="100,122,0,0" VerticalAlignment="Top" Width="284" FontSize="20" FontFamily="Comic Sans MS" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" MouseMove="btnMethod_MouseMove" MouseLeave="btnMethod_MouseLeave" MouseUp="btnMethod_MouseUp"/>
         <Ellipse HorizontalAlignment="Left" Height="28" Margin="45,187,0,0" VerticalAlignment="Top" Width="28" Stretch="Uniform" Stroke="White">
             <Ellipse.Fill>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -42,7 +42,7 @@
                 </LinearGradientBrush>
             </Ellipse.Fill>
         </Ellipse>
-        <Ellipse HorizontalAlignment="Left" Height="41" Margin="291,248,0,0" Stroke="White" VerticalAlignment="Top" Width="41">
+        <Ellipse HorizontalAlignment="Left" Height="41" Margin="291,248,0,0" Stroke="White" VerticalAlignment="Top" Width="41" IsEnabled="False">
             <Ellipse.Fill>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FF364361" Offset="0.298"/>
@@ -50,9 +50,9 @@
                 </LinearGradientBrush>
             </Ellipse.Fill>
         </Ellipse>
-        <Label Content="?" HorizontalAlignment="Left" Height="41" Margin="303,248,0,0" VerticalAlignment="Top" Width="29" FontSize="20" FontFamily="Comic Sans MS" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+        <Label Content="?" HorizontalAlignment="Left" Height="41" Margin="303,248,0,0" VerticalAlignment="Top" Width="29" FontSize="20" FontFamily="Comic Sans MS" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" IsEnabled="False"/>
         <Label x:Name="aboutMark" Content="!" HorizontalAlignment="Left" Height="41" Margin="356,248,0,0" VerticalAlignment="Top" Width="29" FontSize="20" FontFamily="Comic Sans MS" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" MouseUp="aboutMark_MouseUp"/>
-        <Label x:Name="lblVer" Content="" HorizontalAlignment="Left" Height="22" Margin="10,267,0,0" VerticalAlignment="Top" Width="124" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+        <Label x:Name="lblVer" Content="" HorizontalAlignment="Left" Height="29" Margin="10,267,0,0" VerticalAlignment="Top" Width="124" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
 
 
 

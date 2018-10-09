@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Empower_List"
         mc:Ignorable="d"
-        Title="Method Editor" Height="386.612" Width="725.683" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow" FontSize="14" FontFamily="Segoe UI">
+        Title="Method Editor" Height="386.612" Width="725.683" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" FontSize="14" FontFamily="Segoe UI">
     <Grid>
         <Label Content="Project" HorizontalAlignment="Left" Margin="31,21,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="cProj" HorizontalAlignment="Left" Height="29" Margin="105,21,0,0" VerticalAlignment="Top" Width="173" SelectionChanged="cProj_SelectionChanged"/>
@@ -21,7 +21,7 @@
         <TextBox x:Name="tSTD" HorizontalAlignment="Left" Height="29" Margin="105,212,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="173" VerticalContentAlignment="Center"/>
         <Label Content="Config" HorizontalAlignment="Left" Margin="31,246,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="cConfig" HorizontalAlignment="Left" Height="29" Margin="105,246,0,0" VerticalAlignment="Top" Width="173"/>
-        <DataGrid x:Name="g" HorizontalAlignment="Left" Height="321" Margin="324,21,0,0" VerticalAlignment="Top" Width="376" CanUserAddRows="True" CanUserDeleteRows="True"  AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False">
+        <DataGrid x:Name="g" HorizontalAlignment="Left" Height="321" Margin="324,21,0,0" VerticalAlignment="Top" Width="376" CanUserAddRows="True" CanUserDeleteRows="True"  AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" PreviewKeyUp="g_PreviewKeyUp" >
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="Vol" Header="Vol" Width="50" Binding="{Binding Volume, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
                 <DataGridTextColumn x:Name="Count"  Header="# of injs" Width="60" Binding="{Binding Count, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
@@ -29,7 +29,7 @@
                 <DataGridTextColumn x:Name="Time"  Header="Time" Width="60" Binding="{Binding Time, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Left" Height="29" Margin="66,313,0,0" VerticalAlignment="Top" Width="55"/>
+        <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Left" Margin="66,313,0,16" Width="55" Click="btnSave_Click"/>
         <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Left" Height="29" Margin="192,313,0,0" VerticalAlignment="Top" Width="55"/>
         <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="31,132,0,0" Stroke="Gray" VerticalAlignment="Top" Width="288"/>
         <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="31,290,0,0" Stroke="Gray" VerticalAlignment="Top" Width="288"/>

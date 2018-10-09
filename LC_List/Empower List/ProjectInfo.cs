@@ -15,6 +15,10 @@ namespace Empower_List
             {
                 return Items.Find(x => x.Name == index);
             }
+            set
+            {
+                Items[Items.FindIndex(x => x.Name == index)] = value;
+            }
         }
     }
 }

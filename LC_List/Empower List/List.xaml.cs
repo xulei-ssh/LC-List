@@ -1,25 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.Collections.ObjectModel;
 
 namespace Empower_List
 {
-    /// <summary>
-    /// List.xaml 的交互逻辑
-    /// </summary>
     public partial class FinalList:Window
     {
-        public bool[] Used { get; set; }
         new ProjSelect Parent { get; set; }
         
         ProjectInfo projInfo;
@@ -27,19 +15,18 @@ namespace Empower_List
         List<TaskSet> tasks;
         string projName;
         int invalid;
-        public List<ListItem> FullList { get; set; }
+        //public List<ListItem> FullList { get; set; }
+        public ObservableCollection<ListItem> FullList { get; set; }
         List<int> stdTypes;
         public FinalList(ProjSelect parent, string projName, ProjectInfo projInfo, string[] items, List<TaskSet> tasks, int invalid = 0)
         {
             Parent = parent;
             InitializeComponent();
-            Used = new bool[200];
-            Used[invalid] = true;
             this.projInfo = projInfo;
             this.items = items;
             this.tasks = tasks;
             this.projName = projName;
-            FullList = new List<ListItem>();
+            FullList = new ObservableCollection<ListItem>();
             std1StartVials = new Dictionary<int, int>();
             std1StartVialsSuffix = new Dictionary<int, string>();
             currentVial = 1;
@@ -105,13 +92,13 @@ namespace Empower_List
 
         private void GenSubListRS(Item item, List<string> lots)
         {
-            foreach (var inj in item.Injs.FindAll(x => !x.Name.Contains("sp")))
+            foreach (var inj in item.FindAll(false))
             {
                 VailConfirm();
                 FullList.Add(new ListItem(currentVial, inj));
                 currentVial++;
             }
-            var sampleInjs = item.Injs.FindAll(x => x.Name.Contains("sp"));
+            var sampleInjs = item.FindAll(true);
             foreach (var lot in lots)
             {
                 if (item.Config == "self")
@@ -135,7 +122,7 @@ namespace Empower_List
         {
             bool writeSTD = false;
             ListItem std1 = new ListItem();
-            foreach (var inj in item.Injs.FindAll(x => !x.Name.Contains("sp")))
+            foreach (var inj in item.FindAll(false))
             {
                 if (inj.Name.Contains("STD1"))
                 {
@@ -195,11 +182,11 @@ namespace Empower_List
                 }
             }
             std1 = std1.InsertSTD1();
-            var sampleInjs = item.Injs.FindAll(x => x.Name.Contains("sp"));
+            var sampleInjs = item.FindAll(true);
             int assayEnum = 0;
             foreach (var lot in lots)
             {
-                if ((assayEnum >= 9)||(assayEnum==8&&lot.Contains ("(")))
+                if ((assayEnum >= 9)||(assayEnum==8&&(lot.Contains ("(")||lot.Contains ("（"))))
                 {
                     FullList.Add(std1);
                     assayEnum = 0;
@@ -240,7 +227,7 @@ namespace Empower_List
             }
             else
             {
-                foreach (var inj in item.Injs.FindAll(x => !x.Name.Contains("sp")))
+                foreach (var inj in item.FindAll(false))
                 {
                     if (inj.Name.Contains("STD1"))
                     {
@@ -303,7 +290,7 @@ namespace Empower_List
                 std1 = std1.InsertSTD1();
             }
 
-            var sampleInjs = item.Injs.FindAll(x => x.Name.Contains("sp"));
+            var sampleInjs = item.FindAll(true);
 
             foreach (var lot in lots)
             {
@@ -356,6 +343,41 @@ namespace Empower_List
                 currentVial++;
             }
         }
+
+        private void btnCopyA_Click(object sender, RoutedEventArgs e)
+        {
+            string data = "";
+            foreach (var p in FullList)
+            {
+                data += p.Vial + "\t" + p.Vol + "\t" + p.Count + "\t" + p.Name + "\r\n";
+            }
+            data = data.Substring(0, data.Length - 2);
+            Clipboard.SetData(DataFormats.Text, data);
+        }
+
+        private void btnCopyB_Click(object sender, RoutedEventArgs e)
+        {
+            string data = "";
+            foreach (var p in FullList)
+            {
+                data += p.Time + "\r\n";
+            }
+            data = data.Substring(0, data.Length - 2);
+            Clipboard.SetData(DataFormats.Text, data);
+
+        }
+
+        private void btnCopyC_Click(object sender, RoutedEventArgs e)
+        {
+            string data = "";
+            foreach (var p in FullList)
+            {
+                data += p.Vial + "\t" + p.Vol + "\t" + p.Count + "\t" + p.Name + "\t" + p.Time + "\r\n";
+            }
+            data = data.Substring(0, data.Length - 2);
+            Clipboard.SetData(DataFormats.Text, data);
+
+        }
     }
     public class ListItem
     {
@@ -395,13 +417,5 @@ namespace Empower_List
         {
             return new ListItem(currentVial, Vol, 1, Name, Time);
         }
-    }
-    public class SubList
-    {
-        public int StdType { get; set; }
-        private List<ListItem> items;
-        public ListItem this[int index] => items[index];
-        public void ChangeSTDVial(string STDName, int newVial) => items.Find(x => x.Name == STDName).Vial = newVial;
-    }
-    
+    }    
 }

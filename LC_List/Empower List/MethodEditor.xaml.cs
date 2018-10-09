@@ -1,39 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.ComponentModel;
 
 namespace Empower_List
 {
-    /// <summary>
-    /// MethodEditor.xaml 的交互逻辑
-    /// </summary>
     public partial class MethodEditor : Window
     {
         Dictionary<string, ProjectInfo> database;
+        new MainWindow Parent { get; set; }
 
-        public MethodEditor()
+        public MethodEditor(MainWindow parent)
         {
+            Parent = parent;
             InitializeComponent();
-            database = ConfigParser.Parse(@"D:\c");
+            database = ConfigParser.Parse(AppDomain.CurrentDomain.BaseDirectory + @"ds");
             cProj.Items.Clear();
             database.Keys.ToList().ForEach(x => cProj.Items.Add(x));
         }
-
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            Parent.IsEnabled = true;
+            Parent.Show();
+        }
         private void cProj_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string fullProt= database[cProj.SelectedValue.ToString()].Protocol;
             tProt.Text = fullProt.Split(' ')[0];
             tVer.Text = fullProt.Split(' ')[1].Split('.')[1];
-            //clear all others
             cItem.SelectedIndex = -1;
             tSTD.Text = "";
             tCondition.Text = "";
@@ -67,5 +63,45 @@ namespace Empower_List
 
             }
         }
+
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void g_PreviewKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if ((e.Key == System.Windows.Input.Key.Delete || e.Key == System.Windows.Input.Key.Back) && ((DataGrid)sender).SelectedIndex != -1)
+            {
+                database[cProj.SelectedValue.ToString()][cItem.SelectedValue.ToString()].DeleteInj(((DataGrid)sender).SelectedIndex);
+            }
+        }
+
+        //private void g_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        //{
+        //    if (e.EditAction == DataGridEditAction.Commit)
+        //    {
+        //        Item i = new Item();
+        //        i.LCCondition = int.Parse(tCondition.Text);
+        //        i.StdType = int.TryParse(tSTD.Text, out int temp) ? int.Parse(tSTD.Text) : 0;
+        //        i.Config = cConfig.SelectedIndex == -1 ? "" : cConfig.SelectedValue.ToString();
+        //        foreach (Inj row in ((DataGrid)sender).Items)
+        //        {
+        //            if (row.Name != "")
+        //            {
+        //                i.AddInj(row);
+        //            }
+        //        }
+        //        database[cProj.SelectedValue.ToString()][cItem.SelectedValue.ToString()] = i;
+        //    }
+        //}
+
+        //private void g_PreviewKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        //{
+        //    if (((DataGrid)sender).SelectedIndex != -1 && (e.Key == System.Windows.Input.Key.Delete || e.Key == System.Windows.Input.Key.Back))
+        //    {
+        //        database[cProj.SelectedValue.ToString()][cItem.SelectedValue.ToString()].DeleteInj(((DataGrid)sender).SelectedIndex);
+        //    }
+        //}
     }
 }

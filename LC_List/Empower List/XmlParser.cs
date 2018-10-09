@@ -49,7 +49,7 @@ namespace Empower_List
                             Name = i.Attributes["exp"].InnerText,
                             LCCondition = int.Parse(i.Attributes["condition"].InnerText),
                             Config = i.Attributes["config"].InnerText,
-                            Injs = new List<Inj>()
+                            Injs = new System.Collections.ObjectModel.ObservableCollection<Inj>()
                         };
                         int temp;
                         item.StdType = int.TryParse(i.Attributes["stdType"].InnerText, out temp) ? int.Parse(i.Attributes["stdType"].InnerText) : 0;
@@ -68,6 +68,11 @@ namespace Empower_List
                 data.Add(p.Attributes["name"].InnerText, pi);
             }
             return data;
+        }
+        public static bool UpdateData(Dictionary<string, ProjectInfo> database, string location)
+        {
+            
+            return true;
         }
     }
 }
