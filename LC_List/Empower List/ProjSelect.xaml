@@ -31,7 +31,7 @@
                     </DataGrid.Columns>
 
                 </DataGrid>
-                <Label Content="Uniform Run Time" HorizontalAlignment="Left" Margin="10,46,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="lblRT" Content="Uniform Run Time" HorizontalAlignment="Left" Margin="10,46,0,0" VerticalAlignment="Top"/>
                 <TextBox x:Name="uTime" HorizontalAlignment="Left" Height="27" Margin="156,50,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="77" RenderTransformOrigin="-0.181,0.333" VerticalContentAlignment="Center" TabIndex="7" KeyUp="uTime_KeyUp"/>
                 <Button x:Name="SetTime" Content="Set" HorizontalAlignment="Left" Height="27" Margin="245,50,0,0" VerticalAlignment="Top" Width="46" Click="SetTime_Click"/>
             </Grid>

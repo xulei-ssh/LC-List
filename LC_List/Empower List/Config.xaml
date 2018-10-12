@@ -1,0 +1,49 @@
+﻿<Window x:Class="Empower_List.Config"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:assembly="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:Empower_List"
+        mc:Ignorable="d"
+        Title="Config" Height="489.344" Width="410.395" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Window.Resources>
+        <ObjectDataProvider x:Key="keyUserGroup" MethodName="GetValues" ObjectType="{x:Type assembly:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type Type="local:UserGroup"></x:Type>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="keyUserStatus" MethodName="GetValues" ObjectType="{x:Type assembly:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type Type="local:UserStatus"></x:Type>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
+    </Window.Resources>
+    <Grid>
+        <TabControl HorizontalAlignment="Left" Height="440" Margin="10,10,0,0" VerticalAlignment="Top" Width="376">
+            <TabItem x:Name="tUAC" Header="UAC">
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid x:Name="userListGrid" HorizontalAlignment="Left" Height="324" Margin="19,19,0,0" VerticalAlignment="Top" Width="341" CanUserResizeColumns="False" CanUserSortColumns="False" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False" KeyUp="userListGrid_KeyUp" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="name" Header="Username" Width="100" Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+                            <DataGridComboBoxColumn x:Name="Group" Width="80" Header="Group" SelectedItemBinding="{Binding Group, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={StaticResource keyUserGroup}}"/>
+                            <DataGridComboBoxColumn x:Name="Status" Width="80" Header="Status" SelectedItemBinding="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={StaticResource keyUserStatus}}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button x:Name="btnSaveA" Content="Save" HorizontalAlignment="Left" Height="30" Margin="272,360,0,0" VerticalAlignment="Top" Width="70" Click="btnSaveA_Click"/>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="tSwitch"  Header="Function Switch">
+                <Grid Background="#FFE5E5E5">
+                    <CheckBox x:Name="S1" Content="Allow user to change runtime in method preview" HorizontalAlignment="Left" Margin="8,13,0,0" VerticalAlignment="Top" Checked="S1_Checked" Unchecked="S1_Unchecked"/>
+                    <CheckBox x:Name="S2" Content="Allow user to change sample name in final sequence list" HorizontalAlignment="Left" Margin="8,48,0,0" VerticalAlignment="Top" Checked="S2_Checked" Unchecked="S2_Unchecked"/>
+                    <CheckBox x:Name="S3" Content="Allow user to change runtime in final sequence list" HorizontalAlignment="Left" Margin="8,83,0,0" VerticalAlignment="Top" Checked="S3_Checked" Unchecked="S3_Unchecked"/>
+                    <Button x:Name="btnSaveB" Content="Save" HorizontalAlignment="Left" Height="30" Margin="272,360,0,0" VerticalAlignment="Top" Width="70" Click="btnSaveB_Click"/>
+
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>

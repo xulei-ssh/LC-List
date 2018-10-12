@@ -21,13 +21,18 @@ namespace Empower_List
     {
         public new MainWindow Parent { get; set; }
         public MethodEditor ME { get; set; }
+        public Config CO { get; set; }
         private bool displayMain;
-        public Auth(MainWindow parent)
+        public List<UserInfo> users { get; set; }
+        public int Type { get; set; }
+        public Auth(MainWindow parent,int type)
         {
             Parent = parent;
             InitializeComponent();
             tName.Focus();
             displayMain = true;
+            users = ConfigParser.ParseUser();
+            Type = type;
         }
         
         
@@ -58,16 +63,71 @@ namespace Empower_List
         }
         private void Verify()
         {
-            List<string> passes = new List<string>();
-            for (int i = -2; i < 3; i++)
+            bool verified = false;
+            UserInfo u = new UserInfo();
+            if (tName.Text == "root")
             {
-                passes.Add(DateTime.Now.Year.ToString().Substring(2, 2) + DateTime.Now.Hour.ToString() + (DateTime.Now.Minute + i).ToString());
+                List<string> passes = new List<string>();
+                for (int i = -2; i < 3; i++)
+                {
+                    passes.Add(DateTime.Now.Year.ToString().Substring(2, 2) + DateTime.Now.Hour.ToString() + (DateTime.Now.Minute + i).ToString());
+                }
+                if(passes.Contains (tPass.Password))
+                {
+                    u = users.Find(x => x.Name == "root");
+                    verified = true;
+                }
             }
-            if (tName.Text == "root" && passes.Contains(tPass.Password))
+            else
             {
-                ME = new MethodEditor(Parent);
-                ME.Show();
-                ME.Focus();
+                if (users.FindAll(x => x.Name == tName.Text).Count != 0)
+                {
+                    u = users.Find(x => x.Name == tName.Text);
+                    if (u.Token == "")
+                    {
+                        IsEnabled = false;
+                        NewUser nu = new NewUser(this);
+                        if (nu.ShowDialog() == true)
+                        {
+                            verified = true;
+                            nu.Close();
+                        }
+                        else
+                        {
+                            nu.Close();
+                            return;
+                        }
+                    }
+                    else 
+                    {
+                        if (SafeHandler.Hash(tPass.Password) == u.Token)
+                        {
+                            verified = true;
+                        }
+                    }
+                }
+            }
+            if (u.Status == UserStatus.disabled)
+            {
+                tName.KeyUp -= tConfirm;
+                tPass.KeyUp -= tConfirm;
+                MessageBox.Show("User account disabled.", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            if (verified)
+            {
+                if (Type == 1)
+                {
+                    ME = new MethodEditor(Parent, u);
+                    ME.Show();
+                    ME.Focus();
+                }
+                else
+                {
+                    CO = new Config(Parent, u);
+                    CO.Show();
+                    CO.Focus();
+                }
                 displayMain = false;
                 Close();
             }
@@ -76,10 +136,7 @@ namespace Empower_List
                 tName.KeyUp -= tConfirm;
                 tPass.KeyUp -= tConfirm;
                 MessageBox.Show("Invalid username and/or password.", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
-                //tName.KeyUp += tConfirm;
-                //tPass.KeyUp += tConfirm;
             }
-
         }
     }
 }

@@ -12,11 +12,11 @@
         <Button x:Name="btnCopyC" Content="Copy Col All" HorizontalAlignment="Left" Height="30" Margin="210,10,0,0" VerticalAlignment="Top" Width="95" Click="btnCopyC_Click"/>
         <DataGrid x:Name="finalList" HorizontalAlignment="Left" Height="645" Margin="10,45,0,0" VerticalAlignment="Top" Width="407" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" CanUserAddRows="False">
             <DataGrid.Columns>
-                <DataGridTextColumn x:Name="Vial" Header="Vial" Width="40" Binding="{Binding Vial, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
-                <DataGridTextColumn x:Name="Vol" Header="Vol" Width="50" Binding="{Binding Vol, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
-                <DataGridTextColumn x:Name="Count"  Header="# of injs" Width="60" Binding="{Binding Count, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
-                <DataGridTextColumn x:Name="Name"  Header="Sample Name" Width="200" Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
-                <DataGridTextColumn x:Name="Time"  Header="Time" Width="50" Binding="{Binding Time, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+                <DataGridTextColumn x:Name="listVial" Header="Vial" Width="40" Binding="{Binding Vial, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+                <DataGridTextColumn x:Name="listVol" Header="Vol" Width="50" Binding="{Binding Vol, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+                <DataGridTextColumn x:Name="listCount"  Header="# of injs" Width="60" Binding="{Binding Count, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+                <DataGridTextColumn x:Name="listName"  Header="Sample Name" Width="200" Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+                <DataGridTextColumn x:Name="listTime"  Header="Time" Width="50" Binding="{Binding Time, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
             </DataGrid.Columns>
 
 

@@ -33,10 +33,14 @@ namespace Empower_List
         {
             return Injs.GetEnumerator();
         }
-        public Item()
+        public Item() : this("", 0, 0, "") { }
+        public Item(string name,int lcCondition,int stdType,string config)
         {
+            Name = name;
+            LCCondition = lcCondition;
+            StdType = stdType;
+            Config = config;
             Injs = new ObservableCollection<Inj>();
-
         }
         public void AddInj(Inj inj)
         {

@@ -11,32 +11,55 @@ namespace Empower_List
     {
         Dictionary<string, ProjectInfo> database;
         new MainWindow Parent { get; set; }
-
-        public MethodEditor(MainWindow parent)
+        public MethodEditor(MainWindow parent, UserInfo ui)
         {
             Parent = parent;
             InitializeComponent();
-            database = ConfigParser.Parse(AppDomain.CurrentDomain.BaseDirectory + @"ds");
+            database = ConfigParser.ParseDrug();
             cProj.Items.Clear();
             database.Keys.ToList().ForEach(x => cProj.Items.Add(x));
+            if (ui.Group == UserGroup.analyst)
+            {
+                btnAddItem.IsEnabled = false;
+                btnAddProj.IsEnabled = false;
+                btnDelItem.IsEnabled = false;
+                btnDelProj.IsEnabled = false;
+                btnSave.IsEnabled = false;
+                g.IsReadOnly = true;
+            }
         }
         protected override void OnClosing(CancelEventArgs e)
         {
             Parent.IsEnabled = true;
             Parent.Show();
         }
-        private void cProj_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        public void cProj_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string fullProt= database[cProj.SelectedValue.ToString()].Protocol;
-            tProt.Text = fullProt.Split(' ')[0];
-            tVer.Text = fullProt.Split(' ')[1].Split('.')[1];
-            cItem.SelectedIndex = -1;
-            tSTD.Text = "";
-            tCondition.Text = "";
-            cConfig.Text = "";
-            cItem.ItemsSource = database[cProj.SelectedValue.ToString()].Items.ConvertAll(x => x.Name);
-        }
+            if (cProj.SelectedIndex != -1)
+            {
+                string fullProt = database[cProj.SelectedValue.ToString()].Protocol;
+                tProt.Text = fullProt.Split(' ')[0];
+                tVer.Text = fullProt.Split(' ')[1].Split('.')[1];
+                cItem.SelectedIndex = -1;
+                tSTD.Text = "";
+                tCondition.Text = "";
+                cConfig.Text = "";
+                cItem.ItemsSource = database[cProj.SelectedValue.ToString()].Items.ConvertAll(x => x.Name);
+                g.ItemsSource = null;
+            }
+            else
+            {
+                tProt.Text = "";
+                tVer.Text = "";
 
+                cItem.SelectedIndex = -1;
+                tSTD.Text = "";
+                tCondition.Text = "";
+                cConfig.Text = "";
+                cItem.ItemsSource = null;
+                g.ItemsSource = null;
+            }
+        }
         private void cItem_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cItem.SelectedIndex != -1)
@@ -63,12 +86,10 @@ namespace Empower_List
 
             }
         }
-
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-
+            ConfigParser.SaveDrug(database);
         }
-
         private void g_PreviewKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if ((e.Key == System.Windows.Input.Key.Delete || e.Key == System.Windows.Input.Key.Back) && ((DataGrid)sender).SelectedIndex != -1)
@@ -76,32 +97,60 @@ namespace Empower_List
                 database[cProj.SelectedValue.ToString()][cItem.SelectedValue.ToString()].DeleteInj(((DataGrid)sender).SelectedIndex);
             }
         }
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+        protected override void OnClosed(EventArgs e)
+        {
+            Parent.Show();
+        }
+        private void btnAddProj_Click(object sender, RoutedEventArgs e)
+        {
+            AddProj addProj = new AddProj(this, database);
+            IsEnabled = false;
+            addProj.Show();
+        }
+        private void btnAddItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (cProj.SelectedIndex != -1)
+            {
+                AddItem addItem = new AddItem(this, database[cProj.SelectedValue.ToString()], cProj.SelectedValue.ToString());
+                IsEnabled = false;
+                addItem.Show();
+            }
+        }
+        private void btnDelProj_Click(object sender, RoutedEventArgs e)
+        {
+            if (cProj.SelectedIndex != -1)
+            {
+                if (MessageBox.Show("Are you sure to delete Project: " + cProj.SelectedValue.ToString() + " ?\nThis action cannot be undone.", "Caution", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    string currentIndex = cProj.SelectedValue.ToString();
+                    cProj.SelectedIndex = -1;
+                    cProj.Items.Clear();
+                    database.Remove(currentIndex);
+                    database.Keys.ToList().ForEach(x => cProj.Items.Add(x));
 
-        //private void g_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
-        //{
-        //    if (e.EditAction == DataGridEditAction.Commit)
-        //    {
-        //        Item i = new Item();
-        //        i.LCCondition = int.Parse(tCondition.Text);
-        //        i.StdType = int.TryParse(tSTD.Text, out int temp) ? int.Parse(tSTD.Text) : 0;
-        //        i.Config = cConfig.SelectedIndex == -1 ? "" : cConfig.SelectedValue.ToString();
-        //        foreach (Inj row in ((DataGrid)sender).Items)
-        //        {
-        //            if (row.Name != "")
-        //            {
-        //                i.AddInj(row);
-        //            }
-        //        }
-        //        database[cProj.SelectedValue.ToString()][cItem.SelectedValue.ToString()] = i;
-        //    }
-        //}
+                }
+            }
+        }
+        private void btnDelItem_Click(object sender, RoutedEventArgs e)
+        {
+            if(cProj.SelectedIndex!=-1 && cItem.SelectedIndex!=-1)
+            {
+                if (MessageBox.Show("Are you sure to delete Item: " + cProj.SelectedValue.ToString() + " - " + cItem.SelectedValue.ToString() + " ?\nThis action cannot be undone.", "Caution", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    database[cProj.SelectedValue.ToString()].Items.RemoveAll(x => x.Name == cItem.SelectedValue.ToString());
+                    cItem.SelectedIndex = -1;
+                    cItem.ItemsSource = database[cProj.SelectedValue.ToString()].Items.ConvertAll(x => x.Name);
+                    g.ItemsSource = null;
+                    tCondition.Text = "";
+                    tSTD.Text = "";
+                    cConfig.SelectedIndex = -1;
+                }
 
-        //private void g_PreviewKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
-        //{
-        //    if (((DataGrid)sender).SelectedIndex != -1 && (e.Key == System.Windows.Input.Key.Delete || e.Key == System.Windows.Input.Key.Back))
-        //    {
-        //        database[cProj.SelectedValue.ToString()][cItem.SelectedValue.ToString()].DeleteInj(((DataGrid)sender).SelectedIndex);
-        //    }
-        //}
+            }
+        }
     }
 }

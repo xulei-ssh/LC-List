@@ -20,5 +20,11 @@ namespace Empower_List
                 Items[Items.FindIndex(x => x.Name == index)] = value;
             }
         }
+        public ProjectInfo() : this("") { }
+        public ProjectInfo(string protocol)
+        {
+            Protocol = protocol;
+            Items = new List<Item>();
+        }
     }
 }

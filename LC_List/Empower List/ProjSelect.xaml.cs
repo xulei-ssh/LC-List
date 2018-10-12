@@ -23,6 +23,7 @@ namespace Empower_List
         List<TaskSet> tasks;
         bool openedDetails = false;
         new MainWindow Parent { get; set; }
+        List<bool> config;
         //Dictionary<string, string[]> ItemEachLot;
         public ProjSelect(MainWindow parent)
         {
@@ -34,10 +35,15 @@ namespace Empower_List
                 Hide();
                 return;
             }
-            database = ConfigParser.Parse(System.AppDomain.CurrentDomain.BaseDirectory + @"ds");
+            database = ConfigParser.ParseDrug();
+            config = ConfigParser.ParseConfig();
+            lblRT.IsEnabled = config[0];
+            uTime.IsEnabled = config[0];
+            SetTime.IsEnabled = config[0];
+            methodGrid.IsReadOnly = config[0];
             comboProj.Items.Clear();
             database.Keys.ToList().ForEach(x => comboProj.Items.Add(x));
-            tip.Text = "1: Item priority in sequence: Related Substance > Assay > Others.\n2: Use braces like (25*60, 18M) in Lot to indicate stability batches.\n3: CDN Dissolution cannot be carried out using a single list.";
+            tip.Text = "1: Item priority in sequence: Related Substance > Assay > Others.\n2: Use braces like (25*60, 18M) in Lot to indicate stability batches.\n3: CDN Dissolution cannot be carried out using a multi-item list.";
         }
         private void comboProj_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -155,7 +161,7 @@ namespace Empower_List
                 listItems.Items.CopyTo(headers, 0);
                 ItemEditor ie = new ItemEditor(this,headers, tasks);
                 ie.Show();
-                this.IsEnabled = false;
+                IsEnabled = false;
 
                 
             }
@@ -211,6 +217,8 @@ namespace Empower_List
                 string[] headers = new string[listItems.Items.Count];
                 listItems.Items.CopyTo(headers, 0);
                 FinalList fl = new FinalList(this,comboProj.SelectedValue.ToString(), database[comboProj.SelectedValue.ToString()], headers, tasks, textSkip.Text == "" ? 0 : int.Parse(textSkip.Text));
+                fl.listName.IsReadOnly = !config[1];
+                fl.listTime.IsReadOnly = !config[2];
                 fl.Show();
 
                 this.IsEnabled = false;

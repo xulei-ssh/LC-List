@@ -18,15 +18,15 @@ namespace Empower_List
         }
         protected override void OnClosed(EventArgs e)
         {
-            System.Windows.Application.Current.Shutdown();
+            Application.Current.Shutdown();
         }
-        private void btnMethod_MouseMove(object sender, MouseEventArgs e)
-        {
-            btnMethod.Foreground = new SolidColorBrush(Colors.Turquoise);
-        }
+        private void btnMethod_MouseMove(object sender, MouseEventArgs e) => btnMethod.Foreground = new SolidColorBrush(Colors.Turquoise);
         private void btnMethod_MouseLeave(object sender, MouseEventArgs e) => btnMethod.Foreground = defaultBrush;
         private void btnList_MouseMove(object sender, MouseEventArgs e) => btnList.Foreground = new SolidColorBrush(Colors.Turquoise);
         private void btnList_MouseLeave(object sender, MouseEventArgs e) => btnList.Foreground = defaultBrush;
+        private void btnConfig_MouseMove(object sender, MouseEventArgs e) => btnConfig.Foreground = new SolidColorBrush(Colors.Turquoise);
+        private void btnConfig_MouseLeave(object sender, MouseEventArgs e) => btnConfig.Foreground = defaultBrush;
+
         private void btnList_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (CheckFile())
@@ -52,7 +52,7 @@ namespace Empower_List
         {
             if (CheckFile())
             {
-                Auth a = new Auth(this);
+                Auth a = new Auth(this,1);
                 IsEnabled = false;
                 a.Show();
                 Hide();
@@ -68,5 +68,18 @@ namespace Empower_List
             return true;
 
         }
+        private void btnConfig_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (CheckFile())
+            {
+                Auth a = new Auth(this, 2);
+                IsEnabled = false;
+                a.Show();
+                Hide();
+            }
+
+        }
+
+
     }
 }
