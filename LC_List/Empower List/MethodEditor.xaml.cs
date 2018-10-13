@@ -11,22 +11,16 @@ namespace Empower_List
     {
         Dictionary<string, ProjectInfo> database;
         new MainWindow Parent { get; set; }
+        UserInfo UI { get; set; }
         public MethodEditor(MainWindow parent, UserInfo ui)
         {
             Parent = parent;
+            UI = ui;
             InitializeComponent();
             database = ConfigParser.ParseDrug();
             cProj.Items.Clear();
             database.Keys.ToList().ForEach(x => cProj.Items.Add(x));
-            if (ui.Group == UserGroup.analyst)
-            {
-                btnAddItem.IsEnabled = false;
-                btnAddProj.IsEnabled = false;
-                btnDelItem.IsEnabled = false;
-                btnDelProj.IsEnabled = false;
-                btnSave.IsEnabled = false;
-                g.IsReadOnly = true;
-            }
+            SetAcccess();
         }
         protected override void OnClosing(CancelEventArgs e)
         {
@@ -43,7 +37,6 @@ namespace Empower_List
                 cItem.SelectedIndex = -1;
                 tSTD.Text = "";
                 tCondition.Text = "";
-                cConfig.Text = "";
                 cItem.ItemsSource = database[cProj.SelectedValue.ToString()].Items.ConvertAll(x => x.Name);
                 g.ItemsSource = null;
             }
@@ -51,14 +44,13 @@ namespace Empower_List
             {
                 tProt.Text = "";
                 tVer.Text = "";
-
                 cItem.SelectedIndex = -1;
                 tSTD.Text = "";
                 tCondition.Text = "";
-                cConfig.Text = "";
                 cItem.ItemsSource = null;
                 g.ItemsSource = null;
             }
+            SetAcccess();
         }
         private void cItem_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -69,32 +61,25 @@ namespace Empower_List
                 {
                     tSTD.IsEnabled = false;
                     tSTD.Text = "";
-                    cConfig.IsEnabled = true;
-                    cConfig.Items.Add("self");
-                    cConfig.Items.Add("union");
-                    cConfig.SelectedIndex = database[cProj.SelectedValue.ToString()]["Related Substance"].Config == "self" ? 0 : 1;
                 }
                 else
                 {
                     tSTD.IsEnabled = true;
                     tSTD.Text = database[cProj.SelectedValue.ToString()][cItem.SelectedValue.ToString()].StdType.ToString();
-                    cConfig.IsEnabled = false;
-                    cConfig.Items.Clear();
                 }
                 g.ItemsSource = database[cProj.SelectedValue.ToString()][cItem.SelectedValue.ToString()].Injs;
-
-
             }
+            SetAcccess();
         }
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            ConfigParser.SaveDrug(database);
-        }
-        private void g_PreviewKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if ((e.Key == System.Windows.Input.Key.Delete || e.Key == System.Windows.Input.Key.Back) && ((DataGrid)sender).SelectedIndex != -1)
+            if (VerifyList())
             {
-                database[cProj.SelectedValue.ToString()][cItem.SelectedValue.ToString()].DeleteInj(((DataGrid)sender).SelectedIndex);
+                ConfigParser.SaveDrug(database);
+            }
+            else
+            {
+                AlertListError();
             }
         }
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -137,7 +122,7 @@ namespace Empower_List
         }
         private void btnDelItem_Click(object sender, RoutedEventArgs e)
         {
-            if(cProj.SelectedIndex!=-1 && cItem.SelectedIndex!=-1)
+            if (cProj.SelectedIndex != -1 && cItem.SelectedIndex != -1)
             {
                 if (MessageBox.Show("Are you sure to delete Item: " + cProj.SelectedValue.ToString() + " - " + cItem.SelectedValue.ToString() + " ?\nThis action cannot be undone.", "Caution", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
@@ -147,8 +132,88 @@ namespace Empower_List
                     g.ItemsSource = null;
                     tCondition.Text = "";
                     tSTD.Text = "";
-                    cConfig.SelectedIndex = -1;
                 }
+
+            }
+        }
+        private void Prot_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (cProj.SelectedIndex != -1)
+            {
+                if (tProt.Text.Contains(".") || tVer.Text.Contains("."))
+                {
+                    ((TextBox)sender).Text = ((TextBox)sender).Text.Substring(0, ((TextBox)sender).Text.Length - 1);
+                    return;
+                }
+                database[cProj.SelectedValue.ToString()].Protocol = tProt.Text + " ver." + tVer.Text;
+            }
+        }
+        private void tCondition_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (cProj.SelectedIndex != -1 && cItem.SelectedIndex != -1)
+            {
+                if (tCondition.Text != "" && !int.TryParse(tCondition.Text, out int temp))
+                {
+                    ((TextBox)sender).Text = ((TextBox)sender).Text.Substring(0, ((TextBox)sender).Text.Length - 1);
+                    return;
+                }
+                database[cProj.SelectedValue.ToString()][cItem.SelectedValue.ToString()].LCCondition = tCondition.Text == "" ? 0 : int.Parse(tCondition.Text);
+            }
+        }
+        private void tSTD_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (cProj.SelectedIndex != -1 && cItem.SelectedIndex != -1)
+            {
+                if (tSTD.Text != "" && !int.TryParse(tSTD.Text, out int temp))
+                {
+                    ((TextBox)sender).Text = ((TextBox)sender).Text.Substring(0, ((TextBox)sender).Text.Length - 1);
+                    return;
+                }
+                database[cProj.SelectedValue.ToString()][cItem.SelectedValue.ToString()].StdType = tSTD.Text == "" ? 0 : int.Parse(tSTD.Text);
+            }
+        }
+        public bool VerifyList()
+        {
+            if (cProj.SelectedIndex == -1 || cItem.SelectedIndex == -1) return true;
+            var t = database[cProj.SelectedValue.ToString()][cItem.SelectedValue.ToString()];
+            if (((t.Name == "Related Substance") && (t.Injs.Count > 1) && (t.Injs.Last().Name == "spY")) || ((t.Name != "Related Substance") && (t.Injs.Count > 1) && (t.Injs.Last().Name == "sp")))
+            {
+                return true;
+            }
+            return false;
+        }
+        private void g_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (!VerifyList())
+            {
+                AlertListError();
+            }
+        }
+        public void AlertListError()
+        {
+            MessageBox.Show("List must have a sample entry named \"spY\" (for Related Substance) or \"sp\" (for other Items).", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        public void SetAcccess()
+        {
+            if (UI.Group == UserGroup.analyst)
+            {
+                btnAddItem.IsEnabled = false;
+                btnAddProj.IsEnabled = false;
+                btnDelItem.IsEnabled = false;
+                btnDelProj.IsEnabled = false;
+                btnSave.IsEnabled = false;
+                g.IsReadOnly = true;
+                tProt.IsEnabled = false;
+                tVer.IsEnabled = false;
+                tCondition.IsEnabled = false;
+                tSTD.IsEnabled = false;
+            }
+        }
+        private void g_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (g.SelectedIndex != -1)
+            {
+                database[cProj.SelectedValue.ToString()][cItem.SelectedValue.ToString()].Injs.RemoveAt(g.SelectedIndex);
 
             }
         }

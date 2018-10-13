@@ -25,6 +25,10 @@ namespace Empower_List
                 S1.IsEnabled = false;
                 S2.IsEnabled = false;
                 S3.IsEnabled = false;
+                btnSaveA.IsEnabled = false;
+                btnSaveB.IsEnabled = false;
+                btnReset.IsEnabled = false;
+                btnAddUser.IsEnabled = false;          
             }
             config = ConfigParser.ParseConfig();
             S1.IsChecked = config[0];
@@ -36,15 +40,18 @@ namespace Empower_List
             Parent.IsEnabled = true;
             Parent.Show();
         }
-        private void userListGrid_KeyUp(object sender, KeyEventArgs e)
+        private void btnSaveA_Click(object sender, RoutedEventArgs e)
         {
-            if ( e.Key == Key.Back && ((DataGrid)sender).SelectedIndex > 0)
+            if (users.Exists(x => x.Name == "root"))
             {
-                users.RemoveAt(((DataGrid)sender).SelectedIndex);
-                userListGrid.Items.Refresh();
+                ConfigParser.SaveUser(users);
+            }
+            else
+            {
+                MessageBox.Show("Root user missing, changes cannot be saved", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Close();
             }
         }
-        private void btnSaveA_Click(object sender, RoutedEventArgs e) => ConfigParser.SaveUser(users);
         private void btnSaveB_Click(object sender, RoutedEventArgs e) => ConfigParser.SaveConfig(config);
         private void S1_Checked(object sender, RoutedEventArgs e) => config[0] = true;
         private void S1_Unchecked(object sender, RoutedEventArgs e) => config[0] = false;
@@ -52,8 +59,48 @@ namespace Empower_List
         private void S2_Unchecked(object sender, RoutedEventArgs e) => config[1] = false;
         private void S3_Checked(object sender, RoutedEventArgs e) => config[2] = true;
         private void S3_Unchecked(object sender, RoutedEventArgs e) => config[2] = false;
+        private void btnReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (userListGrid.SelectedIndex > 0)
+            {
+                if (MessageBox.Show("Are you sure to reset password for " + users[userListGrid.SelectedIndex].Name + "?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    users[userListGrid.SelectedIndex].Token = "";
+                    ConfigParser.SaveUser(users);
+                }
+            }
+        }
+        private void userListGrid_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (userListGrid.SelectedIndex > 0)
+            {
+                if (MessageBox.Show("Are you sure to delete " + users[userListGrid.SelectedIndex].Name + "?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    users.RemoveAt(userListGrid.SelectedIndex);
+                    userListGrid.Items.Refresh();
+                }
+            }
 
-
+        }
+        private void btnAddUser_Click(object sender, RoutedEventArgs e)
+        {
+            AddUser a = new AddUser(this, users);
+            IsEnabled = false;
+            a.Show();
+        }
+        private void userListGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (UI.Group == UserGroup.root)
+            {
+                if (userListGrid.SelectedIndex == 0)
+                {
+                    btnReset.IsEnabled = false;
+                }
+                else
+                {
+                    btnReset.IsEnabled = true;
+                }
+            }
+        }
     }
-
 }

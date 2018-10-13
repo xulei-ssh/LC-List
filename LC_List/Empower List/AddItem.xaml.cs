@@ -32,9 +32,6 @@ namespace Empower_List
             itemName.Items.Add("Dissolution");
             itemName.Items.Add("Acid Tolerance");
             stdType.IsEnabled = false;
-            config.Items.Add("self");
-            config.Items.Add("union");
-            config.IsEnabled = false;
             lblProj.Content = projName + " " + info.Protocol;
             ProjName = projName;
         }
@@ -47,7 +44,6 @@ namespace Empower_List
                 if (item.Name == itemName.SelectedValue.ToString())
                 {
                     MessageBox.Show("Item already exists.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    config.KeyUp -= Enter_KeyUp;
                     stdType.KeyUp -= Enter_KeyUp;
                     return;
                 }
@@ -55,28 +51,15 @@ namespace Empower_List
             if (!int.TryParse(condition.Text, out int temp1))
             {
                 MessageBox.Show("Condition should be number.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                config.KeyUp -= Enter_KeyUp;
                 stdType.KeyUp -= Enter_KeyUp;
                 condition.SelectAll();
                 return;
             }
-            if (itemName.SelectedValue.ToString() == "Related Substance")
-            {
-                if (config.SelectedIndex == -1)
-                {
-                    MessageBox.Show("Please select Config.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    config.KeyUp -= Enter_KeyUp;
-                    stdType.KeyUp -= Enter_KeyUp;
-                    config.Focus();
-                    return;
-                }
-            }
-            else
+            if (itemName.SelectedValue.ToString() != "Related Substance")
             {
                 if (!int.TryParse(stdType.Text, out int temp2))
                 {
                     MessageBox.Show("STDType should be number.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    config.KeyUp -= Enter_KeyUp;
                     stdType.KeyUp -= Enter_KeyUp;
                     stdType.SelectAll();
                     return;
@@ -86,11 +69,11 @@ namespace Empower_List
             {
                 if (itemName.SelectedValue.ToString() == "Related Substance")
                 {
-                    Project.Items.Add(new Item("Related Substance", int.Parse(condition.Text), 0, config.SelectedIndex == 0 ? "self" : "union"));
+                    Project.Items.Add(new Item("Related Substance", int.Parse(condition.Text), 0));
                 }
                 else
                 {
-                    Project.Items.Add(new Item(itemName.SelectedValue.ToString(), int.Parse(condition.Text), int.Parse(stdType.Text), ""));
+                    Project.Items.Add(new Item(itemName.SelectedValue.ToString(), int.Parse(condition.Text), int.Parse(stdType.Text)));
                 }
                 Parent.cProj_SelectionChanged(null, null);
                 Parent.cItem.SelectedIndex = Parent.cItem.Items.Count - 1;
@@ -118,9 +101,7 @@ namespace Empower_List
 
         private void itemName_GotFocus(object sender, RoutedEventArgs e)
         {
-            config.KeyUp -= Enter_KeyUp;
             stdType.KeyUp -= Enter_KeyUp;
-            config.KeyUp += Enter_KeyUp;
             stdType.KeyUp += Enter_KeyUp;
 
         }
@@ -128,16 +109,13 @@ namespace Empower_List
         private void itemName_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             itemName_GotFocus(null, null);
-            config.SelectedIndex = -1;
             if (itemName.SelectedValue.ToString() == "Related Substance")
             {
                 stdType.IsEnabled = false;
-                config.IsEnabled = true;
             }
             else
             {
                 stdType.IsEnabled = true;
-                config.IsEnabled = false;
             }
         }
 

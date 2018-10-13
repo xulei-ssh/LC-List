@@ -24,14 +24,16 @@
         <TabControl HorizontalAlignment="Left" Height="440" Margin="10,10,0,0" VerticalAlignment="Top" Width="376">
             <TabItem x:Name="tUAC" Header="UAC">
                 <Grid Background="#FFE5E5E5">
-                    <DataGrid x:Name="userListGrid" HorizontalAlignment="Left" Height="324" Margin="19,19,0,0" VerticalAlignment="Top" Width="341" CanUserResizeColumns="False" CanUserSortColumns="False" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False" KeyUp="userListGrid_KeyUp" >
+                    <DataGrid x:Name="userListGrid" HorizontalAlignment="Left" Height="324" Margin="19,19,0,0" VerticalAlignment="Top" Width="341" CanUserResizeColumns="False" CanUserSortColumns="False" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False" MouseRightButtonUp="userListGrid_MouseRightButtonUp" CanUserAddRows="False" CanUserDeleteRows="False" SelectionChanged="userListGrid_SelectionChanged">
                         <DataGrid.Columns>
-                            <DataGridTextColumn x:Name="name" Header="Username" Width="100" Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+                            <DataGridTextColumn x:Name="name" Header="Username" Width="100" Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
                             <DataGridComboBoxColumn x:Name="Group" Width="80" Header="Group" SelectedItemBinding="{Binding Group, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={StaticResource keyUserGroup}}"/>
                             <DataGridComboBoxColumn x:Name="Status" Width="80" Header="Status" SelectedItemBinding="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={StaticResource keyUserStatus}}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <Button x:Name="btnSaveA" Content="Save" HorizontalAlignment="Left" Height="30" Margin="272,360,0,0" VerticalAlignment="Top" Width="70" Click="btnSaveA_Click"/>
+                    <Button x:Name="btnReset" Content="Reset" HorizontalAlignment="Left" Height="30" Margin="19,360,0,0" VerticalAlignment="Top" Width="70" Click="btnReset_Click"/>
+                    <Button x:Name="btnAddUser" Content="Add" HorizontalAlignment="Left" Height="30" Margin="197,360,0,0" VerticalAlignment="Top" Width="70" Click="btnAddUser_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="tSwitch"  Header="Function Switch">

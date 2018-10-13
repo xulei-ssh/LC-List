@@ -9,7 +9,6 @@ namespace Empower_List
         public string Name { get; set; }
         public int LCCondition { get; set; }
         public int StdType { get; set; }
-        public string Config { get; set; }
         public ObservableCollection<Inj> Injs { get; set; }
         public bool NewLine { get; set; } = false;
         public Inj this[int index]
@@ -33,13 +32,12 @@ namespace Empower_List
         {
             return Injs.GetEnumerator();
         }
-        public Item() : this("", 0, 0, "") { }
-        public Item(string name,int lcCondition,int stdType,string config)
+        public Item() : this("", 0, 0) { }
+        public Item(string name,int lcCondition,int stdType)
         {
             Name = name;
             LCCondition = lcCondition;
             StdType = stdType;
-            Config = config;
             Injs = new ObservableCollection<Inj>();
         }
         public void AddInj(Inj inj)
@@ -58,8 +56,7 @@ namespace Empower_List
                 if ((isSP && inj.Name.Contains("sp") && isSP) || (!isSP && !inj.Name.Contains("sp")))
                 {
                     r.Add(inj);
-                }
-                
+                }                
             }
             return r;
         }

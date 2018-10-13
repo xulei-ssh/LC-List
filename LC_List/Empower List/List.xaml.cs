@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#define enable_mbl_once
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -8,14 +9,12 @@ namespace Empower_List
 {
     public partial class FinalList:Window
     {
-        new ProjSelect Parent { get; set; }
-        
+        new ProjSelect Parent { get; set; }    
         ProjectInfo projInfo;
         string[] items;
         List<TaskSet> tasks;
         string projName;
         int invalid;
-        //public List<ListItem> FullList { get; set; }
         public ObservableCollection<ListItem> FullList { get; set; }
         List<int> stdTypes;
         public FinalList(ProjSelect parent, string projName, ProjectInfo projInfo, string[] items, List<TaskSet> tasks, int invalid = 0)
@@ -37,22 +36,26 @@ namespace Empower_List
             finalList.ItemsSource = FullList;
 
         }
-
         protected override void OnClosing(CancelEventArgs e)
         {
             Parent.IsEnabled = true;
             Hide();
             e.Cancel = true;
         }
-
-        //Help methods
         Dictionary<int, int> std1StartVials;
         Dictionary<int, string> std1StartVialsSuffix;
         int currentVial = 1;
         int STDenum = 0;
         private void Gen()
         {
+            //MBL-ONCE特殊化，当同时出现溶出和含量均匀度时特殊处理，直接return,注意RS处理
+            if (projName == "MBL-ONCE" && items.Contains("Dissolution") && items.Contains("Content Uniformity"))
+            {
+                //return;
+            }
+
             //获取有多少种STD
+            
             stdTypes = new List<int>();
             foreach (var q in items)
             {
@@ -89,7 +92,6 @@ namespace Empower_List
                 currentVial++;
             }
         }
-
         private void GenSubListRS(Item item, List<string> lots)
         {
             foreach (var inj in item.FindAll(false))
@@ -101,14 +103,29 @@ namespace Empower_List
             var sampleInjs = item.FindAll(true);
             foreach (var lot in lots)
             {
-                if (item.Config == "self")
+                if (item.FindAll(true).Count == 2)
                 {
-                    VailConfirm();
-                    FullList.Add(new ListItem(currentVial,sampleInjs[0],lot+"-S"));
-                    currentVial++;
-                    VailConfirm();
-                    FullList.Add(new ListItem(currentVial, sampleInjs[1], lot + "-Y"));
-                    currentVial++;
+                    if (projName == "MBL-ONCE")
+                    {
+                        for (int j = 0; j < 3; j++)
+                        {
+                            VailConfirm();
+                            FullList.Add(new ListItem(currentVial, sampleInjs[0], lot + "-" + (j + 1).ToString() + "-S"));
+                            currentVial++;
+                            VailConfirm();
+                            FullList.Add(new ListItem(currentVial, sampleInjs[0], lot + "-" + (j + 1).ToString() + "-Y"));
+                            currentVial++;
+                        }
+                    }
+                    else
+                    {
+                        VailConfirm();
+                        FullList.Add(new ListItem(currentVial, sampleInjs[0], lot + "-S"));
+                        currentVial++;
+                        VailConfirm();
+                        FullList.Add(new ListItem(currentVial, sampleInjs[1], lot + "-Y"));
+                        currentVial++;
+                    }
                 }
                 else
                 {
@@ -212,7 +229,8 @@ namespace Empower_List
         {
             bool writeSTD = false;
             ListItem std1 = new ListItem();
-            // CDN 溶出特殊化
+            //speical injs process
+            //CDN 溶出的speical序列特殊化
             if (projName == "CDN" && item.Name == "Dissolution" && item.Injs.First().Volume > 100)
             {
                 for (int i = 0; i < 4; i++)
@@ -220,10 +238,8 @@ namespace Empower_List
                     VailConfirm();
                     FullList.Add(new ListItem(currentVial, item.Injs[i]));
                     if (i == 0) std1 = new ListItem(currentVial, item.Injs[i]);
-
                     currentVial++;
                 }
-                
             }
             else
             {
@@ -289,19 +305,20 @@ namespace Empower_List
                 }
                 std1 = std1.InsertSTD1();
             }
-
+            //end of special inj process
+            //sample inj process
             var sampleInjs = item.FindAll(true);
 
             foreach (var lot in lots)
             {
                 if (item.NewLine)
                 {
-                    NewLineCurrentVial();
+                    NewLineCurrentVial(10);
                 }
                 switch (item.Name)
                 {
                     case "Acid Tolerance":
-                    case "Dissolution":                        
+                    case "Dissolution":
                         for (int i = 0; i < 6; i++)
                         {
                             VailConfirm();
@@ -320,13 +337,33 @@ namespace Empower_List
                         }
                         break;
                     case "Content Uniformity":
-                        for (int i = 0; i < 10; i++)
+                        if (projName == "MBL-ONCE")
                         {
-                            VailConfirm();
-                            FullList.Add(new ListItem(currentVial, item.Injs.Last(), lot + "-HJ" + (i + 1)));
-                            currentVial++;
+                            for (int c = 0; c < 3; c++)
+                            {
+                                if (item.NewLine)
+                                {
+                                    NewLineCurrentVial(10);
+                                }
+                                for (int i = 0; i < 10; i++)
+                                {
+                                    VailConfirm();
+                                    FullList.Add(new ListItem(currentVial, item.Injs.Last(), lot + "-HJ" + (c * 10 + i + 1)));
+                                    currentVial++;
+                                }
+                                FullList.Add(std1);
+                            }
                         }
-                        FullList.Add(std1);
+                        else
+                        {
+                            for (int i = 0; i < 10; i++)
+                            {
+                                VailConfirm();
+                                FullList.Add(new ListItem(currentVial, item.Injs.Last(), lot + "-HJ" + (i + 1)));
+                                currentVial++;
+                            }
+                            FullList.Add(std1);
+                        }
                         break;
                 }
 
@@ -334,16 +371,16 @@ namespace Empower_List
 
             }
 
-
+            //end of sample inj process
         }
-        public void NewLineCurrentVial()
+
+        public void NewLineCurrentVial(int baseNumber)
         {
-            while (currentVial % 10 != 1)
+            while (currentVial % baseNumber != 1)
             {
                 currentVial++;
             }
         }
-
         private void btnCopyA_Click(object sender, RoutedEventArgs e)
         {
             string data = "";
@@ -354,7 +391,6 @@ namespace Empower_List
             data = data.Substring(0, data.Length - 2);
             Clipboard.SetData(DataFormats.Text, data);
         }
-
         private void btnCopyB_Click(object sender, RoutedEventArgs e)
         {
             string data = "";
@@ -366,7 +402,6 @@ namespace Empower_List
             Clipboard.SetData(DataFormats.Text, data);
 
         }
-
         private void btnCopyC_Click(object sender, RoutedEventArgs e)
         {
             string data = "";

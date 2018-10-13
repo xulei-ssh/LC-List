@@ -11,8 +11,8 @@
         <Label Content="Username" HorizontalAlignment="Left" Margin="37,72,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lblName" Content="Label" HorizontalAlignment="Left" Margin="260,72,0,0" VerticalAlignment="Top"/>
         <Label Content="Password (Retype)" HorizontalAlignment="Left" Margin="37,123,0,0" VerticalAlignment="Top"/>
-        <PasswordBox x:Name="pass" TabIndex="1" HorizontalAlignment="Left" Height="28" Margin="260,123,0,0" VerticalAlignment="Top" Width="301" KeyUp="pass_KeyUp"/>
-        <Button x:Name="btnOK" TabIndex="2" Content="OK" HorizontalAlignment="Left" Height="32" Margin="193,185,0,0" VerticalAlignment="Top" Width="86" Click="btnOK_Click" IsDefault="True"/>
+        <PasswordBox x:Name="pass" TabIndex="1" HorizontalAlignment="Left" Height="28" Margin="260,123,0,0" VerticalAlignment="Top" Width="301" VerticalContentAlignment="Center" GotFocus="pass_GotFocus" LostFocus="pass_LostFocus"/>
+        <Button x:Name="btnOK" TabIndex="2" Content="OK" HorizontalAlignment="Left" Height="32" Margin="193,185,0,0" VerticalAlignment="Top" Width="86" IsDefault="True"/>
         <Button x:Name="btnCancel" TabIndex="3" Content="Cancel" HorizontalAlignment="Left" Height="32" Margin="356,185,0,0" VerticalAlignment="Top" Width="86" IsCancel="True"/>
 
     </Grid>

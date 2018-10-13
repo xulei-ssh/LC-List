@@ -36,11 +36,12 @@
                 <Button x:Name="SetTime" Content="Set" HorizontalAlignment="Left" Height="27" Margin="245,50,0,0" VerticalAlignment="Top" Width="46" Click="SetTime_Click"/>
             </Grid>
         </GroupBox>
-        <Button x:Name="btnLotDetail" Content="Customize Applied Items" HorizontalAlignment="Left" Height="32" Margin="543,449,0,0" VerticalAlignment="Top" Width="152" FontFamily="Segoe UI" FontSize="13" Click="btnLotDetail_Click"/>
-        <Button x:Name="btnGen" Content="Generate" HorizontalAlignment="Left" Height="32" Margin="722,449,0,0" VerticalAlignment="Top" Width="79" FontFamily="Segoe UI" FontSize="13" Click="btnGen_Click"/>
+        <Button x:Name="btnLotDetail" Content="Customize Applied Items" HorizontalAlignment="Left" Height="32" Margin="493,449,0,0" VerticalAlignment="Top" Width="152" FontFamily="Segoe UI" FontSize="13" Click="btnLotDetail_Click"/>
+        <Button x:Name="btnGen" Content="Generate" HorizontalAlignment="Left" Height="32" Margin="761,449,0,0" VerticalAlignment="Top" Width="79" FontFamily="Segoe UI" FontSize="13" Click="btnGen_Click"/>
         <GroupBox Header="Tip" FontSize="13" FontFamily="Segoe UI" HorizontalAlignment="Left" Height="84" Margin="10,417,0,0" VerticalAlignment="Top" Width="450">
             <TextBox x:Name="tip" HorizontalAlignment="Left" Height="65" TextWrapping="Wrap" VerticalAlignment="Top" Width="430" Margin="0,0,0,0" AcceptsReturn="True" AllowDrop="False" IsReadOnly="True" BorderThickness="0"/>
         </GroupBox>
+        <Button x:Name="btnReset" Content="Reset" HorizontalAlignment="Left" Height="32" Margin="663,449,0,0" VerticalAlignment="Top" Width="79" FontFamily="Segoe UI" FontSize="13" Click="btnReset_Click"/>
 
     </Grid>
 </Window>

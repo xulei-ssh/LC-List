@@ -166,7 +166,7 @@ namespace Empower_List
                 
             }
         } 
-        private void ModifySwitch(bool mode)     
+        private void ModifySwitch(bool mode)
         {
             textLots.IsEnabled = mode;
             comboItems.IsEnabled = mode;
@@ -233,6 +233,11 @@ namespace Empower_List
             {
                 SetTime_Click(this, null);
             }
+        }
+        private void btnReset_Click(object sender, RoutedEventArgs e)
+        {
+            comboProj_SelectionChanged(null, null);
+
         }
     }
 }

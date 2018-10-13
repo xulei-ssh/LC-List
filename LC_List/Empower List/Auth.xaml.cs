@@ -51,7 +51,17 @@ namespace Empower_List
 
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
-            Verify();
+            if (tName.Text.Length == 0 || tPass.Password.Length == 0)
+            {
+                tName.KeyUp -= tConfirm;
+                tPass.KeyUp -= tConfirm;
+                MessageBox.Show("Username and password are required", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            else
+            {
+                Verify();
+            }
 
         }
         private void tConfirm(object sender, KeyEventArgs e)
