@@ -45,6 +45,7 @@ namespace Empower_List
             if (users.Exists(x => x.Name == "root"))
             {
                 ConfigParser.SaveUser(users);
+                MessageBox.Show("Config Saved.", "Success", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.OK);
             }
             else
             {
@@ -52,7 +53,11 @@ namespace Empower_List
                 Close();
             }
         }
-        private void btnSaveB_Click(object sender, RoutedEventArgs e) => ConfigParser.SaveConfig(config);
+        private void btnSaveB_Click(object sender, RoutedEventArgs e)
+        {
+            ConfigParser.SaveConfig(config);
+            MessageBox.Show("Config Saved.", "Success", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.OK);
+        }
         private void S1_Checked(object sender, RoutedEventArgs e) => config[0] = true;
         private void S1_Unchecked(object sender, RoutedEventArgs e) => config[0] = false;
         private void S2_Checked(object sender, RoutedEventArgs e) => config[1] = true;

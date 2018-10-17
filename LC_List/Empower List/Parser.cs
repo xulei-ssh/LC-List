@@ -135,35 +135,23 @@ namespace Empower_List
                 s += "<Entry status=\"" + (con ? 1 : 0).ToString() + "\"/>";
             }
             s += "</Switch></Ew>";
-
-
             writer.Write(s);
             writer.Flush();
             stream.Position = 0;
-            string destFile = @"d:\ds";
+            string tempFileLocation = location + ".temp";
             byte[] arr1 = new byte[(int)stream.Length];
             stream.Read(arr1, 0, (int)stream.Length);
             for (int i = 0; i < arr1.Length; i++)
             {
                 arr1[i] = (byte)(arr1[i] + i);
             }
-
-            FileStream ms1 = File.Create(destFile);
+            FileStream ms1 = File.Create(tempFileLocation);
             GZipStream gz = new GZipStream(ms1, CompressionMode.Compress);
-
             gz.Write(arr1, 0, arr1.Length);
-
-
             gz.Close();
             ms1.Close();
-            File.Delete(@"C:\Users\xulei\Source\Repos\LC-List\LC_List\Empower List\bin\Debug\ds");
-            File.Delete(@"C:\Users\xulei\Source\Repos\LC-List\LC_List\Empower List\bin\Release\ds");
-            File.Copy(@"d:\ds", @"C:\Users\xulei\Source\Repos\LC-List\LC_List\Empower List\bin\Debug\ds");
-            File.Copy(@"d:\ds", @"C:\Users\xulei\Source\Repos\LC-List\LC_List\Empower List\bin\Release\ds");
-
-
-
-
+            File.Delete(location);
+            File.Move(tempFileLocation, location);
         }
     }
 }

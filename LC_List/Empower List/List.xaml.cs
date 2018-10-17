@@ -48,12 +48,6 @@ namespace Empower_List
         int STDenum = 0;
         private void Gen()
         {
-            //MBL-ONCE特殊化，当同时出现溶出和含量均匀度时特殊处理，直接return,注意RS处理
-            if (projName == "MBL-ONCE" && items.Contains("Dissolution") && items.Contains("Content Uniformity"))
-            {
-                //return;
-            }
-
             //获取有多少种STD
             
             stdTypes = new List<int>();
@@ -183,7 +177,7 @@ namespace Empower_List
                     if (writeSTD)
                     {
                         VailConfirm();
-                        FullList.Add(new ListItem(currentVial, inj, FullList.Last().Name.Replace('1', inj.Name.Contains("STD2") ? '2' : '3')));
+                        FullList.Add(new ListItem(currentVial, inj, FullList.Last().Name.Replace(FullList.Last().Name.Contains("STD1") ? "STD1" : "STD2", FullList.Last().Name.Contains("STD1") ? "STD2" : "STD3")));
                         currentVial++;
                     }
                 }
@@ -215,7 +209,7 @@ namespace Empower_List
                 FullList.Add(new ListItem(currentVial, item.Injs.Last(), lot + "-H2"));
                 currentVial++;
                 assayEnum += 2;
-                if (lot.Contains("("))
+                if (lot.Contains("(") || lot.Contains("（"))
                 {
                     VailConfirm();
                     FullList.Add(new ListItem(currentVial, item.Injs.Last(), lot + "-H3"));

@@ -9,7 +9,7 @@ namespace Empower_List
     {
         public string Lot { get; set; }
         public bool[] Items { get; set; }
-        public TaskSet(string lot, int itemCount)
+        public TaskSet(string lot, int itemCount,int indexOfContentUniformity)
         {
             Items = new bool[4] { false, false, false, false };
             Lot = lot;
@@ -19,19 +19,21 @@ namespace Empower_List
                 if (itemCount > 1)
                 {
                     Items[1] = true;
-
                     if (itemCount > 2)
                     {
                         Items[2] = true;
-
                         if (itemCount > 3)
                         {
                             Items[3] = true;
-
                         }
                     }
                 }
             }
+            if (lot.Contains("(") || lot.Contains("（"))
+            {
+                Items[indexOfContentUniformity] = false;
+            }
+
         }
 
     }

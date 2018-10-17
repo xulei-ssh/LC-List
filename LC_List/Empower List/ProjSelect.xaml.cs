@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.IO;
 namespace Empower_List
 {
@@ -40,10 +33,10 @@ namespace Empower_List
             lblRT.IsEnabled = config[0];
             uTime.IsEnabled = config[0];
             SetTime.IsEnabled = config[0];
-            methodGrid.IsReadOnly = config[0];
+            methodGrid.IsReadOnly = !config[0];
             comboProj.Items.Clear();
             database.Keys.ToList().ForEach(x => comboProj.Items.Add(x));
-            tip.Text = "1: Item priority in sequence: Related Substance > Assay > Others.\n2: Use braces like (25*60, 18M) in Lot to indicate stability batches.\n3: CDN Dissolution cannot be carried out using a multi-item list.";
+            tip.Text = "1: 优先顺序为：有关物质>含量>其他\n2: 稳定性样品请用小括号注明贮存条件；稳定性样品默认不做含量均匀度\n3: CDN溶出度不得与其他项使用同一个序列表";
         }
         private void comboProj_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -177,14 +170,21 @@ namespace Empower_List
         private void UpdateItemEachLot()
         {
             tasks = new List<TaskSet>();
+            int indexOfCU = 0;
+            for (int c = 0; c < listItems.Items.Count; c++)
+            {
+                if (listItems.Items[c].ToString() == "Content Uniformity")
+                {
+                    indexOfCU = c;
+                }
+            }
             foreach (var lot in textLots.Text.Split('\r','\n'))
             {
                 if (lot != "")
                 {
-                    tasks.Add(new TaskSet(lot, listItems.Items.Count));
+                        tasks.Add(new TaskSet(lot, listItems.Items.Count, indexOfCU));
                 }
-            }
-            
+            }          
         }
         private void textLots_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -220,12 +220,8 @@ namespace Empower_List
                 fl.listName.IsReadOnly = !config[1];
                 fl.listTime.IsReadOnly = !config[2];
                 fl.Show();
-
-                this.IsEnabled = false;
-
-
+                IsEnabled = false;
             }
-
         }
         private void uTime_KeyUp(object sender, KeyEventArgs e)
         {
@@ -237,7 +233,36 @@ namespace Empower_List
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
             comboProj_SelectionChanged(null, null);
+        }
+        private void textLots_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && cLot.IsChecked == true ? true : false)
+            {
+                if (textLots.SelectionStart != textLots.Text.Length)
+                {
+                    return;
+                }
+                //Get last line of previous
 
+                string x = textLots.GetLineText(textLots.GetLastVisibleLineIndex() - 1);
+                //假定开始都是数字，获取第一个不是数字的部分,将之后的保存
+                string suffix = "";
+                for (int i = 0; i < x.Length; i++)
+                {
+                    if (!int.TryParse(x[i].ToString(), out int q))
+                    {
+                        suffix = x.Substring(i, x.Length - i);
+                        x = x.Substring(0, i);
+                        break;
+                    }
+                }
+                x = (int.Parse(x) + 1).ToString();
+                x += suffix;
+                x = x.Substring(0, x.Length - 2);
+                textLots.Text += x;
+                textLots.Select(textLots.Text.Length, 0);
+                textLots.ScrollToEnd();
+            }
         }
     }
 }

@@ -76,6 +76,7 @@ namespace Empower_List
             if (VerifyList())
             {
                 ConfigParser.SaveDrug(database);
+                MessageBox.Show("Method Saved.", "Success", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.OK);
             }
             else
             {

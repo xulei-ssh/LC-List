@@ -11,12 +11,12 @@
         <ComboBox x:Name="comboProj" HorizontalAlignment="Left" Height="31" Margin="78,10,0,0" VerticalAlignment="Top" Width="164" VerticalContentAlignment="Center" SelectionChanged="comboProj_SelectionChanged" FontFamily="Segoe UI" FontSize="13" TabIndex="1"/>
         <Label x:Name="lblProtocol" Content="" HorizontalAlignment="Left" Height="31" Margin="247,10,0,0" VerticalAlignment="Top" Width="187" FontSize="13" FontFamily="Segoe UI"/>
         <Label Content="Lot #" HorizontalAlignment="Left" Height="31" Margin="10,46,0,0" VerticalAlignment="Top" Width="68" FontSize="13" FontFamily="Segoe UI"/>
-        <TextBox x:Name="textLots" HorizontalAlignment="Left" Height="330" Margin="10,82,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250" AcceptsReturn="True" FontSize="13" FontFamily="Segoe UI" LostFocus="textLots_LostFocus" TabIndex="2"/>
-        <ListBox x:Name="listItems" HorizontalAlignment="Left" Height="249" Margin="273,123,0,0" VerticalAlignment="Top" Width="169" FontSize="13" SelectionChanged="listItems_SelectionChanged" FontFamily="Segoe UI" LostFocus="listItems_LostFocus" TabIndex="4"/>
+        <TextBox x:Name="textLots" HorizontalAlignment="Left" Height="330" Margin="10,82,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250" AcceptsReturn="True" FontSize="13" FontFamily="Segoe UI" LostFocus="textLots_LostFocus" TabIndex="2" KeyUp="textLots_KeyUp"/>
+        <ListBox x:Name="listItems" HorizontalAlignment="Left" Height="217" Margin="273,123,0,0" VerticalAlignment="Top" Width="169" FontSize="13" SelectionChanged="listItems_SelectionChanged" FontFamily="Segoe UI" LostFocus="listItems_LostFocus" TabIndex="4"/>
         <ComboBox x:Name="comboItems" HorizontalAlignment="Left" Height="36" Margin="273,82,0,0" VerticalAlignment="Top" Width="169" VerticalContentAlignment="Center" SelectionChanged="comboItems_SelectionChanged" FontSize="13" FontFamily="Segoe UI" TabIndex="3"/>
         <Label Content="Item(s)" HorizontalAlignment="Left" Height="31" Margin="265,46,0,0" VerticalAlignment="Top" Width="68" FontSize="13" FontFamily="Segoe UI"/>
-        <Label Content="Skip Vial(s)" HorizontalAlignment="Left" Height="31" Margin="273,381,0,0" VerticalAlignment="Top" Width="90" FontSize="13" FontFamily="Segoe UI"/>
-        <TextBox x:Name="textSkip" HorizontalAlignment="Left" Height="31" Margin="368,380,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="74" FontSize="13" VerticalContentAlignment="Center" FontFamily="Segoe UI" TabIndex="9"/>
+        <Label Content="Skip Vial" HorizontalAlignment="Left" Height="31" Margin="273,381,0,0" VerticalAlignment="Top" Width="90" FontSize="13" FontFamily="Segoe UI"/>
+        <TextBox x:Name="textSkip" HorizontalAlignment="Left" Height="31" Margin="344,380,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" FontSize="13" VerticalContentAlignment="Center" FontFamily="Segoe UI" TabIndex="9"/>
         <GroupBox x:Name="preview" Header="Method Preview" HorizontalAlignment="Left" Height="402" Margin="457,10,0,0" VerticalAlignment="Top" Width="413" FontSize="13" FontFamily="Segoe UI">
             <Grid HorizontalAlignment="Left" Height="374" Margin="4,0,0,0" VerticalAlignment="Top" Width="392">
                 <RadioButton x:Name="radioNormal" Content="Normal" HorizontalAlignment="Left" Margin="143,16,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" IsChecked="True" Click="radioNormal_Click" TabIndex="5"/>
@@ -42,6 +42,7 @@
             <TextBox x:Name="tip" HorizontalAlignment="Left" Height="65" TextWrapping="Wrap" VerticalAlignment="Top" Width="430" Margin="0,0,0,0" AcceptsReturn="True" AllowDrop="False" IsReadOnly="True" BorderThickness="0"/>
         </GroupBox>
         <Button x:Name="btnReset" Content="Reset" HorizontalAlignment="Left" Height="32" Margin="663,449,0,0" VerticalAlignment="Top" Width="79" FontFamily="Segoe UI" FontSize="13" Click="btnReset_Click"/>
+        <CheckBox x:Name="cLot" Content="Smart Lot# Filling" HorizontalAlignment="Left" Margin="273,353,0,0" VerticalAlignment="Top" FontSize="13" FontFamily="Segoe UI" IsChecked="True"/>
 
     </Grid>
 </Window>
