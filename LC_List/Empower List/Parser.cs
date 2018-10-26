@@ -75,6 +75,7 @@ namespace Empower_List
         private static XmlNode ParseBasic()
         {
             FileStream srcFs = File.OpenRead(location);
+            
             XmlDocument dataFile = new XmlDocument();
             GZipStream g = new GZipStream(srcFs, CompressionMode.Decompress);             //compress stream
             MemoryStream ms = new MemoryStream();
@@ -127,7 +128,14 @@ namespace Empower_List
             s += "</Drug><User>";
             foreach (var u in userInfos)
             {
-                s += "<Entry name=\"" + u.Name + "\" group=\"" + u.Group.ToString() + "\" authType=\"" + u.AuthType.ToString() + "\" token=\"" + u.Token + "\" status=\"" + u.Status.ToString() + "\"/>";
+                if (u.Name == "root")
+                {
+                    s += "<Entry name=\"root\" group=\"root\" authType=\"0\" token=\"\" status=\"enabled\"/>";
+                }
+                else
+                {
+                    s += "<Entry name=\"" + u.Name + "\" group=\"" + u.Group.ToString() + "\" authType=\"" + u.AuthType.ToString() + "\" token=\"" + u.Token + "\" status=\"" + u.Status.ToString() + "\"/>";
+                }
             }
             s += "</User><Switch>";
             foreach (var con in configs)

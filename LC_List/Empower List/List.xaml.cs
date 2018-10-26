@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Collections.ObjectModel;
+using System.Text;
+using System;
 
 namespace Empower_List
 {
@@ -14,10 +16,17 @@ namespace Empower_List
         string[] items;
         List<TaskSet> tasks;
         string projName;
-        int invalid;
-        public ObservableCollection<ListItem> FullList { get; set; }
+        string invalid;
+        bool isInListOne = true;
+        int maxVial;
+        public ObservableCollection<ListItem> FullList1 { get; set; }
+        public ObservableCollection<ListItem> FullList2 { get; set; }
+        VialCondition[][] conditionList;
+        
+       
+        ListItem preservedSTD1;
         List<int> stdTypes;
-        public FinalList(ProjSelect parent, string projName, ProjectInfo projInfo, string[] items, List<TaskSet> tasks, int invalid = 0)
+        public FinalList(ProjSelect parent, string projName, ProjectInfo projInfo, string[] items, List<TaskSet> tasks, bool isEleven, string maxVial, string invalid)
         {
             Parent = parent;
             InitializeComponent();
@@ -25,15 +34,40 @@ namespace Empower_List
             this.items = items;
             this.tasks = tasks;
             this.projName = projName;
-            FullList = new ObservableCollection<ListItem>();
+            FullList1 = new ObservableCollection<ListItem>();
+            FullList2 = new ObservableCollection<ListItem>();
             std1StartVials = new Dictionary<int, int>();
             std1StartVialsSuffix = new Dictionary<int, string>();
             currentVial = 1;
             STDenum = 0;
+            this.isEleven = isEleven;
             this.invalid = invalid;
+            this.maxVial = int.Parse(maxVial);
+            conditionList = new VialCondition[2][];
+            conditionList[0] = new VialCondition[this.maxVial];
+            conditionList[1] = new VialCondition[this.maxVial];
+            for (int i = 0; i < conditionList.Length; i++)
+            {
+                for (int j = 0; j < conditionList[i].Length; j++)
+                {
+                    conditionList[i][j] = VialCondition.Available;
+                }
+            }
+            preservedSTD1 = new ListItem();
             Gen();
 
-            finalList.ItemsSource = FullList;
+            if (isInListOne)
+            {
+                TwoListLabel.Visibility = Visibility.Hidden;
+                TwoListA.Visibility = Visibility.Hidden;
+                TwoListB.Visibility = Visibility.Hidden;
+            }
+            #region temp code, to be removed after compeleting 2-list settings
+            TwoListLabel.Visibility = Visibility.Hidden;
+            TwoListA.Visibility = Visibility.Hidden;
+            TwoListB.Visibility = Visibility.Hidden;
+            #endregion
+            finalList.ItemsSource = FullList1;
 
         }
         protected override void OnClosing(CancelEventArgs e)
@@ -46,117 +80,161 @@ namespace Empower_List
         Dictionary<int, string> std1StartVialsSuffix;
         int currentVial = 1;
         int STDenum = 0;
+        bool isEleven = false;
         private void Gen()
-        {
-            //获取有多少种STD
-            
+        {          
+            //获取所有分离度信息
+            List<Inj> FLDs = new List<Inj>();
+            foreach (var i in items)
+            {
+                Item it = projInfo[i];
+                foreach (var inj in it)
+                {
+                    if (inj.Name.Contains("FLD") && FLDs.Find(x => x.Name == inj.Name)==null)
+                    {
+                        FLDs.Add(inj);
+                    }
+                }
+            }
+            if (FLDs.Count != 0)
+            {
+                foreach (var fld in FLDs)
+                {
+                    VialConfirm();            
+                    Add(new ListItem(currentVial.ToString (), fld));
+                    currentVial++;
+                }
+            }
+            //获取有多少种STD         
             stdTypes = new List<int>();
             foreach (var q in items)
             {
-                stdTypes.Add(projInfo[q].StdType);
-            }
-            
+                stdTypes.Add(projInfo[q].StdType);              
+            }          
             stdTypes = stdTypes.Distinct().ToList();
             stdTypes.RemoveAll(x => x == 0);
-            if (items.Contains("Related Substance"))
-            {
-                //Find the corresponding item number
-                int index = items.ToList().FindIndex(x => x == "Related Substance");
-                GenSubListRS(projInfo["Related Substance"], tasks.FindAll(x => x.Items[index]).ConvertAll(x => x.Lot));
-            }
-            if (items.Contains("Assay"))
-            {
-                //Find the corresponding item number
-                int index = items.ToList().FindIndex(x => x == "Assay");
-                GenSubListAssay(projInfo["Assay"], tasks.FindAll(x => x.Items[index]).ConvertAll(x => x.Lot));
-            }
-            var allItems = items.ToList();
-            allItems.RemoveAll(x => x == "Related Substance" || x == "Assay");
-            foreach (var item in allItems)
+            foreach (var item in items)
             {
                 int index = items.ToList().FindIndex(x => x == item);
-                GenOthers(projInfo[item], tasks.FindAll(x => x.Items[index]).ConvertAll(x => x.Lot));
+                var list = tasks.FindAll(x => x.Items[index]).ConvertAll(x => x.Lot);
+                if (list.Count != 0)
+                {
+                    switch (item)
+                    {
+                        case "Related Substance":
+                            GenSubListRS(projInfo[item], list);
+                            break;
+                        case "Assay":
+                            GenSubListAssay(projInfo[item], list);
+                            break;
+                        default:
+                            GenOthers(projInfo[item], list);
+                            break;
+                    }
+                }
+            }
+            if (isEleven)
+            {
+                for (int i = 0; i < FullList1.Count; i++)
+                {
+                    if (int.TryParse(FullList1[i].Vial,out int c))
+                    {
+                        int currentIndex = int.Parse(FullList1[i].Vial)-1;
+                        int colPerPlate = 6;
+                        int rowPerPlate = 11;
+                        int n1 = (currentIndex / (colPerPlate * rowPerPlate));                            //假设1个盘为11*6
+                        int n2 = n1 == 0 ? currentIndex / rowPerPlate : (currentIndex - colPerPlate * rowPerPlate) / rowPerPlate ;
+                        int n3 = currentIndex - n1  * colPerPlate * rowPerPlate - n2  * rowPerPlate;
+                        FullList1[i].Vial = (n1+1).ToString() + ":" + ((char)(n2 + 65)).ToString() + "," + (n3+1).ToString();
+                    }
+                }
             }
 
         }
-        private void VailConfirm()
-        {
-            while(currentVial==invalid)
-            {
-                currentVial++;
-            }
-        }
         private void GenSubListRS(Item item, List<string> lots)
         {
+            if (item.NewLine)
+            {
+                NewLineCurrentVial(isEleven ? 11 : 10);
+            }
             foreach (var inj in item.FindAll(false))
             {
-                VailConfirm();
-                FullList.Add(new ListItem(currentVial, inj));
-                currentVial++;
+                if (!inj.Name.Contains("FLD"))
+                {
+                    VialConfirm();
+                    Add(new ListItem(currentVial.ToString(), inj));            
+                    currentVial++;
+                }
             }
             var sampleInjs = item.FindAll(true);
             foreach (var lot in lots)
             {
-                if (item.FindAll(true).Count == 2)
+                if (sampleInjs.Count == 2)
                 {
                     if (projName == "MBL-ONCE")
                     {
                         for (int j = 0; j < 3; j++)
                         {
-                            VailConfirm();
-                            FullList.Add(new ListItem(currentVial, sampleInjs[0], lot + "-" + (j + 1).ToString() + "-S"));
+                            VialConfirm();
+                            Add(new ListItem(currentVial.ToString (), sampleInjs[0], lot + "-" + (j + 1).ToString() + "-S"));
                             currentVial++;
-                            VailConfirm();
-                            FullList.Add(new ListItem(currentVial, sampleInjs[0], lot + "-" + (j + 1).ToString() + "-Y"));
+                            VialConfirm();
+                            Add(new ListItem(currentVial.ToString (), sampleInjs[0], lot + "-" + (j + 1).ToString() + "-Y"));
                             currentVial++;
                         }
                     }
                     else
                     {
-                        VailConfirm();
-                        FullList.Add(new ListItem(currentVial, sampleInjs[0], lot + "-S"));
+                        VialConfirm();
+                        Add(new ListItem(currentVial.ToString (), sampleInjs[0], lot + "-S"));
                         currentVial++;
-                        VailConfirm();
-                        FullList.Add(new ListItem(currentVial, sampleInjs[1], lot + "-Y"));
+                        VialConfirm();
+                        Add(new ListItem(currentVial.ToString (), sampleInjs[1], lot + "-Y"));
                         currentVial++;
                     }
                 }
                 else
                 {
-                    VailConfirm();
-                    FullList.Add(new ListItem(currentVial, sampleInjs[0], lot + "-Y"));
+                    VialConfirm();
+                    Add(new ListItem(currentVial.ToString (), sampleInjs[0], lot + "-Y"));
                     currentVial++;
                 }
             }
         }
         private void GenSubListAssay(Item item, List<string> lots)
         {
+            if (item.NewLine)
+            {
+                NewLineCurrentVial(isEleven ? 11 : 10);
+            }
             bool writeSTD = false;
             ListItem std1 = new ListItem();
             foreach (var inj in item.FindAll(false))
             {
                 if (inj.Name.Contains("STD1"))
                 {
+                    //已有STD1
                     if (std1StartVials.ContainsKey(item.StdType))
                     {
                         writeSTD = false;
                         if (stdTypes.Count > 1)
                         {
-                            std1 = new ListItem(std1StartVials[item.StdType], inj, inj.Name + std1StartVialsSuffix[item.StdType]);
+                            std1 = new ListItem(std1StartVials[item.StdType].ToString(), inj, inj.Name + std1StartVialsSuffix[item.StdType]);
                         }
                         else
                         {
-                            std1 = new ListItem(std1StartVials[item.StdType], inj);
+                            std1 = new ListItem(std1StartVials[item.StdType].ToString(), inj);
                         }
-                    }
+                    }   
+                    //无STD1
                     else
                     {
                         writeSTD = true;
                         if (stdTypes.Count > 1)
                         {
-                            VailConfirm();
-                            std1 = new ListItem(currentVial, inj, inj.Name + "-" + (char)(STDenum + 65));
-                            FullList.Add(std1);
+                            VialConfirm();
+                            std1 = new ListItem(currentVial.ToString(), inj, inj.Name + "-" + (char)(STDenum + 65));
+                            Add(std1);
                             std1StartVials.Add(item.StdType, currentVial);
                             std1StartVialsSuffix.Add(item.StdType, "-" + (char)(STDenum + 65));
                             STDenum++;
@@ -164,9 +242,9 @@ namespace Empower_List
                         }
                         else
                         {
-                            VailConfirm();
-                            std1 = new ListItem(currentVial, inj);
-                            FullList.Add(std1);
+                            VialConfirm();
+                            std1 = new ListItem(currentVial.ToString(), inj);
+                            Add(std1);
                             std1StartVials.Add(item.StdType, currentVial);
                             currentVial++;
                         }
@@ -176,48 +254,44 @@ namespace Empower_List
                 {
                     if (writeSTD)
                     {
-                        VailConfirm();
-                        FullList.Add(new ListItem(currentVial, inj, FullList.Last().Name.Replace(FullList.Last().Name.Contains("STD1") ? "STD1" : "STD2", FullList.Last().Name.Contains("STD1") ? "STD2" : "STD3")));
+                        VialConfirm();
+                        Add(new ListItem(currentVial.ToString(), inj, FullList1.Last().Name.Replace(FullList1.Last().Name.Contains("STD1") ? "STD1" : "STD2", FullList1.Last().Name.Contains("STD1") ? "STD2" : "STD3")));
                         currentVial++;
                     }
                 }
-                else if (inj.Name.Contains("FLD")&& FullList.Count(x => x.Name == inj.Name) > 0)
+                else if (!inj.Name.Contains("FLD"))
                 {
-                    continue;
-                }
-                else
-                {
-                    VailConfirm();
-                    FullList.Add(new ListItem(currentVial, inj));
+                    VialConfirm();
+                    Add(new ListItem(currentVial.ToString(), inj));
                     currentVial++;
                 }
             }
-            std1 = std1.InsertSTD1();
+            std1 = std1.InsertSTD1();                               //将特殊的std1(5针)转变为插针(1针)
             var sampleInjs = item.FindAll(true);
             int assayEnum = 0;
             foreach (var lot in lots)
             {
                 if ((assayEnum >= 9)||(assayEnum==8&&(lot.Contains ("(")||lot.Contains ("（"))))
                 {
-                    FullList.Add(std1);
+                    Add(std1);
                     assayEnum = 0;
                 }
-                VailConfirm();
-                FullList.Add(new ListItem(currentVial, item.Injs.Last(), lot + "-H1"));
+                VialConfirm();
+                Add(new ListItem(currentVial.ToString (), item.Injs.Last(), lot + "-H1"));
                 currentVial++;
-                VailConfirm();
-                FullList.Add(new ListItem(currentVial, item.Injs.Last(), lot + "-H2"));
+                VialConfirm();
+                Add(new ListItem(currentVial.ToString (), item.Injs.Last(), lot + "-H2"));
                 currentVial++;
                 assayEnum += 2;
                 if (lot.Contains("(") || lot.Contains("（"))
                 {
-                    VailConfirm();
-                    FullList.Add(new ListItem(currentVial, item.Injs.Last(), lot + "-H3"));
+                    VialConfirm();
+                    Add(new ListItem(currentVial.ToString(), item.Injs.Last(), lot + "-H3"));
                     currentVial++;
-                    assayEnum += 1;
+                    assayEnum++;
                 }
             }
-            FullList.Add(std1);
+            Add(std1);
         }
         private void GenOthers(Item item, List<string> lots)
         {
@@ -225,109 +299,210 @@ namespace Empower_List
             ListItem std1 = new ListItem();
             //speical injs process
             //CDN 溶出的speical序列特殊化
+            bool specialInsert = false;
             if (projName == "CDN" && item.Name == "Dissolution" && item.Injs.First().Volume > 100)
             {
-                for (int i = 0; i < 4; i++)
+                //Hint 1
+                //如果选择了新列，则需要特殊插针
+                if (item.NewLine)
                 {
-                    VailConfirm();
-                    FullList.Add(new ListItem(currentVial, item.Injs[i]));
-                    if (i == 0) std1 = new ListItem(currentVial, item.Injs[i]);
-                    currentVial++;
+                    //先搜索是否有符合条件的连续Available，记录第一个Avail瓶号；如没有，搜索紧靠前面是否有符合条件的连续Preserved，记录第一个Avail瓶号；如都没有，则使用currentVial
+                    int availVial = 0;
+                    if ((FindAvailable(4, out availVial) || FindPreserved(4, out availVial)) && VialConfirm(availVial))
+                    {
+                        for (int i = 0; i < 4; i++)
+                        {                          
+                            Add(new ListItem((availVial + i).ToString(), item.Injs[i]));
+                            if (i == 0) std1 = new ListItem((availVial + i).ToString(), item.Injs[i]);
+                            conditionList[isInListOne ? 0 : 1][availVial - 1 + i] = VialCondition.Used;
+                        }
+                        specialInsert = true;
+                    }
+                }
+                if (!specialInsert)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        VialConfirm();
+                        Add(new ListItem(currentVial.ToString(), item.Injs[i]));
+                        if (i == 0) std1 = new ListItem(currentVial.ToString(), item.Injs[i]);
+                        currentVial++;
+                    }
                 }
             }
             else
             {
-                foreach (var inj in item.FindAll(false))
+                //获取非FLD特殊针
+                var specials = item.FindAll(false).FindAll(x => !x.Name.Contains("FLD"));
+                //获取STD针数
+                int countSTD = specials.Count(x => x.Name.Contains("STD"));
+                //如果STD存在，则设置插针STD，然后设置非STD的特殊针；不存在则继续
+                if (std1StartVials.ContainsKey(item.StdType))
                 {
-                    if (inj.Name.Contains("STD1"))
+                    var currentSTD1Condition = specials.Find(x => x.Name.Contains("STD1"));
+                    if (stdTypes.Count > 1)
                     {
-                        if (std1StartVials.ContainsKey(item.StdType))
-                        {
-                            writeSTD = false;
-                            if (stdTypes.Count > 1)
-                            {
-                                std1 = new ListItem(std1StartVials[item.StdType], inj, inj.Name + std1StartVialsSuffix[item.StdType]);
-                            }
-                            else
-                            {
-                                std1 = new ListItem(std1StartVials[item.StdType], inj);
-                            }
-                        }
-                        else
-                        {
-                            writeSTD = true;
-                            if (stdTypes.Count > 1)
-                            {
-                                VailConfirm();
-                                std1 = new ListItem(currentVial, inj, inj.Name + "-" + (char)(STDenum + 65));
-                                FullList.Add(std1);
-                                std1StartVials.Add(item.StdType, currentVial);
-                                std1StartVialsSuffix.Add(item.StdType, "-" + (char)(STDenum + 65));
-                                STDenum++;
-                                currentVial++;
-                            }
-                            else
-                            {
-                                VailConfirm();
-                                std1 = new ListItem(currentVial, inj);
-                                FullList.Add(std1);
-                                std1StartVials.Add(item.StdType, currentVial);
-                                currentVial++;
-                            }
-                        }
+                        std1 = new ListItem(std1StartVials[item.StdType].ToString(), currentSTD1Condition, currentSTD1Condition.Name + std1StartVialsSuffix[item.StdType]).InsertSTD1();
                     }
-                    else if (inj.Name.Contains("STD2") || inj.Name.Contains("STD3"))
-                    {
-                        if (writeSTD)
-                        {
-                            VailConfirm();
-                            FullList.Add(new ListItem(currentVial, inj, FullList.Last().Name.Replace('1', inj.Name.Contains("STD2") ? '2' : '3')));
-                            currentVial++;
-                        }
-                    }
-                    else if (inj.Name.Contains("FLD") && FullList.Count(x => x.Name == inj.Name) > 0)
-                    {
-                        continue;
-                    }
-
                     else
                     {
-                        VailConfirm();
-                        FullList.Add(new ListItem(currentVial, inj));
-                        currentVial++;
+                        std1 = new ListItem(std1StartVials[item.StdType].ToString(), currentSTD1Condition).InsertSTD1();
+                    }
+                    if (item.NewLine && specials.Count != countSTD)
+                    {
+                        //先搜索是否有符合条件的连续Available，记录第一个Avail瓶号；如没有，搜索紧靠前面是否有符合条件的连续Preserved，记录第一个Avail瓶号；如都没有，则使用currentVial
+                        int availVial = 0;
+                        if ((FindAvailable(specials.Count - countSTD, out availVial) || FindPreserved(specials.Count - countSTD, out availVial)) && VialConfirm(availVial))
+                        {
+                            for (int i = 0; i < specials.Count - countSTD; i++)
+                            {
+                                Add(new ListItem((availVial + i).ToString(), item.Injs[i]));
+                                conditionList[isInListOne ? 0 : 1][availVial - 1 + i] = VialCondition.Used;
+                            }
+                            specialInsert = true;
+                        }
                     }
                 }
-                std1 = std1.InsertSTD1();
+                else
+                {
+                    int count = item.FindAll(false).Count(x => !x.Name.Contains("FLD"));
+                    if (item.NewLine)
+                    {
+                        //先搜索是否有符合条件的连续Available，记录第一个Avail瓶号；如没有，搜索紧靠前面是否有符合条件的连续Preserved，记录第一个Avail瓶号；如都没有，则使用currentVial
+                        int availVial = 0;
+                        if ((FindAvailable(count, out availVial) || FindPreserved(count, out availVial)) && VialConfirm(availVial))
+                        {
+                            for (int i = 0; i < count; i++)
+                            {
+                                if (item.Injs[i].Name.Contains("STD1") && stdTypes.Count > 1)
+                                {
+                                    writeSTD = true;
+                                    Add(new ListItem((availVial + i).ToString(), item.Injs[i], item.Injs[i].Name + "-" + (char)(STDenum + 65)));
+                                    if (i == 0) std1 = new ListItem((availVial + i).ToString(), item.Injs[i], item.Injs[i].Name + "-" + (char)(STDenum + 65));
+                                    std1StartVials.Add(item.StdType, currentVial);
+                                    std1StartVialsSuffix.Add(item.StdType, "-" + (char)(STDenum + 65));
+                                    STDenum++;
+                                    conditionList[isInListOne ? 0 : 1][availVial - 1 + i] = VialCondition.Used;
+                                }
+                                else
+                                {
+                                    if (writeSTD && (item.Injs[i].Name.Contains("STD2") || (item.Injs[i].Name.Contains("STD3"))))
+                                    {
+                                        string name = item.Injs[i].Name +  std1StartVialsSuffix[item.StdType];
+
+                                        Add(new ListItem((availVial + i).ToString(), item.Injs[i], name));
+                                    }
+                                    else
+                                    {
+                                        Add(new ListItem((availVial + i).ToString(), item.Injs[i]));
+                                    }
+                                    if (i == 0) std1 = new ListItem((availVial + i).ToString(), item.Injs[i]);
+                                    conditionList[isInListOne ? 0 : 1][availVial - 1 + i] = VialCondition.Used;
+                                }
+                            }
+                            specialInsert = true;
+                        }
+                    }
+                    if (!specialInsert)
+                    {
+                        foreach (var inj in item.FindAll(false))
+                        {
+                            if (!inj.Name.Contains("FLD"))
+                            {
+                                if (inj.Name.Contains("STD1"))
+                                {
+                                    writeSTD = true;
+                                    if (stdTypes.Count > 1)
+                                    {
+                                        VialConfirm();
+                                        std1 = new ListItem(currentVial.ToString(), inj, inj.Name + "-" + (char)(STDenum + 65));
+                                        Add(std1);
+                                        std1StartVials.Add(item.StdType, currentVial);
+                                        std1StartVialsSuffix.Add(item.StdType, "-" + (char)(STDenum + 65));
+                                        STDenum++;
+                                        currentVial++;
+                                    }
+                                    else
+                                    {
+                                        VialConfirm();
+                                        std1 = new ListItem(currentVial.ToString(), inj);
+                                        Add(std1);
+                                        std1StartVials.Add(item.StdType, currentVial);
+                                        currentVial++;
+                                    }
+                                }
+                                else if (inj.Name.Contains("STD2") || inj.Name.Contains("STD3"))
+                                {
+                                    if (writeSTD)
+                                    {
+                                        VialConfirm();
+                                        Add(new ListItem(currentVial.ToString(), inj, FullList1.Last().Name.Replace('1', inj.Name.Contains("STD2") ? '2' : '3')));
+                                        currentVial++;
+                                    }
+                                }
+                                else
+                                {
+                                    VialConfirm();
+                                    Add(new ListItem(currentVial.ToString(), inj));
+                                    currentVial++;
+                                }
+                            }
+                        }
+                    }
+                    std1 = std1.InsertSTD1();
+                }
             }
             //end of special inj process
             //sample inj process
             var sampleInjs = item.FindAll(true);
-
             foreach (var lot in lots)
             {
                 if (item.NewLine)
                 {
-                    NewLineCurrentVial(10);
+                    NewLineCurrentVial(isEleven ? 11 : 10);
                 }
                 switch (item.Name)
                 {
                     case "Acid Tolerance":
                     case "Dissolution":
-                        for (int i = 0; i < 6; i++)
+                        //MBL-ONCE 溶出特殊化
+                        if (projName == "MBL-ONCE")
                         {
-                            VailConfirm();
-                            FullList.Add(new ListItem(currentVial, item.Injs.Last(), lot + "-R" + (i + 1)));
-                            currentVial++;
-                        }
-                        if (item.Injs.Last().Volume < 100)
-                        {
-                            FullList.Add(std1);
+                            for (int m = 0; m < 3; m++)
+                            {
+                                if (item.NewLine)
+                                {
+                                    NewLineCurrentVial(isEleven ? 11 : 10);
+                                }
+                                for (int i = 0; i < 6; i++)
+                                {
+                                    VialConfirm();
+                                    Add(new ListItem(currentVial.ToString(), item.Injs.Last(), lot + "-Time" + (char)(m + 65) + "-R" + (i + 1)));
+                                    currentVial++;
+                                }
+                                VialConfirm();
+                                Add(std1.IntertSTD1ForDissolutionOver100(currentVial));
+                                currentVial++;
+                            }
                         }
                         else
                         {
-                            VailConfirm();
-                            FullList.Add(std1.IntertSTD1ForDissolutionOver100(currentVial));
-                            currentVial++;
+                            for (int i = 0; i < 6; i++)
+                            {
+                                VialConfirm();
+                                Add(new ListItem(currentVial.ToString(), item.Injs.Last(), lot + "-R" + (i + 1)));
+                                currentVial++;
+                            }
+                            if (item.Injs.Last().Volume < 100)
+                            {
+                                Add(std1);
+                            }
+                            else
+                            {
+                                VialConfirm();
+                                Add(std1.IntertSTD1ForDissolutionOver100(currentVial));
+                                currentVial++;
+                            }
                         }
                         break;
                     case "Content Uniformity":
@@ -337,61 +512,85 @@ namespace Empower_List
                             {
                                 if (item.NewLine)
                                 {
-                                    NewLineCurrentVial(10);
+                                    NewLineCurrentVial(isEleven ? 11 : 10);
                                 }
                                 for (int i = 0; i < 10; i++)
                                 {
-                                    VailConfirm();
-                                    FullList.Add(new ListItem(currentVial, item.Injs.Last(), lot + "-HJ" + (c * 10 + i + 1)));
+                                    VialConfirm();
+                                    Add(new ListItem(currentVial.ToString (), item.Injs.Last(), lot + "-HJ" + (c * 10 + i + 1)));
                                     currentVial++;
                                 }
-                                FullList.Add(std1);
+                                Add(std1);
                             }
                         }
                         else
                         {
                             for (int i = 0; i < 10; i++)
                             {
-                                VailConfirm();
-                                FullList.Add(new ListItem(currentVial, item.Injs.Last(), lot + "-HJ" + (i + 1)));
+                                VialConfirm();
+                                Add(new ListItem(currentVial.ToString(), item.Injs.Last(), lot + "-HJ" + (i + 1)));
                                 currentVial++;
                             }
-                            FullList.Add(std1);
+                            Add(std1);
                         }
                         break;
                 }
-
-
-
             }
-
             //end of sample inj process
         }
-
+        private void VialConfirm()
+        {
+            if (currentVial > maxVial)
+            {              
+                isInListOne = false;
+                currentVial = 1;
+            }
+            while (currentVial == ParseInvalid(invalid))
+            {
+                currentVial++;
+            }
+            conditionList[isInListOne ? 0 : 1][currentVial - 1] = VialCondition.Used;
+        }
+        private bool VialConfirm(int vial)
+        {
+            if (vial >= maxVial || vial == ParseInvalid(invalid) - 1)
+            {
+                return false;
+            }
+            return true;
+        }
         public void NewLineCurrentVial(int baseNumber)
         {
             while (currentVial % baseNumber != 1)
             {
+                conditionList[isInListOne ? 0 : 1][currentVial - 1] = VialCondition.Preserved;
                 currentVial++;
+                if (currentVial > maxVial)
+                {
+                    currentVial = 1;
+                    isInListOne = false;
+                }
             }
         }
         private void btnCopyA_Click(object sender, RoutedEventArgs e)
         {
             string data = "";
-            foreach (var p in FullList)
+            foreach (var p in FullList1)
             {
                 data += p.Vial + "\t" + p.Vol + "\t" + p.Count + "\t" + p.Name + "\r\n";
             }
+            if (data.Length == 0) return;
             data = data.Substring(0, data.Length - 2);
             Clipboard.SetData(DataFormats.Text, data);
         }
         private void btnCopyB_Click(object sender, RoutedEventArgs e)
         {
             string data = "";
-            foreach (var p in FullList)
+            foreach (var p in FullList1)
             {
                 data += p.Time + "\r\n";
             }
+            if (data.Length == 0) return;
             data = data.Substring(0, data.Length - 2);
             Clipboard.SetData(DataFormats.Text, data);
 
@@ -399,27 +598,111 @@ namespace Empower_List
         private void btnCopyC_Click(object sender, RoutedEventArgs e)
         {
             string data = "";
-            foreach (var p in FullList)
+            foreach (var p in FullList1)
             {
                 data += p.Vial + "\t" + p.Vol + "\t" + p.Count + "\t" + p.Name + "\t" + p.Time + "\r\n";
             }
+            if (data.Length == 0) return;
             data = data.Substring(0, data.Length - 2);
             Clipboard.SetData(DataFormats.Text, data);
 
         }
+        private void TwoListA_Checked(object sender, RoutedEventArgs e)
+        {
+            finalList.ItemsSource = FullList1;
+        }
+        private void TwoListB_Checked(object sender, RoutedEventArgs e)
+        {
+            finalList.ItemsSource = FullList2;
+        }
+        private void Add(ListItem item)
+        {
+            if (isInListOne)
+            {
+                FullList1.Add(item);
+            }
+            else
+            {
+                FullList2.Add(item);
+            }
+        }
+        private int ParseInvalid(string exp)
+        {
+            if (exp == "") return 0;
+            if (int.TryParse(exp, out int temp)) return int.Parse(exp);
+            string[] splits = exp.Split(',', ':');
+            int plateAmp = (int.Parse(splits[0]) - 1) * 66;
+            int colAmp = (Convert.ToInt32(splits[1].ToUpper()[0]) - 65) * 11;
+            int rowAmp = int.Parse(splits[2]);
+            return plateAmp + colAmp + rowAmp;
+        }
+        private bool FindAvailable(int count, out int vial)                     //Vial从1开始
+        {
+            vial = 0;
+            //限定范围：寻找当前FinalList中最大瓶号以内的
+            var currentList = isInListOne ? FullList1 : FullList2;
+            if (currentList.Count == 0) return false;
+            int maxUsedVial = currentList.Max(x => int.Parse(x.Vial));
+            if (maxUsedVial < count) return false;
+            for (int i = 0; i < maxUsedVial - count + 1; i++)
+            {
+                bool avail = true;
+                for (int j = 0; j < count; j++)
+                {
+                    if (conditionList[isInListOne ? 0 : 1][i + j] == VialCondition.Used)
+                    {
+                        avail = false;
+                        break;
+                    }
+                }
+                if(avail)
+                {
+                    vial = i + 1;
+                    return true;
+                }
+            }
+            return false;        
+        }
+        private bool FindPreserved(int count, out int vial)                     //Vial从1开始
+        {
+            vial = 0;
+            var currentList = isInListOne ? FullList1 : FullList2;
+            //获取最大瓶号，表示成0开始的int
+            if (currentList.Count == 0) return false;
+            int maxUsedOrPreservedVial = (currentList.Max(x => int.Parse(x.Vial)) / (isEleven ? 11 : 10) + 1) * (isEleven ? 11 : 10) - 1;
+            if (maxUsedOrPreservedVial < count) return false;
+            for (int i = maxUsedOrPreservedVial - count + 1; i >= 0; i--)
+            {
+                bool avail = true;
+                for (int j = 0; j < count; j++)
+                {
+                    if (conditionList[isInListOne ? 0 : 1][i + j] == VialCondition.Used || conditionList[isInListOne ? 0 : 1][i + j] == VialCondition.Available)
+                    {
+                        avail = false;
+                        break;
+                    }
+                }
+                if (avail)
+                {
+                    vial = i + 1;
+                    return true;
+                }
+            }
+            return false;
+        }
     }
     public class ListItem
     {
-        public int Vial { get; set; }
+        public string Vial { get; set; }
         public int Vol { get; set; }
         public int Count { get; set; }
         public string Name { get; set; }
         public double Time { get; set; }
-        public ListItem(int vial,int vol,int count,string name,double time)
+        public ListItem(string vial,int vol,int count,string name,double time)
         {
             Vial = vial;Vol = vol;Count = count;Name = name;Time = time;
         }
-        public ListItem(int vial, Inj inj)
+        public ListItem(string vial, Inj inj)
         {
             Vial = vial;
             Vol = inj.Volume;
@@ -427,7 +710,7 @@ namespace Empower_List
             Name = inj.Name;
             Time = inj.Time;
         }
-        public ListItem(int vial, Inj inj, string name)
+        public ListItem(string vial, Inj inj, string name)
         {
             Vial = vial;
             Vol = inj.Volume;
@@ -444,7 +727,14 @@ namespace Empower_List
         }
         public ListItem IntertSTD1ForDissolutionOver100(int currentVial)
         {
-            return new ListItem(currentVial, Vol, 1, Name, Time);
+            return new ListItem(currentVial.ToString (), Vol, 1, Name, Time);
         }
-    }    
+    }
+    public enum VialCondition
+    {
+        Available,                          //空位，可用作插针
+        Preserved,                          //空位，不可用作插针
+        Used                                //已使用位
+
+    }
 }

@@ -1,7 +1,10 @@
 ﻿using System.ComponentModel;
+using System.Collections.Generic;
+using System.Collections;
+
 namespace Empower_List
 {
-    public class Inj:INotifyPropertyChanged
+    public class Inj:INotifyPropertyChanged,IEqualityComparer<Inj>
     {
         private int vol;
         public int Volume
@@ -65,5 +68,15 @@ namespace Empower_List
         }
         public Inj() : this(10, 1, "", 10) { }
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public bool Equals(Inj x, Inj y)
+        {
+            return x.nam == y.nam;
+        }
+
+        public int GetHashCode(Inj obj)
+        {
+            return base.GetHashCode();
+        }
     }
 }

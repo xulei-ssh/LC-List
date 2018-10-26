@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.IO.Compression;
 using System.Security.Cryptography;
+using System.Xml;
 using Microsoft.Office.Interop.Word;
 namespace GenDS
 {
@@ -13,13 +14,40 @@ namespace GenDS
         [STAThread]
         static void Main(string[] args)
         {
-            CreateDoc c = new CreateDoc();
-            c.CreateNewDocument(@"d:\temp.docx");
-            c.InsertText("Title", "甲钴胺片溶出度");
-            c.InsertText("Lot", "批号：\t1807001 1807002");
-            Table t = c.InsertTable("List", 15, 3, 1);
-            c.SaveDocument(@"d:\a.docx");
+            //CreateDoc c = new CreateDoc();
+            //c.CreateNewDocument(@"d:\temp.docx");
+            //c.InsertText("Title", "甲钴胺片溶出度");
+            //c.InsertText("Lot", "批号：\t1807001 1807002");
+            //Table t = c.InsertTable("List", 15, 3, 1);
+            //c.SaveDocument(@"d:\a.docx");
 
+            FileStream srcFs = File.OpenRead(@"d:\ds");
+            //XmlDocument dataFile = new XmlDocument();
+            GZipStream g = new GZipStream(srcFs, CompressionMode.Decompress);             //compress stream
+            MemoryStream ms = new MemoryStream();
+            byte[] bytes = new byte[40960];
+            int n;
+            while ((n = g.Read(bytes, 0, bytes.Length)) > 0)
+            {
+                ms.Write(bytes, 0, n);
+            }
+            g.Close();
+            ms.Position = 0;
+            byte[] eData = ms.ToArray();
+            for (int i = 0; i < eData.Length; i++)
+            {
+                eData[i] = (byte)(eData[i] - i);
+            }
+            ms = new MemoryStream(eData);
+            FileStream fsw = File.Create(@"d:\1");
+            fsw.Write(eData, 0, eData.Length);
+            fsw.Close();
+
+
+
+
+            //dataFile.Load(ms);
+            srcFs.Close();
 
 
 

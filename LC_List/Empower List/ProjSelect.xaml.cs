@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Reflection;
 using System.IO;
 namespace Empower_List
 {
@@ -21,6 +22,8 @@ namespace Empower_List
         public ProjSelect(MainWindow parent)
         {
             InitializeComponent();
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            Title = "Injection List " + "Ver " + version.Major + "." + version.Minor + "." + version.Revision;
             Parent = parent;
             if(!File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + @"ds"))
             {
@@ -36,7 +39,16 @@ namespace Empower_List
             methodGrid.IsReadOnly = !config[0];
             comboProj.Items.Clear();
             database.Keys.ToList().ForEach(x => comboProj.Items.Add(x));
-            tip.Text = "1: 优先顺序为：有关物质>含量>其他\n2: 稳定性样品请用小括号注明贮存条件；稳定性样品默认不做含量均匀度\n3: CDN溶出度不得与其他项使用同一个序列表";
+            tip.Text = "1: 请务必确认SOP版本；当前版本仅支持单张序列表\n2: 稳定性样品请用小括号注明贮存条件；稳定性样品默认不做含量均匀度\n3: CDN溶出度不得与其他项使用同一个序列表";
+            cMax.Items.Add(100);
+            cMax.Items.Add(120);
+            cMax.Items.Add(132);
+            #region delete after 2 list done
+            cMax.Items.Add(999);
+            cMax.IsEnabled = false;
+
+            cMax.SelectedIndex = 3;                 //0 after 2 list done
+            #endregion
         }
         private void comboProj_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -85,14 +97,11 @@ namespace Empower_List
                 uTime.Text = "";
                 if (listItems.SelectedValue.ToString() == "Related Substance" || listItems.SelectedValue.ToString() == "Assay")
                 {
-                    radioNew.IsEnabled = false;
-                    radioNormal.IsEnabled = false;
-                    radioNormal.IsChecked = true;
+                    radioNew.Content = "Start this item as new line";
                 }
                 else
                 {
-                    radioNew.IsEnabled = true;
-                    radioNormal.IsEnabled = true;
+                    radioNew.Content = "Start samples as new line";
                 }
             }
             else
@@ -142,7 +151,7 @@ namespace Empower_List
         private void btnLotDetail_Click(object sender, RoutedEventArgs e)
         {
             if (tasks == null || textLots.Text == "" || listItems.Items == null || listItems.Items.Count == 0) return;
-            if (MessageBox.Show("Please confirm Lot, Item and Method information before customizing.\nNo further change could be made if continue.", "Confirm", MessageBoxButton.OKCancel, MessageBoxImage.Information) == MessageBoxResult.OK)
+            if (!comboItems.IsEnabled || MessageBox.Show("Please confirm Lot, Item and Method information before customizing.\nNo further change could be made if continue.", "Confirm", MessageBoxButton.OKCancel, MessageBoxImage.Information) == MessageBoxResult.OK)
             {
                 if (openedDetails == false)
                 {
@@ -152,11 +161,9 @@ namespace Empower_List
                 ModifySwitch(false);
                 string[] headers = new string[listItems.Items.Count];
                 listItems.Items.CopyTo(headers, 0);
-                ItemEditor ie = new ItemEditor(this,headers, tasks);
+                ItemEditor ie = new ItemEditor(this, headers, tasks);
                 ie.Show();
                 IsEnabled = false;
-
-                
             }
         } 
         private void ModifySwitch(bool mode)
@@ -197,16 +204,16 @@ namespace Empower_List
         private void btnGen_Click(object sender, RoutedEventArgs e)
         {
             if (tasks == null || textLots.Text == "" || listItems.Items == null || listItems.Items.Count == 0) return;
-            int temp;
-            if (textSkip.Text != "" && !int.TryParse(textSkip.Text, out temp))
+
+            // Check skip Vial 
+            if (!SkipVerify())
             {
                 MessageBox.Show("Invalid skipped vial", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 textSkip.SelectAll();
                 textSkip.Focus();
                 return;
             }
-
-            if (MessageBox.Show("Please confirm Lot, Item and Method information before generating.\nNo further change could be made if continue.", "Confirm", MessageBoxButton.OKCancel, MessageBoxImage.Information) == MessageBoxResult.OK)
+            if (!comboItems.IsEnabled || MessageBox.Show("Please confirm Lot, Item and Method information before generating.\nNo further change could be made if continue.", "Confirm", MessageBoxButton.OKCancel, MessageBoxImage.Information) == MessageBoxResult.OK)
             {
                 if (openedDetails == false)
                 {
@@ -216,7 +223,7 @@ namespace Empower_List
                 ModifySwitch(false);
                 string[] headers = new string[listItems.Items.Count];
                 listItems.Items.CopyTo(headers, 0);
-                FinalList fl = new FinalList(this,comboProj.SelectedValue.ToString(), database[comboProj.SelectedValue.ToString()], headers, tasks, textSkip.Text == "" ? 0 : int.Parse(textSkip.Text));
+                FinalList fl = new FinalList(this, comboProj.SelectedValue.ToString(), database[comboProj.SelectedValue.ToString()], headers, tasks, cEleven.IsChecked == true ? true : false, cMax.SelectedValue.ToString(), textSkip.Text.Trim());
                 fl.listName.IsReadOnly = !config[1];
                 fl.listTime.IsReadOnly = !config[2];
                 fl.Show();
@@ -232,10 +239,14 @@ namespace Empower_List
         }
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
-            comboProj_SelectionChanged(null, null);
+            if (comboProj.SelectedIndex != -1) comboProj_SelectionChanged(null, null);
         }
         private void textLots_KeyUp(object sender, KeyEventArgs e)
         {
+            if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
+            {
+                cLot.IsChecked = cLot.IsChecked == true ? false : true;
+            }
             if (e.Key == Key.Enter && cLot.IsChecked == true ? true : false)
             {
                 if (textLots.SelectionStart != textLots.Text.Length)
@@ -256,13 +267,59 @@ namespace Empower_List
                         break;
                     }
                 }
-                x = (int.Parse(x) + 1).ToString();
+                if (x == "") return;
+                x = (long.Parse(x) + 1).ToString();
                 x += suffix;
                 x = x.Substring(0, x.Length - 2);
                 textLots.Text += x;
                 textLots.Select(textLots.Text.Length, 0);
                 textLots.ScrollToEnd();
             }
+        }
+        private void cEleven_Click(object sender, RoutedEventArgs e)
+        {
+
+            //if (cEleven.IsChecked == true)
+            //{
+            //    cMax.SelectedIndex = 2;
+            //    cMax.IsEnabled = false;
+            //    textSkip.IsEnabled = false;
+            //}
+            //else
+            //{
+            //    cMax.SelectedIndex = 0;
+            //    cMax.IsEnabled = true;
+            //    textSkip.IsEnabled = true;
+            //}
+        }
+        private bool SkipVerify()
+        {
+            if (textSkip.Text.Trim() == "") return true;
+            //数字瓶号
+            if (cEleven.IsChecked == false)
+            {
+                if (!int.TryParse(textSkip.Text.Trim(), out int temp))
+                {
+                    return false;
+                }
+            }
+            // 字母瓶号
+            else
+            {
+                string s = textSkip.Text.Trim();
+                //5位以下，无效
+                if (s.Length < 5) return false;
+                if (s[1] != ':' || s[3] != ',') return false;
+                var splits = s.Split(':', ',');             
+                if (splits.Count() != 3) return false;
+                splits[1] = splits[1].ToUpper();
+                if (splits[0] != "1" && splits[0] != "2") return false;
+                if (splits[1] != "A" && splits[1] != "B" && splits[1] != "C" && splits[1] != "D" && splits[1] != "E" && splits[1] != "F") return false;
+                int c = 0;
+                if (!int.TryParse(splits[2], out c)) return false;
+                if (c < 1 || c > 11) return false;
+            }
+            return true;
         }
     }
 }

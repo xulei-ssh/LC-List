@@ -1,25 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-
+using System.Windows.Controls.Primitives;
 namespace Empower_List
 {
-    /// <summary>
-    /// ItemEditor.xaml 的交互逻辑
-    /// </summary>
-    
+
     public partial class ItemEditor : Window
     {
         public ProjSelect ParentWindow { get; set; }
+        private List<TaskSet> tasks;
         public ItemEditor(ProjSelect parent,string[] headers, List<TaskSet> ts)
         {
             InitializeComponent();
@@ -48,20 +38,42 @@ namespace Empower_List
                     }
                 }
             }
+            tasks = ts;
             grid.ItemsSource = ts;
         }
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             ParentWindow.IsEnabled = true;
-
             ParentWindow.Show();
         }
-
         private void grid_Unloaded(object sender, RoutedEventArgs e)
         {
             var grid = (DataGrid)sender;
             grid.CommitEdit(DataGridEditingUnit.Row, true);
+            grid.CommitEdit(DataGridEditingUnit.Cell, true);
+            grid.Items.Refresh();
+
+        }
+        private void DataGridColumnHeader_Click(object sender, RoutedEventArgs e)
+        {
+            var columnHeader = sender as DataGridColumnHeader;
+            if (columnHeader != null)
+            {
+                int c = columnHeader.DisplayIndex;
+                //get all properties
+                bool allTrue = true;
+                foreach (var q in tasks)
+                {
+                    if (!q.Items[c-1]) allTrue = false;
+                }
+                for (int i = 0; i < tasks.Count; i++)
+                {
+                    tasks[i].Items[c-1] = !allTrue;
+                }
+            }
+            grid.ItemsSource = tasks;
+            grid_Unloaded(grid, null);
+
         }
     }
 }

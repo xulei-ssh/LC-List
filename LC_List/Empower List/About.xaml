@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="About" Height="471.311" Width="449.727" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closing="about_Closing">
     <Grid>
-        <Label Content="Empower List Wizard -- Eisai Edition" HorizontalAlignment="Left" Height="31" Margin="81,20,0,0" VerticalAlignment="Top" Width="275" FontSize="15" HorizontalContentAlignment="Center" FontFamily="Segoe UI"/>
+        <Label Content="List Wizard -- Eisai Edition" HorizontalAlignment="Left" Height="31" Margin="81,20,0,0" VerticalAlignment="Top" Width="275" FontSize="15" HorizontalContentAlignment="Center" FontFamily="Segoe UI"/>
         <Label Content="Author:    Xu Lei  (xulei@eisai.com.cn)" HorizontalAlignment="Left" Margin="98,85,0,0" VerticalAlignment="Top" FontSize="13" FontFamily="Segoe UI"/>
         <Label x:Name="ver" Content="" HorizontalAlignment="Left" Margin="189,54,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" FontFamily="Segoe UI"/>
         <GroupBox Header="GUN General Public Licence" HorizontalAlignment="Left" Height="226" Margin="28,156,0,0" VerticalAlignment="Top" Width="391" FontFamily="Segoe UI">
