@@ -7,6 +7,7 @@ using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Xml;
 using Microsoft.Office.Interop.Word;
+using System.Text.RegularExpressions;
 namespace GenDS
 {
     class Program
@@ -20,38 +21,75 @@ namespace GenDS
             //c.InsertText("Lot", "批号：\t1807001 1807002");
             //Table t = c.InsertTable("List", 15, 3, 1);
             //c.SaveDocument(@"d:\a.docx");
+            //int r = 1;
+            //List<bool> re = new List<bool>();
+            //while (r <= 30)
+            //{
+            //    string x = "1011(25)-HJ" + r.ToString();
+            //    string p = @"^*\-HJ([1-9]{0,1}[02-9]$)";
+            //    re.Add(Regex.IsMatch(x, p));
+            //    r++;
+            //}
 
-            FileStream srcFs = File.OpenRead(@"d:\ds");
-            //XmlDocument dataFile = new XmlDocument();
-            GZipStream g = new GZipStream(srcFs, CompressionMode.Decompress);             //compress stream
-            MemoryStream ms = new MemoryStream();
-            byte[] bytes = new byte[40960];
-            int n;
-            while ((n = g.Read(bytes, 0, bytes.Length)) > 0)
+
+
+
+
+            Console.WriteLine(@"1: Decompress d:\ds to d:\1");
+            Console.WriteLine(@"2: Compress d:\1 to d:\ds.new");
+            int sd = int.Parse(Console.ReadLine());
+            if (sd == 1)
             {
-                ms.Write(bytes, 0, n);
+                FileStream srcFs = File.OpenRead(@"d:\ds");
+                //XmlDocument dataFile = new XmlDocument();
+                GZipStream g = new GZipStream(srcFs, CompressionMode.Decompress);             //compress stream
+                MemoryStream ms = new MemoryStream();
+                byte[] bytes = new byte[40960];
+                int n;
+                while ((n = g.Read(bytes, 0, bytes.Length)) > 0)
+                {
+                    ms.Write(bytes, 0, n);
+                }
+                g.Close();
+                ms.Position = 0;
+                byte[] eData = ms.ToArray();
+                for (int i = 0; i < eData.Length; i++)
+                {
+                    eData[i] = (byte)(eData[i] - i);
+                }
+                ms = new MemoryStream(eData);
+                FileStream fsw = File.Create(@"d:\1");
+                fsw.Write(eData, 0, eData.Length);
+                fsw.Close();
+
+
+
+
+                //dataFile.Load(ms);
+                srcFs.Close();
             }
-            g.Close();
-            ms.Position = 0;
-            byte[] eData = ms.ToArray();
-            for (int i = 0; i < eData.Length; i++)
+
+            else if (sd == 2)
             {
-                eData[i] = (byte)(eData[i] - i);
+                MemoryStream stream = new MemoryStream();
+                StreamWriter writer = new StreamWriter(stream);
+                string s = File.ReadAllText(@"d:\1");
+                writer.Write(s);
+                writer.Flush();
+                stream.Position = 0;
+                string tempFileLocation = @"d:\ds.new";
+                byte[] arr1 = new byte[(int)stream.Length];
+                stream.Read(arr1, 0, (int)stream.Length);
+                for (int i = 0; i < arr1.Length; i++)
+                {
+                    arr1[i] = (byte)(arr1[i] + i);
+                }
+                FileStream ms1 = File.Create(tempFileLocation);
+                GZipStream gz = new GZipStream(ms1, CompressionMode.Compress);
+                gz.Write(arr1, 0, arr1.Length);
+                gz.Close();
+                ms1.Close();
             }
-            ms = new MemoryStream(eData);
-            FileStream fsw = File.Create(@"d:\1");
-            fsw.Write(eData, 0, eData.Length);
-            fsw.Close();
-
-
-
-
-            //dataFile.Load(ms);
-            srcFs.Close();
-
-
-
-
 
 
 

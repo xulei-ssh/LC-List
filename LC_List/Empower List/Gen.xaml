@@ -1,0 +1,16 @@
+﻿<Window x:Name="SelectSeq" x:Class="Empower_List.Gen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Empower_List"
+        mc:Ignorable="d"
+        Title="Select Sequence File" Height="405.192" Width="427.322" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" FontSize="14">
+    <Grid>
+        <ListBox x:Name="seqList" HorizontalAlignment="Left" Height="275" Margin="10,10,0,0" VerticalAlignment="Top" Width="392" PreviewMouseDoubleClick="seqList_PreviewMouseDoubleClick"/>
+        <Label Content="Start Index" HorizontalAlignment="Left" Height="30" Margin="10,323,0,0" VerticalAlignment="Top" Width="97"/>
+        <TextBox x:Name="tIndex" HorizontalAlignment="Left" Height="30" Margin="107,323,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="93" VerticalContentAlignment="Center" AcceptsReturn="True" PreviewKeyUp="tIndex_PreviewKeyUp"/>
+        <Button x:Name="btnOK" Content="OK" HorizontalAlignment="Left" Height="30" Margin="277,322,0,0" VerticalAlignment="Top" Width="86" Click="btnOK_Click"/>
+
+    </Grid>
+</Window>

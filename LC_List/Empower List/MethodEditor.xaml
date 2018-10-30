@@ -9,15 +9,15 @@
         <Label Content="Project" HorizontalAlignment="Left" Margin="31,21,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="cProj" HorizontalAlignment="Left" Height="29" Margin="105,21,0,0" VerticalAlignment="Top" Width="229" SelectionChanged="cProj_SelectionChanged"/>
         <TextBox x:Name="tProt" HorizontalAlignment="Left" Height="29" Margin="105,55,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="229" VerticalContentAlignment="Center" TextChanged="Prot_TextChanged"/>
-        <Label Content="Item" HorizontalAlignment="Left" Margin="31,169,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="cItem"  HorizontalAlignment="Left" Height="29" Margin="105,169,0,0" VerticalAlignment="Top" Width="229" SelectionChanged="cItem_SelectionChanged"/>
+        <Label Content="Item" HorizontalAlignment="Left" Margin="31,183,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cItem"  HorizontalAlignment="Left" Height="29" Margin="105,183,0,0" VerticalAlignment="Top" Width="229" SelectionChanged="cItem_SelectionChanged"/>
         <Label Content="Protocol" HorizontalAlignment="Left" Margin="31,55,0,0" VerticalAlignment="Top"/>
         <Label Content="Ver." HorizontalAlignment="Left" Margin="31,89,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.46,0.446"/>
         <TextBox x:Name="tVer" HorizontalAlignment="Left" Height="29" Margin="105,89,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="229" VerticalContentAlignment="Center"  TextChanged="Prot_TextChanged"/>
-        <Label Content="Condition" HorizontalAlignment="Left" Margin="31,203,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="tCondition" HorizontalAlignment="Left" Height="29" Margin="105,203,0,0" TextWrapping="Wrap" TextChanged="tCondition_TextChanged" VerticalAlignment="Top" Width="229" VerticalContentAlignment="Center"/>
-        <Label Content="STD Type" HorizontalAlignment="Left" Margin="31,237,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="tSTD" HorizontalAlignment="Left" TextChanged="tSTD_TextChanged" Height="29" Margin="105,237,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="229" VerticalContentAlignment="Center"/>
+        <Label Content="Condition" HorizontalAlignment="Left" Margin="31,217,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="tCondition" HorizontalAlignment="Left" Height="29" Margin="105,217,0,0" TextWrapping="Wrap" TextChanged="tCondition_TextChanged" VerticalAlignment="Top" Width="229" VerticalContentAlignment="Center"/>
+        <Label Content="STD Type" HorizontalAlignment="Left" Margin="31,251,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="tSTD" HorizontalAlignment="Left" TextChanged="tSTD_TextChanged" Height="29" Margin="105,251,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="229" VerticalContentAlignment="Center"/>
         <DataGrid x:Name="g" HorizontalAlignment="Left" Height="362" Margin="397,21,0,0" VerticalAlignment="Top" Width="380" CanUserAddRows="True" CanUserDeleteRows="False"  AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" MouseRightButtonUp="g_MouseRightButtonUp">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="Vol" Header="Vol" Width="50" Binding="{Binding Volume, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
@@ -28,12 +28,14 @@
         </DataGrid>
         <Button x:Name="btnSave" Content="Save" Height="32" HorizontalAlignment="Left" Margin="274,312,0,0" VerticalAlignment="Top" Width="79" Click="btnSave_Click"/>
         <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Left" Height="32" Margin="274,350,0,0" VerticalAlignment="Top" Width="79" Click="btnCancel_Click"/>
-        <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="32,145,0,0" Stroke="Gray" VerticalAlignment="Top" Width="322"/>
+        <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="32,169,0,0" Stroke="Gray" VerticalAlignment="Top" Width="322"/>
         <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="31,290,0,0" Stroke="Gray" VerticalAlignment="Top" Width="322"/>
         <Button x:Name="btnAddProj" Content="+ Project" HorizontalAlignment="Left" Margin="32,312,0,0" Width="79" VerticalAlignment="Top" Height="32" Click="btnAddProj_Click"/>
         <Button x:Name="btnAddItem" Content="+ Item" HorizontalAlignment="Left" Margin="116,312,0,0" Width="79" VerticalAlignment="Top" Height="32" Click="btnAddItem_Click"/>
         <Button x:Name="btnDelProj" Content="- Project" HorizontalAlignment="Left" Margin="32,350,0,0" Width="79" VerticalAlignment="Top" Height="32" Click="btnDelProj_Click"/>
         <Button x:Name="btnDelItem" Content="- Item" HorizontalAlignment="Left" Margin="116,350,0,0" Width="79" VerticalAlignment="Top" Height="32" Click="btnDelItem_Click"/>
+        <Label Content="Name" HorizontalAlignment="Left" Margin="31,123,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.46,0.446"/>
+        <TextBox x:Name="tName" HorizontalAlignment="Left" Height="29" Margin="105,123,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="229" VerticalContentAlignment="Center"  TextChanged="tName_TextChanged"/>
 
     </Grid>
 </Window>

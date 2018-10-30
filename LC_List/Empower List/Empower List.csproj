@@ -85,6 +85,10 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WordPlugin, Version=1.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\WordPlugin.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -109,6 +113,9 @@
     <Compile Include="Config.xaml.cs">
       <DependentUpon>Config.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Gen.xaml.cs">
+      <DependentUpon>Gen.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Inj.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="ItemEditor.xaml.cs">
@@ -125,6 +132,9 @@
       <DependentUpon>NewUser.xaml</DependentUpon>
     </Compile>
     <Compile Include="ProjectInfo.cs" />
+    <Compile Include="SaveOptions.xaml.cs">
+      <DependentUpon>SaveOptions.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TaskSet.cs" />
     <Compile Include="UserGroup.cs" />
     <Compile Include="UserInfo.cs" />
@@ -150,6 +160,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Config.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -182,6 +196,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ProjSelect.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SaveOptions.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

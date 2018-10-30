@@ -26,6 +26,8 @@ namespace Empower_List
         private void btnList_MouseLeave(object sender, MouseEventArgs e) => btnList.Foreground = defaultBrush;
         private void btnConfig_MouseMove(object sender, MouseEventArgs e) => btnConfig.Foreground = new SolidColorBrush(Colors.Turquoise);
         private void btnConfig_MouseLeave(object sender, MouseEventArgs e) => btnConfig.Foreground = defaultBrush;
+        private void btnWord_MouseMove(object sender, MouseEventArgs e) => btnWord.Foreground = new SolidColorBrush(Colors.Turquoise);
+        private void btnWord_MouseLeave(object sender, MouseEventArgs e) => btnWord.Foreground = defaultBrush;
 
         private void btnList_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -79,7 +81,22 @@ namespace Empower_List
             }
 
         }
-
-
+        private void btnWord_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "Sequences"))
+            {
+                MessageBox.Show("Cannot find list directory.", "List Directory Missing", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            if (Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + "Sequences").Length==0)
+            {
+                MessageBox.Show("Cannot find list file.", "List File Missing", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            Gen g = new Gen(this);
+            IsEnabled = false;
+            g.Show();
+            Hide();
+        }
     }
 }

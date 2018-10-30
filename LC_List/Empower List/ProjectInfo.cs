@@ -9,6 +9,7 @@ namespace Empower_List
     {
         public string Protocol { get; set; }
         public List<Item> Items { get; set; }
+        public string ProductName { get; set; }
         public Item this[string index]
         {
             get
@@ -20,10 +21,11 @@ namespace Empower_List
                 Items[Items.FindIndex(x => x.Name == index)] = value;
             }
         }
-        public ProjectInfo() : this("") { }
-        public ProjectInfo(string protocol)
+        public ProjectInfo() : this("","") { }
+        public ProjectInfo(string protocol,string productName)
         {
             Protocol = protocol;
+            ProductName = productName;
             Items = new List<Item>();
         }
     }

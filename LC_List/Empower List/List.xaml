@@ -18,11 +18,10 @@
                 <DataGridTextColumn x:Name="listName"  Header="Sample Name" Width="200" Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
                 <DataGridTextColumn x:Name="listTime"  Header="Time" Width="50" Binding="{Binding Time, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
             </DataGrid.Columns>
-
-
         </DataGrid>
-        <Label x:Name="TwoListLabel" Content="List" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="326,10,0,0" VerticalAlignment="Top" Height="30"/>
-        <RadioButton x:Name="TwoListA" Content="A" HorizontalAlignment="Left" Margin="360,10,0,0" VerticalAlignment="Top" IsChecked="True" Checked="TwoListA_Checked"/>
-        <RadioButton x:Name="TwoListB" Content="B" HorizontalAlignment="Left" Margin="360,26,-0.4,0" VerticalAlignment="Top" Checked="TwoListB_Checked"/>
+        <Label x:Name="TwoListLabel" Content="List" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="311,10,0,0" VerticalAlignment="Top" Height="30"/>
+        <RadioButton x:Name="TwoListA" Content="A" HorizontalAlignment="Left" Margin="345,10,0,0" VerticalAlignment="Top" IsChecked="True" Checked="TwoListA_Checked"/>
+        <RadioButton x:Name="TwoListB" Content="B" HorizontalAlignment="Left" Margin="345,26,0,0" VerticalAlignment="Top" Checked="TwoListB_Checked"/>
+        <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Left" Height="30" Margin="388,10,0,0" VerticalAlignment="Top" Width="52" Click="btnSave_Click"/>
     </Grid>
 </Window>

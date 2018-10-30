@@ -37,6 +37,7 @@ namespace Empower_List
                 cItem.SelectedIndex = -1;
                 tSTD.Text = "";
                 tCondition.Text = "";
+                tName.Text = database[cProj.SelectedValue.ToString()].ProductName;
                 cItem.ItemsSource = database[cProj.SelectedValue.ToString()].Items.ConvertAll(x => x.Name);
                 g.ItemsSource = null;
             }
@@ -217,6 +218,11 @@ namespace Empower_List
                 database[cProj.SelectedValue.ToString()][cItem.SelectedValue.ToString()].Injs.RemoveAt(g.SelectedIndex);
 
             }
+        }
+        private void tName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            database[cProj.SelectedValue.ToString()].ProductName = tName.Text;
+
         }
     }
 }

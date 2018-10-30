@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Empower_List"
         mc:Ignorable="d"
-        Title="List Wizard - Eisai Edition" Height="423.6" Width="400" HorizontalAlignment="Left" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+        Title="List Wizard - Eisai Edition" Height="438" Width="400" HorizontalAlignment="Left" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Window.Background>
         <ImageBrush ImageSource="/Resources/bg.jpg" Opacity="50"/>
     </Window.Background>
@@ -16,7 +16,7 @@
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveBorderColorKey}}"/>
             </Label.Foreground>
         </Label>
-        <Ellipse HorizontalAlignment="Left" Height="30" Margin="31,140,0,0" VerticalAlignment="Top" Width="28" Stretch="Uniform" Stroke="White">
+        <Ellipse HorizontalAlignment="Left" Height="30" Margin="31,118,0,0" VerticalAlignment="Top" Width="28" Stretch="Uniform" Stroke="White">
             <Ellipse.Fill>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FF364361" Offset="0.298"/>
@@ -25,7 +25,7 @@
             </Ellipse.Fill>
         </Ellipse>
 
-        <Ellipse HorizontalAlignment="Left" Height="30" Margin="31,200,0,0" VerticalAlignment="Top" Width="28" Stretch="Uniform" Stroke="White">
+        <Ellipse HorizontalAlignment="Left" Height="30" Margin="31,178,0,0" VerticalAlignment="Top" Width="28" Stretch="Uniform" Stroke="White">
             <Ellipse.Fill>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FF364361" Offset="0.298"/>
@@ -33,11 +33,11 @@
                 </LinearGradientBrush>
             </Ellipse.Fill>
         </Ellipse>
-        <Label x:Name="btnConfig" Content="System Configuration" HorizontalAlignment="Left" Height="38" Margin="86,135,0,0" VerticalAlignment="Top" Width="284" FontSize="20" FontFamily="Comic Sans MS" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" MouseMove="btnConfig_MouseMove" MouseLeave="btnConfig_MouseLeave" MouseUp="btnConfig_MouseUp"/>
+        <Label x:Name="btnConfig" Content="System Configuration" HorizontalAlignment="Left" Height="38" Margin="86,113,0,0" VerticalAlignment="Top" Width="284" FontSize="20" FontFamily="Comic Sans MS" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" MouseMove="btnConfig_MouseMove" MouseLeave="btnConfig_MouseLeave" MouseUp="btnConfig_MouseUp"/>
 
-        <Label x:Name="btnList" Content="Edit Injection List" HorizontalAlignment="Left" Height="38" Margin="86,255,0,0" VerticalAlignment="Top" Width="284" FontSize="20" FontFamily="Comic Sans MS" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" MouseMove="btnList_MouseMove" MouseLeave="btnList_MouseLeave" MouseUp="btnList_MouseUp"/>
-        <Label x:Name="btnMethod" Content="Edit Method" HorizontalAlignment="Left" Height="38" Margin="86,195,0,0" VerticalAlignment="Top" Width="284" FontSize="20" FontFamily="Comic Sans MS" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" MouseMove="btnMethod_MouseMove" MouseLeave="btnMethod_MouseLeave" MouseUp="btnMethod_MouseUp"/>
-        <Ellipse HorizontalAlignment="Left" Height="28" Margin="31,260,0,0" VerticalAlignment="Top" Width="28" Stretch="Uniform" Stroke="White">
+        <Label x:Name="btnList" Content="Edit Injection List" HorizontalAlignment="Left" Height="38" Margin="86,233,0,0" VerticalAlignment="Top" Width="284" FontSize="20" FontFamily="Comic Sans MS" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" MouseMove="btnList_MouseMove" MouseLeave="btnList_MouseLeave" MouseUp="btnList_MouseUp"/>
+        <Label x:Name="btnMethod" Content="Edit Method" HorizontalAlignment="Left" Height="38" Margin="86,173,0,0" VerticalAlignment="Top" Width="284" FontSize="20" FontFamily="Comic Sans MS" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" MouseMove="btnMethod_MouseMove" MouseLeave="btnMethod_MouseLeave" MouseUp="btnMethod_MouseUp"/>
+        <Ellipse HorizontalAlignment="Left" Height="28" Margin="31,238,0,0" VerticalAlignment="Top" Width="28" Stretch="Uniform" Stroke="White">
             <Ellipse.Fill>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FF364361" Offset="0.298"/>
@@ -45,7 +45,7 @@
                 </LinearGradientBrush>
             </Ellipse.Fill>
         </Ellipse>
-        <Ellipse x:Name="btnAbout" HorizontalAlignment="Left" Height="41" Margin="343,335,0,0" Stroke="White" VerticalAlignment="Top" Width="41" MouseUp="btnAbout_MouseUp">
+        <Ellipse x:Name="btnAbout" HorizontalAlignment="Left" Height="41" Margin="343,351,0,0" Stroke="White" VerticalAlignment="Top" Width="41" MouseUp="btnAbout_MouseUp">
             <Ellipse.Fill>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FF364361" Offset="0.298"/>
@@ -53,7 +53,16 @@
                 </LinearGradientBrush>
             </Ellipse.Fill>
         </Ellipse>
-        <Label x:Name="aboutMark" Content="!" HorizontalAlignment="Left" Height="41" Margin="355,335,0,0" VerticalAlignment="Top" Width="29" FontSize="20" FontFamily="Comic Sans MS" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" MouseUp="aboutMark_MouseUp"/>
-        <Label x:Name="lblVer" Content="" HorizontalAlignment="Left" Height="29" Margin="10,347,0,0" VerticalAlignment="Top" Width="124" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+        <Label x:Name="aboutMark" Content="!" HorizontalAlignment="Left" Height="41" Margin="355,351,0,0" VerticalAlignment="Top" Width="29" FontSize="20" FontFamily="Comic Sans MS" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" MouseUp="aboutMark_MouseUp"/>
+        <Label x:Name="lblVer" Content="" HorizontalAlignment="Left" Height="29" Margin="10,363,0,0" VerticalAlignment="Top" Width="124" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+        <Label x:Name="btnWord" Content="Export to Word" HorizontalAlignment="Left" Height="38" Margin="86,293,0,0" VerticalAlignment="Top" Width="284" FontSize="20" FontFamily="Comic Sans MS" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" MouseMove="btnWord_MouseMove" MouseLeave="btnWord_MouseLeave" MouseUp="btnWord_MouseUp"/>
+        <Ellipse HorizontalAlignment="Left" Height="28" Margin="31,298,0,0" VerticalAlignment="Top" Width="28" Stretch="Uniform" Stroke="White">
+            <Ellipse.Fill>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF364361" Offset="0.298"/>
+                    <GradientStop Color="#FF339DAD" Offset="0.781"/>
+                </LinearGradientBrush>
+            </Ellipse.Fill>
+        </Ellipse>
     </Grid>
 </Window>

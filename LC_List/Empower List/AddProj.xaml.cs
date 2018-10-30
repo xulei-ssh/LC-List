@@ -46,7 +46,7 @@ namespace Empower_List
                 {
                     if (MessageBox.Show("Add "+projName.Text +" (" +projProt.Text+", Version: "+projVer.Text +") as a new project?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question)==MessageBoxResult.Yes)
                     {
-                        Database.Add(projName.Text, new ProjectInfo(projProt.Text + " ver." + projVer.Text));
+                        Database.Add(projName.Text, new ProjectInfo(projProt.Text + " ver." + projVer.Text, productName.Text));
                         Parent.cProj.Items.Clear();
                         Database.Keys.ToList().ForEach(x => Parent.cProj.Items.Add(x));
                         Parent.cProj.SelectedIndex = Parent.cProj.Items.Count - 1;
@@ -60,12 +60,10 @@ namespace Empower_List
             Parent.IsEnabled = true;
             Parent.Focus();
         }
-
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }
-
         private void projVer_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -73,7 +71,6 @@ namespace Empower_List
                 btnOK_Click(null, null);
             }
         }
-
         private void projVer_GotFocus(object sender, RoutedEventArgs e)
         {
             projVer.KeyUp -= projVer_KeyUp;

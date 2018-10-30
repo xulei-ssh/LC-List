@@ -22,11 +22,11 @@ namespace Empower_List
         public ObservableCollection<ListItem> FullList1 { get; set; }
         public ObservableCollection<ListItem> FullList2 { get; set; }
         VialCondition[][] conditionList;
-        
+        string[] lots;
        
         ListItem preservedSTD1;
         List<int> stdTypes;
-        public FinalList(ProjSelect parent, string projName, ProjectInfo projInfo, string[] items, List<TaskSet> tasks, bool isEleven, string maxVial, string invalid)
+        public FinalList(ProjSelect parent, string projName, ProjectInfo projInfo, string[] items, List<TaskSet> tasks, bool isEleven, string maxVial, string invalid,string[] lots)
         {
             Parent = parent;
             InitializeComponent();
@@ -40,6 +40,7 @@ namespace Empower_List
             std1StartVialsSuffix = new Dictionary<int, string>();
             currentVial = 1;
             STDenum = 0;
+            this.lots = lots;
             this.isEleven = isEleven;
             this.invalid = invalid;
             this.maxVial = int.Parse(maxVial);
@@ -55,7 +56,6 @@ namespace Empower_List
             }
             preservedSTD1 = new ListItem();
             Gen();
-
             if (isInListOne)
             {
                 TwoListLabel.Visibility = Visibility.Hidden;
@@ -73,6 +73,8 @@ namespace Empower_List
         protected override void OnClosing(CancelEventArgs e)
         {
             Parent.IsEnabled = true;
+            //Parent.Show();
+            
             Hide();
             e.Cancel = true;
         }
@@ -372,33 +374,33 @@ namespace Empower_List
                         int availVial = 0;
                         if ((FindAvailable(count, out availVial) || FindPreserved(count, out availVial)) && VialConfirm(availVial))
                         {
-                            for (int i = 0; i < count; i++)
+                            int increment = 0;
+                            foreach(var inj in item.FindAll(false ).Where(x=>!x.Name.Contains ("FLD")))
                             {
-                                if (item.Injs[i].Name.Contains("STD1") && stdTypes.Count > 1)
+                                if (inj.Name.Contains("STD1") && stdTypes.Count > 1)
                                 {
                                     writeSTD = true;
-                                    Add(new ListItem((availVial + i).ToString(), item.Injs[i], item.Injs[i].Name + "-" + (char)(STDenum + 65)));
-                                    if (i == 0) std1 = new ListItem((availVial + i).ToString(), item.Injs[i], item.Injs[i].Name + "-" + (char)(STDenum + 65));
+                                    Add(new ListItem((availVial + increment).ToString(), inj, inj.Name + "-" + (char)(STDenum + 65)));
+                                    std1 = new ListItem((availVial + increment).ToString(), inj, inj.Name + "-" + (char)(STDenum + 65));
                                     std1StartVials.Add(item.StdType, currentVial);
                                     std1StartVialsSuffix.Add(item.StdType, "-" + (char)(STDenum + 65));
                                     STDenum++;
-                                    conditionList[isInListOne ? 0 : 1][availVial - 1 + i] = VialCondition.Used;
+                                    conditionList[isInListOne ? 0 : 1][availVial - 1 + increment] = VialCondition.Used;
                                 }
                                 else
                                 {
-                                    if (writeSTD && (item.Injs[i].Name.Contains("STD2") || (item.Injs[i].Name.Contains("STD3"))))
+                                    if (writeSTD && (inj.Name.Contains("STD2") || (inj.Name.Contains("STD3"))))
                                     {
-                                        string name = item.Injs[i].Name +  std1StartVialsSuffix[item.StdType];
-
-                                        Add(new ListItem((availVial + i).ToString(), item.Injs[i], name));
+                                        string name = inj.Name + std1StartVialsSuffix[item.StdType];
+                                        Add(new ListItem((availVial + increment).ToString(), inj, name));
                                     }
                                     else
                                     {
-                                        Add(new ListItem((availVial + i).ToString(), item.Injs[i]));
+                                        Add(new ListItem((availVial + increment).ToString(), inj));
                                     }
-                                    if (i == 0) std1 = new ListItem((availVial + i).ToString(), item.Injs[i]);
-                                    conditionList[isInListOne ? 0 : 1][availVial - 1 + i] = VialCondition.Used;
+                                    conditionList[isInListOne ? 0 : 1][availVial - 1 + increment] = VialCondition.Used;
                                 }
+                                increment++;
                             }
                             specialInsert = true;
                         }
@@ -490,7 +492,8 @@ namespace Empower_List
                             for (int i = 0; i < 6; i++)
                             {
                                 VialConfirm();
-                                Add(new ListItem(currentVial.ToString(), item.Injs.Last(), lot + "-R" + (i + 1)));
+                                string suf = item.Name == "Dissolution" ? "-R" : "-N";
+                                Add(new ListItem(currentVial.ToString(), item.Injs.Last(), lot + suf + (i + 1)));
                                 currentVial++;
                             }
                             if (item.Injs.Last().Volume < 100)
@@ -689,6 +692,17 @@ namespace Empower_List
                 }
             }
             return false;
+        }
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+            List<ObservableCollection<ListItem>> lists = new List<ObservableCollection<ListItem>>();
+            lists.Add(FullList1);
+            if (FullList2.Count != 0) lists.Add(FullList2);
+
+            SaveOptions so = new SaveOptions(this, projInfo.ProductName, items.ToList(), projInfo.Items, std1StartVialsSuffix, lists, lots.ToList());
+            so.Show();
+            IsEnabled = false;
+            Hide();
         }
     }
     public class ListItem

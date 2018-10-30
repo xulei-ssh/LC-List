@@ -8,9 +8,6 @@ using System.Reflection;
 using System.IO;
 namespace Empower_List
 {
-    /// <summary>
-    /// ProjSelect.xaml 的交互逻辑
-    /// </summary>
     public partial class ProjSelect : Window
     {
         Dictionary<string, ProjectInfo> database;
@@ -39,7 +36,7 @@ namespace Empower_List
             methodGrid.IsReadOnly = !config[0];
             comboProj.Items.Clear();
             database.Keys.ToList().ForEach(x => comboProj.Items.Add(x));
-            tip.Text = "1: 请务必确认SOP版本；当前版本仅支持单张序列表\n2: 稳定性样品请用小括号注明贮存条件；稳定性样品默认不做含量均匀度\n3: CDN溶出度不得与其他项使用同一个序列表";
+            tip.Text = "1: 请务必确认SOP版本；当前版本仅支持单张序列表\n2: 稳定性样品请用小括号注明贮存条件\n3: CDN溶出度不得与其他项使用同一个序列表";
             cMax.Items.Add(100);
             cMax.Items.Add(120);
             cMax.Items.Add(132);
@@ -71,12 +68,14 @@ namespace Empower_List
             else if (listItems.Items.Count == 0)
             {
                 listItems.Items.Add(database[comboProj.SelectedValue.ToString()][comboItems.SelectedValue.ToString()].Name);
+                database[comboProj.SelectedValue.ToString()][comboItems.SelectedValue.ToString()].NewLine = false;
             }
             else
             {
                 if (!listItems.Items.Contains(database[comboProj.SelectedValue.ToString()][comboItems.SelectedValue.ToString()].Name) && (database[comboProj.SelectedValue.ToString()][comboItems.SelectedValue.ToString()].LCCondition == database[comboProj.SelectedValue.ToString()][listItems.Items[listItems.Items.Count - 1].ToString()].LCCondition))
                 {
                     listItems.Items.Add(database[comboProj.SelectedValue.ToString()][comboItems.SelectedValue.ToString()].Name);
+                    database[comboProj.SelectedValue.ToString()][comboItems.SelectedValue.ToString()].NewLine = false;
                 }
             }
             UpdateItemEachLot();
@@ -177,19 +176,11 @@ namespace Empower_List
         private void UpdateItemEachLot()
         {
             tasks = new List<TaskSet>();
-            int indexOfCU = 0;
-            for (int c = 0; c < listItems.Items.Count; c++)
-            {
-                if (listItems.Items[c].ToString() == "Content Uniformity")
-                {
-                    indexOfCU = c;
-                }
-            }
             foreach (var lot in textLots.Text.Split('\r','\n'))
             {
                 if (lot != "")
                 {
-                        tasks.Add(new TaskSet(lot, listItems.Items.Count, indexOfCU));
+                    tasks.Add(new TaskSet(lot, listItems.Items.Count));
                 }
             }          
         }
@@ -223,11 +214,14 @@ namespace Empower_List
                 ModifySwitch(false);
                 string[] headers = new string[listItems.Items.Count];
                 listItems.Items.CopyTo(headers, 0);
-                FinalList fl = new FinalList(this, comboProj.SelectedValue.ToString(), database[comboProj.SelectedValue.ToString()], headers, tasks, cEleven.IsChecked == true ? true : false, cMax.SelectedValue.ToString(), textSkip.Text.Trim());
+                var lots = textLots.Text.Split('\r', '\n');
+                FinalList fl = new FinalList(this, comboProj.SelectedValue.ToString(), database[comboProj.SelectedValue.ToString()], headers, tasks, cEleven.IsChecked == true ? true : false, cMax.SelectedValue.ToString(), textSkip.Text.Trim(),lots);
                 fl.listName.IsReadOnly = !config[1];
                 fl.listTime.IsReadOnly = !config[2];
                 fl.Show();
                 IsEnabled = false;
+                
+                
             }
         }
         private void uTime_KeyUp(object sender, KeyEventArgs e)

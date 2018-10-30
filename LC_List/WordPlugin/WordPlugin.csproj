@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7CC109F3-1D44-4E8E-9170-4BFBF015A8C8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WordPlugin</RootNamespace>
+    <AssemblyName>WordPlugin</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Src\Bookmark.cs" />
+    <Compile Include="Src\BookmarkCollection.cs" />
+    <Compile Include="Src\Border.cs" />
+    <Compile Include="Src\Charts\Axis.cs" />
+    <Compile Include="Src\Charts\BarChart.cs" />
+    <Compile Include="Src\Charts\Chart.cs" />
+    <Compile Include="Src\Charts\LineChart.cs" />
+    <Compile Include="Src\Charts\PieChart.cs" />
+    <Compile Include="Src\Charts\XElementHelpers.cs" />
+    <Compile Include="Src\Container.cs" />
+    <Compile Include="Src\CustomProperty.cs" />
+    <Compile Include="Src\DocProperty.cs" />
+    <Compile Include="Src\DocX.cs" />
+    <Compile Include="Src\ExtensionsHeadings.cs" />
+    <Compile Include="Src\Font.cs" />
+    <Compile Include="Src\Footer.cs" />
+    <Compile Include="Src\Footers.cs" />
+    <Compile Include="Src\FormattedText.cs" />
+    <Compile Include="Src\Formatting.cs" />
+    <Compile Include="Src\Header.cs" />
+    <Compile Include="Src\Headers.cs" />
+    <Compile Include="Src\HelperFunctions.cs" />
+    <Compile Include="Src\Hyperlink.cs" />
+    <Compile Include="Src\Image.cs" />
+    <Compile Include="Src\IParagraphContainer.cs" />
+    <Compile Include="Src\List.cs" />
+    <Compile Include="Src\PackagePartStream.cs" />
+    <Compile Include="Src\PageLayout.cs" />
+    <Compile Include="Src\Paragraph.cs" />
+    <Compile Include="Src\Picture.cs" />
+    <Compile Include="Src\Section.cs" />
+    <Compile Include="Src\Table.cs" />
+    <Compile Include="Src\TableOfContents.cs" />
+    <Compile Include="Src\_BaseClasses.cs" />
+    <Compile Include="Src\_Enumerations.cs" />
+    <Compile Include="Src\_Extensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\default_styles.xml.gz" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\numbering.default_bullet_abstract.xml.gz" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\numbering.default_decimal_abstract.xml.gz" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\numbering.xml.gz" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\styles.xml.gz" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
