@@ -483,7 +483,7 @@ namespace Empower_List
                                     currentVial++;
                                 }
                                 VialConfirm();
-                                Add(std1.IntertSTD1ForDissolutionOver100(currentVial));
+                                Add(std1.IntertSTD1ForDissolutionOfLargeInjAmount(currentVial));
                                 currentVial++;
                             }
                         }
@@ -496,14 +496,14 @@ namespace Empower_List
                                 Add(new ListItem(currentVial.ToString(), item.Injs.Last(), lot + suf + (i + 1)));
                                 currentVial++;
                             }
-                            if (item.Injs.Last().Volume < 100)
+                            if (item.Injs.Last().Volume < 50)
                             {
                                 Add(std1);
                             }
                             else
                             {
                                 VialConfirm();
-                                Add(std1.IntertSTD1ForDissolutionOver100(currentVial));
+                                Add(std1.IntertSTD1ForDissolutionOfLargeInjAmount(currentVial));
                                 currentVial++;
                             }
                         }
@@ -739,7 +739,7 @@ namespace Empower_List
         {
             return new ListItem(Vial, Vol, 1, Name, Time);
         }
-        public ListItem IntertSTD1ForDissolutionOver100(int currentVial)
+        public ListItem IntertSTD1ForDissolutionOfLargeInjAmount(int currentVial)
         {
             return new ListItem(currentVial.ToString (), Vol, 1, Name, Time);
         }

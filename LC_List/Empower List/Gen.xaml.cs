@@ -1,23 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.IO;
 using System.ComponentModel;
 
 namespace Empower_List
 {
-    /// <summary>
-    /// Gen.xaml 的交互逻辑
-    /// </summary>
     public partial class Gen : Window
     {
         MainWindow Parent;
@@ -53,18 +43,33 @@ namespace Empower_List
                 MessageBox.Show("Please select a list file.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            ConfigParser.GenReport(AppDomain.CurrentDomain.BaseDirectory + "Sequences\\" + seqList.SelectedItem.ToString() + ".elw", startIndex);
+            if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + "Sequences\\" + seqList.SelectedItem.ToString() + ".elw"))
+            {
+                MessageBox.Show("Unable to locate the selected file.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            ConfigParser.GenReport(AppDomain.CurrentDomain.BaseDirectory + "Sequences\\" + seqList.SelectedItem.ToString() + ".elw", startIndex, tFont.Text == "" ? "楷体_GB2312" : tFont.Text);
             Close();
         }
 
         private void tIndex_PreviewKeyUp(object sender, KeyEventArgs e)
         {
+            tIndex.PreviewKeyUp -= tIndex_PreviewKeyUp;
             if (e.Key == Key.Enter) btnOK_Click(this, null);
         }
 
         private void seqList_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             btnOK_Click(this, null);
+        }
+
+        private void tIndex_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (seqList.SelectedIndex != -1 && e.Key == Key.Enter)
+            {
+                btnOK_Click(this, null);
+            }
         }
     }
 

@@ -240,12 +240,12 @@ namespace Empower_List
             }
             return true;
         }
-        public static void GenReport(string filename, int startIndex)                //startIndex from 1
+        public static void GenReport(string filename, int startIndex,string fontName)
         {
             Dictionary<string, string> syn = GenSyn();
             FileStream srcFs = File.OpenRead(filename);
             XmlDocument dataFile = new XmlDocument();
-            GZipStream g = new GZipStream(srcFs, CompressionMode.Decompress);             //compress stream
+            GZipStream g = new GZipStream(srcFs, CompressionMode.Decompress);
             MemoryStream ms = new MemoryStream();
             byte[] bytes = new byte[40960];
             int n;
@@ -290,13 +290,14 @@ namespace Empower_List
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("zh-CN");
             string temp = Environment.GetEnvironmentVariable("TEMP");
             Random rnd = new Random();
+            string shortFileName = filename.Substring(filename.LastIndexOf("\\") + 1, filename.Length - filename.LastIndexOf("\\") - 5);
             if (temp == "")
             {
-                temp = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\"+rnd.Next().ToString() + rnd.Next().ToString() + rnd.Next().ToString() + rnd.Next().ToString() + ".docx";
+                temp = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\" + shortFileName + "_" + rnd.Next().ToString() + ".docx";
             }
             else
             {
-                temp = temp + "\\" + rnd.Next().ToString() + rnd.Next().ToString() + rnd.Next().ToString() + rnd.Next().ToString() + ".docx";
+                temp = temp + "\\" + shortFileName + "_" + rnd.Next().ToString() + ".docx";
             }
             using (DocX document = DocX.Create(temp, DocumentTypes.Document))
             {
@@ -308,36 +309,34 @@ namespace Empower_List
                 }
                 title = title.Substring(0, title.Length - 1);
                 title += "测定";
-                document.InsertParagraph(title).FontSize(16d).SpacingAfter(8d).Font(new Font("STkaiti")).Alignment = Alignment.center;
+                document.InsertParagraph(title).FontSize(16d).SpacingAfter(8).Font(new Font(fontName)).Alignment = Alignment.center;
                 // End of Title (OK)
-
                 // Start of Lot
                 var p = document.InsertParagraph();
-
                 // Append some text and add formatting.
-                p.Append("批号：\t").Font(new Font("STKaiti")).FontSize(13);
-                p.Append(ParseLotReport(lots)).Font(new Font("STKaiti")).FontSize(13);
+                p.Append("批号：\t").Font(new Font(fontName)).FontSize(13);
+                p.Append(ParseLotReport(lots)).Font(new Font(fontName)).FontSize(13);
                 //End of Lot
                 //Start of Table
                 var t = document.AddTable(1, 3);
                 var colWidth = new float[] { 180f,700f, 150f };
-
                 t.SetWidths(colWidth);
                 t.Alignment = Alignment.center;
                 t.Design = TableDesign.TableGrid;
                 WordPlugin.Formatting f = new WordPlugin.Formatting();
-                f.FontFamily = new Font("STKaiTi");
+                f.FontFamily = new Font(fontName);
                 f.Size = 13;
                 t.Rows[0].Cells[0].Paragraphs[0].Append("图谱编号", f);
+                t.Rows[0].Cells[0].VerticalAlignment = VerticalAlignment.Center;
                 t.Rows[0].Cells[1].Paragraphs[0].Append("图谱内容", f);
+                t.Rows[0].Cells[1].VerticalAlignment = VerticalAlignment.Center;
                 t.Rows[0].Cells[2].Paragraphs[0].Append("备注", f);
+                t.Rows[0].Cells[2].VerticalAlignment = VerticalAlignment.Center;
                 if (startIndex != 1)
                 {
-                    var r = t.InsertRow();
-                    r.Cells[0].Paragraphs[0].Append("", f);
-                    r.Cells[1].Paragraphs[0].Append("", f);
-                    r.Cells[2].Paragraphs[0].Append("--", f);
+                    injs.Insert(0, new ListInj(startIndex - 1, ""));
                 }
+                startIndex = 1;
                 foreach (var inj in injs)
                 {
                     string strIndex = startIndex.ToString();
@@ -346,8 +345,11 @@ namespace Empower_List
                     if (inj.Count != 1) strIndex += (startIndex - 1).ToString();
                     var c = t.InsertRow();
                     c.Cells[0].Paragraphs[0].Append(strIndex, f);
-                    c.Cells[1].Paragraphs[0].Append(ParseInjName(inj.Name), f);
+                    c.Cells[0].VerticalAlignment = VerticalAlignment.Center;
+                    c.Cells[1].Paragraphs[0].Append(inj.Name == "" ? "" : ParseInjName(inj.Name), f);
+                    c.Cells[1].VerticalAlignment = VerticalAlignment.Center;
                     c.Cells[2].Paragraphs[0].Append("--", f);
+                    c.Cells[2].VerticalAlignment = VerticalAlignment.Center;
                 }
                 document.InsertParagraph().InsertTableAfterSelf(t);
                 document.Save();
@@ -371,16 +373,19 @@ namespace Empower_List
             replacements.Add("-TimeA", "第一个时间点");
             replacements.Add("-TimeB", "第二个时间点");
             replacements.Add("-TimeC", "第三个时间点");
+            replacements.Add("FLD1", "分离度1");
+            replacements.Add("FLD2", "分离度2");
             replacements.Add("FLD", "分离度");
+            replacements.Add("KB1", "空白");
+            replacements.Add("KB", "空白");
+            replacements.Add("LMD", "灵敏度");
             replacements.Add("-HJ21", "含量均匀度");
             replacements.Add("-HJ11", "含量均匀度");
             replacements.Add("-HJ1", "含量均匀度");
             replacements.Add("-N1", "耐酸力");
             replacements.Add("YSY", "预试液");
-            replacements.Add("KB1", "空白");
             replacements.Add("FL1", "辅料");
             replacements.Add("-S", "有关物质");
-
             foreach (var rep in replacements)
             {
                 if (input.Contains(rep.Key))
@@ -389,8 +394,6 @@ namespace Empower_List
                 }
             }
             return input;
-
-            
         }
         public static List<ListInj> SimplifyList(List<ListInj> e)
         {
@@ -419,11 +422,17 @@ namespace Empower_List
                         result1.Add(new ListInj(i.Count, i.Name));
                     }
                 }
-                //空白，辅料，黄色
-                else if (result1.Count != 0 && ((i.Name.Contains("HS") && !i.Name.EndsWith("HS1")) || (i.Name.Contains("FL") && !i.Name.EndsWith("FL1")) || (i.Name.Contains("KB") && !i.Name.EndsWith("KB1"))))
+                else if (result1.Count != 0 && result1[result1.Count - 1].Name.Contains("KB") && i.Name.Contains("KB"))
                 {
-                    result1[result1.Count - 1].Count++;
-                    continue;
+                    result1[result1.Count - 1].Count += i.Count;
+                }
+                else if (result1.Count != 0 && result1[result1.Count - 1].Name.Contains("FL") && i.Name.Contains("FL") && !i.Name.Contains("FLD"))
+                {
+                    result1[result1.Count - 1].Count += i.Count;
+                }
+                else if (result1.Count != 0 && result1[result1.Count - 1].Name.Contains("HS") && i.Name.Contains("HS"))
+                {
+                    result1[result1.Count - 1].Count += i.Count;
                 }
                 else if (i.Name.EndsWith("-R1") || i.Name.EndsWith("-N1"))
                 {
@@ -432,6 +441,10 @@ namespace Empower_List
                 else if (i.Name.EndsWith("-HJ1") || i.Name.EndsWith("-HJ11") || i.Name.EndsWith("-HJ21"))
                 {
                     result1.Add(new ListInj(10, i.Name));
+                }
+                else if (result1.Count != 0 && result1[result1.Count - 1].Name == i.Name)
+                {
+                    result1[result1.Count - 1].Count = result1[result1.Count - 1].Count + i.Count;
                 }
                 else
                 {
@@ -506,7 +519,7 @@ namespace Empower_List
             }
             return result2;
         }
-        public static string SimplifyLotForTable(string e)      //格式:1212(121) 21321(231) 12312(213)    //不要带项目名
+        public static string SimplifyLotForTable(string e)
         {
             string[] splitLot = e.Split(' ');
             if (splitLot.Length == 1) return e;
@@ -574,18 +587,37 @@ namespace Empower_List
                 }
             }
             specifications.Add(new NameConfig(lots[lots.Count - 1], lots[lots.Count - 1].Contains("(") ? true : false));
+            //result += specifications[0].Lot;
+            //for (int i = 1; i < specifications.Count; i++)
+            //{
+            //    if (specifications[i].IsStable == specifications[i - 1].IsStable)
+            //    {
+            //        result += " " + specifications[i].Lot;
+            //        if (specifications[i].Lot.Contains("("))
+            //        {
+            //            result += "\r\t\t";
+            //        }
+            //    }
+            //    else
+            //    {
+            //        result += "\r\t\t" + specifications[i].Lot;
+            //    }
+            //}
             result += specifications[0].Lot;
+ 
             for (int i = 1; i < specifications.Count; i++)
             {
-                if (specifications[i].IsStable == specifications[i - 1].IsStable)
+                if (specifications[i].IsStable != specifications[i - 1].IsStable || (specifications[i].IsStable == specifications[i - 1].IsStable && specifications[i].Lot.Contains("(")))
                 {
-                    result += " " + specifications[i].Lot;
+                    result += (result.EndsWith("\t") ? "" : " ") + specifications[i].Lot + "\r\t\t";
                 }
                 else
                 {
-                    result += "\r\t\t" + specifications[i].Lot;
+                    result += (result.EndsWith("\t") ? "" : " ") + specifications[i].Lot;
                 }
+
             }
+            if (result.EndsWith("\r\t\t")) result = result.Substring(0, result.Length - 3);
             return result;
         }
     }
@@ -612,4 +644,3 @@ namespace Empower_List
         }
     }
 }
-

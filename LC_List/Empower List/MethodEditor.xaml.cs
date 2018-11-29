@@ -113,12 +113,17 @@ namespace Empower_List
             {
                 if (MessageBox.Show("Are you sure to delete Project: " + cProj.SelectedValue.ToString() + " ?\nThis action cannot be undone.", "Caution", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
+                    cItem.SelectedIndex = -1;
                     string currentIndex = cProj.SelectedValue.ToString();
                     cProj.SelectedIndex = -1;
                     cProj.Items.Clear();
                     database.Remove(currentIndex);
                     database.Keys.ToList().ForEach(x => cProj.Items.Add(x));
-
+                    tProt.Text = "";
+                    tVer.Text = "";
+                    tName.Text = "";
+                    tCondition.Text = "";
+                    tSTD.Text = "";
                 }
             }
         }
@@ -221,8 +226,10 @@ namespace Empower_List
         }
         private void tName_TextChanged(object sender, TextChangedEventArgs e)
         {
-            database[cProj.SelectedValue.ToString()].ProductName = tName.Text;
-
+            if (cProj.SelectedIndex != -1)
+            {
+                database[cProj.SelectedValue.ToString()].ProductName = tName.Text;
+            }
         }
     }
 }

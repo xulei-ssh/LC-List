@@ -62,6 +62,12 @@ namespace Empower_List
                 tName.Focus();
                 return;
             }
+            if (tName.Text.Trim().Contains("\\")|| tName.Text.Trim().Contains("/") || tName.Text.Trim().Contains(":") || tName.Text.Trim().Contains("*") || tName.Text.Trim().Contains("?") || tName.Text.Trim().Contains("\"") || tName.Text.Trim().Contains("<") || tName.Text.Trim().Contains(">") || tName.Text.Trim().Contains("|"))
+            {
+                var r = MessageBox.Show("Name cannot contain the following:\n\\ / : * ? \" < > |", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                tName.Focus();
+                return;
+            }
             if (ConfigParser.SaveList(ProjName, ItemsDone, Items, StdSuffix, Lists, Lots, tName.Text.Trim()))
             {
                 MessageBox.Show("List saved.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -92,9 +98,13 @@ namespace Empower_List
 
         }
 
-        private void tName_KeyUp(object sender, KeyEventArgs e)
+        private void tName_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter) btnSave_Click(null, null);
+            tName.PreviewKeyDown -= tName_KeyDown;
+            if (e.Key == Key.Enter)
+            {
+                btnSave_Click(null, null);
+            }
         }
     }
 }

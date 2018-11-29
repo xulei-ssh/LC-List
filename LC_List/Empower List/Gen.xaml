@@ -7,10 +7,12 @@
         mc:Ignorable="d"
         Title="Select Sequence File" Height="405.192" Width="427.322" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" FontSize="14">
     <Grid>
-        <ListBox x:Name="seqList" HorizontalAlignment="Left" Height="275" Margin="10,10,0,0" VerticalAlignment="Top" Width="392" PreviewMouseDoubleClick="seqList_PreviewMouseDoubleClick"/>
-        <Label Content="Start Index" HorizontalAlignment="Left" Height="30" Margin="10,323,0,0" VerticalAlignment="Top" Width="97"/>
-        <TextBox x:Name="tIndex" HorizontalAlignment="Left" Height="30" Margin="107,323,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="93" VerticalContentAlignment="Center" AcceptsReturn="True" PreviewKeyUp="tIndex_PreviewKeyUp"/>
-        <Button x:Name="btnOK" Content="OK" HorizontalAlignment="Left" Height="30" Margin="277,322,0,0" VerticalAlignment="Top" Width="86" Click="btnOK_Click"/>
+        <ListBox x:Name="seqList" HorizontalAlignment="Left" Height="291" Margin="10,10,0,0" VerticalAlignment="Top" Width="392" PreviewMouseDoubleClick="seqList_PreviewMouseDoubleClick"/>
+        <Label Content="Start At" HorizontalAlignment="Left" Height="30" Margin="10,323,0,0" VerticalAlignment="Top" Width="67"/>
+        <TextBox x:Name="tIndex" HorizontalAlignment="Left" Height="30" Margin="82,323,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="48" VerticalContentAlignment="Center" PreviewKeyUp="tIndex_PreviewKeyUp" KeyUp="tIndex_KeyUp"/>
+        <Button x:Name="btnOK" Content="OK" HorizontalAlignment="Left" Height="30" Margin="347,323,0,0" VerticalAlignment="Top" Width="55" Click="btnOK_Click"/>
+        <Label Content="Font" HorizontalAlignment="Left" Height="30" Margin="135,323,0,0" VerticalAlignment="Top" Width="46"/>
+        <TextBox x:Name="tFont" HorizontalAlignment="Left" Height="30" Margin="181,323,0,0" TextWrapping="Wrap" Text="楷体_GB2312" VerticalContentAlignment="Center" VerticalAlignment="Top" Width="161"/>
 
     </Grid>
 </Window>
