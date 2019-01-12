@@ -11,6 +11,7 @@ namespace Empower_List
         public int StdType { get; set; }
         public ObservableCollection<Inj> Injs { get; set; }
         public bool NewLine { get; set; } = false;
+        public bool NewStd { get; set; } = false;
         public Inj this[int index]
         {
             get

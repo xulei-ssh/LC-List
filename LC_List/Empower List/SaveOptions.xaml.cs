@@ -62,9 +62,9 @@ namespace Empower_List
                 tName.Focus();
                 return;
             }
-            if (tName.Text.Trim().Contains("\\")|| tName.Text.Trim().Contains("/") || tName.Text.Trim().Contains(":") || tName.Text.Trim().Contains("*") || tName.Text.Trim().Contains("?") || tName.Text.Trim().Contains("\"") || tName.Text.Trim().Contains("<") || tName.Text.Trim().Contains(">") || tName.Text.Trim().Contains("|"))
+            if (tName.Text.Trim().Contains(" ")||tName.Text.Trim().Contains("\\")|| tName.Text.Trim().Contains("/") || tName.Text.Trim().Contains(":") || tName.Text.Trim().Contains("*") || tName.Text.Trim().Contains("?") || tName.Text.Trim().Contains("\"") || tName.Text.Trim().Contains("<") || tName.Text.Trim().Contains(">") || tName.Text.Trim().Contains("|"))
             {
-                var r = MessageBox.Show("Name cannot contain the following:\n\\ / : * ? \" < > |", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                var r = MessageBox.Show("Name cannot contain the following:\n\\ / : * ? \" < > | <space>", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 tName.Focus();
                 return;
             }

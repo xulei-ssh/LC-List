@@ -11,47 +11,37 @@ namespace Empower_List
         {
             InitializeComponent();
             Parent = parent;
-            btnOK.Click += btnOK_Click;
-
             lblName.Content = Parent.tName.Text;
             pass.Focus();
         }
         protected override void OnClosing(CancelEventArgs e) => Parent.IsEnabled = true;
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
-            if (pass.Password == Parent.tPass.Password)
+            if (btnOK.IsEnabled)
             {
                 ConfigParser.ChangeToken(Parent.tName.Text, pass.Password);
                 DialogResult = true;
             }
-            else
-            {
-                MessageBox.Show("Password not match.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                pass_LostFocus(null, null);
-                pass.Focus();
-            }
         }
         private void pass_KeyUp(object sender, KeyEventArgs e)
         {
-            if (swt && e.Key == Key.Enter)
+            if (e.Key == Key.Enter)
             {
                 btnOK_Click(null, null);
             }
+        }
+        private void pass_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (pass.Password == Parent.tPass.Password)
+            {
+                lblTick.Content = "PASS";
+                btnOK.IsEnabled = true;
+            }
             else
             {
-                swt = true;
+                lblTick.Content = "FAILED";
+                btnOK.IsEnabled = false;
             }
-        }
-
-        private void pass_GotFocus(object sender, RoutedEventArgs e)
-        {
-            pass.KeyUp += pass_KeyUp;
-        }
-
-        private void pass_LostFocus(object sender, RoutedEventArgs e)
-        {
-            pass.KeyUp -= pass_KeyUp;
-
         }
     }
 }

@@ -6,7 +6,7 @@ using System.IO;
 using System.Windows;
 namespace Empower_List
 {
-    public partial class MainWindow : System.Windows.Window
+    public partial class MainWindow : Window
     {
         public Brush defaultBrush;
         public MainWindow()
@@ -15,6 +15,15 @@ namespace Empower_List
             defaultBrush = btnMethod.Foreground;
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             lblVer.Content = "ver " + version.Major + "." + version.Minor + "." + version.Revision;
+            try
+            {
+                if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"notification"))
+                {
+                    var notification = File.OpenText(AppDomain.CurrentDomain.BaseDirectory + @"notification");
+                    MessageBox.Show(notification.ReadLine(), notification.ReadLine());
+                }
+            }
+            catch (Exception e) { }
         }
         protected override void OnClosed(EventArgs e)
         {
@@ -28,7 +37,6 @@ namespace Empower_List
         private void btnConfig_MouseLeave(object sender, MouseEventArgs e) => btnConfig.Foreground = defaultBrush;
         private void btnWord_MouseMove(object sender, MouseEventArgs e) => btnWord.Foreground = new SolidColorBrush(Colors.Turquoise);
         private void btnWord_MouseLeave(object sender, MouseEventArgs e) => btnWord.Foreground = defaultBrush;
-
         private void btnList_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (CheckFile())
@@ -42,7 +50,7 @@ namespace Empower_List
         private void btnAbout_MouseUp(object sender, MouseButtonEventArgs e)
         {
             About a = new About(this);
-            this.IsEnabled = false;
+            IsEnabled = false;
             a.Show();
             a.Focus();
         }
@@ -97,6 +105,22 @@ namespace Empower_List
             IsEnabled = false;
             g.Show();
             Hide();
+        }
+        private void btnFAQ_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            string loc = AppDomain.CurrentDomain.BaseDirectory + @"UserGuide.docx";
+            if (File.Exists(loc))
+            {
+                System.Diagnostics.Process.Start("winword.exe", loc);
+            }
+            else
+            {
+                MessageBox.Show("Cannot locate help file.", "File missing", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        private void FAQMark_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            btnFAQ_MouseUp(this, null);
         }
     }
 }

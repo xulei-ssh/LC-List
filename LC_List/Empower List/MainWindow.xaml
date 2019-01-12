@@ -64,5 +64,14 @@
                 </LinearGradientBrush>
             </Ellipse.Fill>
         </Ellipse>
+        <Ellipse x:Name="btnFAQ" HorizontalAlignment="Left" Height="41" Margin="291,351,0,0" Stroke="White" VerticalAlignment="Top" Width="41" MouseUp="btnFAQ_MouseUp">
+            <Ellipse.Fill>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF364361" Offset="0.298"/>
+                    <GradientStop Color="#FF339DAD" Offset="0.781"/>
+                </LinearGradientBrush>
+            </Ellipse.Fill>
+        </Ellipse>
+        <Label x:Name="FAQMark" Content="?" HorizontalAlignment="Left" Height="41" Margin="303,351,0,0" VerticalAlignment="Top" Width="29" FontSize="20" FontFamily="Comic Sans MS" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" MouseUp="FAQMark_MouseUp"/>
     </Grid>
 </Window>

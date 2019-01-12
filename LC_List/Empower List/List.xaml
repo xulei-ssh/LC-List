@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Empower_List"
         mc:Ignorable="d"
-        Title="Final List" Height="727.8" Width="455" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+        Title="序列表" Height="727.8" Width="455" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Grid>
-        <Button x:Name="btnCopyA" Content="Copy Col 1-4" HorizontalAlignment="Left" Height="30" Margin="10,10,0,0" VerticalAlignment="Top" Width="95" Click="btnCopyA_Click"/>
-        <Button x:Name="btnCopyB" Content="Copy Col 5" HorizontalAlignment="Left" Height="30" Margin="110,10,0,0" VerticalAlignment="Top" Width="95" Click="btnCopyB_Click"/>
-        <Button x:Name="btnCopyC" Content="Copy Col All" HorizontalAlignment="Left" Height="30" Margin="210,10,0,0" VerticalAlignment="Top" Width="95" Click="btnCopyC_Click"/>
+        <Button x:Name="btnCopyA" Content="复制第1-4列" HorizontalAlignment="Left" Height="30" Margin="10,10,0,0" VerticalAlignment="Top" Width="95" Click="btnCopyA_Click"/>
+        <Button x:Name="btnCopyB" Content="复制第5列" HorizontalAlignment="Left" Height="30" Margin="110,10,0,0" VerticalAlignment="Top" Width="95" Click="btnCopyB_Click"/>
+        <Button x:Name="btnCopyC" Content="复制全部" HorizontalAlignment="Left" Height="30" Margin="210,10,0,0" VerticalAlignment="Top" Width="95" Click="btnCopyC_Click"/>
         <DataGrid x:Name="finalList" HorizontalAlignment="Left" Height="645" Margin="10,45,0,0" VerticalAlignment="Top" Width="430" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="listVial" Header="Vial" Width="50" Binding="{Binding Vial, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
@@ -22,6 +22,6 @@
         <Label x:Name="TwoListLabel" Content="List" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="311,10,0,0" VerticalAlignment="Top" Height="30"/>
         <RadioButton x:Name="TwoListA" Content="A" HorizontalAlignment="Left" Margin="345,10,0,0" VerticalAlignment="Top" IsChecked="True" Checked="TwoListA_Checked"/>
         <RadioButton x:Name="TwoListB" Content="B" HorizontalAlignment="Left" Margin="345,26,0,0" VerticalAlignment="Top" Checked="TwoListB_Checked"/>
-        <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Left" Height="30" Margin="388,10,0,0" VerticalAlignment="Top" Width="52" Click="btnSave_Click"/>
+        <Button x:Name="btnSave" Content="保存" HorizontalAlignment="Left" Height="30" Margin="388,10,0,0" VerticalAlignment="Top" Width="52" Click="btnSave_Click"/>
     </Grid>
 </Window>

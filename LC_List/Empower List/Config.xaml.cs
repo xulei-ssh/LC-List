@@ -45,18 +45,18 @@ namespace Empower_List
             if (users.Exists(x => x.Name == "root"))
             {
                 ConfigParser.SaveUser(users);
-                MessageBox.Show("Config Saved.", "Success", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.OK);
+                MessageBox.Show("设置已保存", "成功", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.OK);
             }
             else
             {
-                MessageBox.Show("Root user missing, changes cannot be saved", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("根用户缺失，无法保存", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 Close();
             }
         }
         private void btnSaveB_Click(object sender, RoutedEventArgs e)
         {
             ConfigParser.SaveConfig(config);
-            MessageBox.Show("Config Saved.", "Success", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.OK);
+            MessageBox.Show("设置已保存", "成功", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.OK);
         }
         private void S1_Checked(object sender, RoutedEventArgs e) => config[0] = true;
         private void S1_Unchecked(object sender, RoutedEventArgs e) => config[0] = false;
@@ -68,7 +68,7 @@ namespace Empower_List
         {
             if (userListGrid.SelectedIndex > 0)
             {
-                if (MessageBox.Show("Are you sure to reset password for " + users[userListGrid.SelectedIndex].Name + "?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (MessageBox.Show("确认要重设\"" + users[userListGrid.SelectedIndex].Name + "\"的密码吗？", "确认", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     users[userListGrid.SelectedIndex].Token = "";
                     ConfigParser.SaveUser(users);
@@ -79,7 +79,7 @@ namespace Empower_List
         {
             if (userListGrid.SelectedIndex > 0)
             {
-                if (MessageBox.Show("Are you sure to delete " + users[userListGrid.SelectedIndex].Name + "?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                if (MessageBox.Show("确认要删除用户\"" + users[userListGrid.SelectedIndex].Name + "\"吗？", "确认", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
                     users.RemoveAt(userListGrid.SelectedIndex);
                     userListGrid.Items.Refresh();

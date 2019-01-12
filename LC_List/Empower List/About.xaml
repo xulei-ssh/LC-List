@@ -5,16 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Empower_List"
         mc:Ignorable="d"
-        Title="About" Height="471.311" Width="449.727" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closing="about_Closing">
+        Title="关于" Height="471.311" Width="449.727" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closing="about_Closing" WindowStyle="ToolWindow">
     <Grid>
         <Label Content="List Wizard -- Eisai Edition" HorizontalAlignment="Left" Height="31" Margin="81,20,0,0" VerticalAlignment="Top" Width="275" FontSize="15" HorizontalContentAlignment="Center" FontFamily="Segoe UI"/>
-        <Label Content="Author:    Xu Lei  (xulei@eisai.com.cn)" HorizontalAlignment="Left" Margin="98,85,0,0" VerticalAlignment="Top" FontSize="13" FontFamily="Segoe UI"/>
+        <Label Content="作者：徐磊 (xulei@eisai.com.cn)" HorizontalAlignment="Left" Margin="121,85,0,0" VerticalAlignment="Top" FontSize="13" FontFamily="Segoe UI"/>
         <Label x:Name="ver" Content="" HorizontalAlignment="Left" Margin="189,54,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" FontFamily="Segoe UI"/>
-        <GroupBox Header="GUN General Public Licence" HorizontalAlignment="Left" Height="226" Margin="28,156,0,0" VerticalAlignment="Top" Width="391" FontFamily="Segoe UI">
+        <GroupBox Header="GUN General Public License" HorizontalAlignment="Left" Height="226" Margin="28,156,0,0" VerticalAlignment="Top" Width="391" FontFamily="Segoe UI">
             <TextBox x:Name="t" HorizontalAlignment="Left" Height="190" Margin="4,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="371" AllowDrop="False" IsReadOnly="True" AcceptsReturn="True" BorderThickness="0" IsTabStop="False" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto"/>
         </GroupBox>
-        <Button Content="Close" HorizontalAlignment="Left" Height="32" Margin="189,401,0,0" VerticalAlignment="Top" Width="72" Click="Button_Click" FontFamily="Segoe UI"/>
-        <Label x:Name="site" Content="Project Site: https://github.com/xulei-ssh/LC-List/tree/current" HorizontalAlignment="Left" Margin="45,112,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" FontFamily="Segoe UI" FontSize="13"/>
+        <Button Content="关闭" HorizontalAlignment="Left" Height="32" Margin="189,401,0,0" VerticalAlignment="Top" Width="72" Click="Button_Click" FontFamily="Segoe UI"/>
+        <Label x:Name="site" Content="开源项目地址：https://github.com/xulei-ssh/LC-List/tree/current" HorizontalAlignment="Left" Margin="28,112,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" FontFamily="Segoe UI" FontSize="13"/>
 
     </Grid>
 </Window>

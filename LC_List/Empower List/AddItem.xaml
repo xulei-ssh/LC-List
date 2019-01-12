@@ -8,15 +8,15 @@
         mc:Ignorable="d"
         Title="Add Item" Height="131.326" FontSize="14" Width="748.228" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None">
     <Grid>
-        <Label Content="Item Name"  HorizontalAlignment="Left" Height="31" Margin="10,45,0,0" VerticalAlignment="Top" Width="101"/>
+        <Label Content="品种"  HorizontalAlignment="Left" Height="31" Margin="10,45,0,0" VerticalAlignment="Top" Width="101"/>
         <ComboBox x:Name="itemName" TabIndex="1" HorizontalAlignment="Left" Margin="10,81,0,0" VerticalAlignment="Top" Width="147" Height="25" GotFocus="itemName_GotFocus" SelectionChanged="itemName_SelectionChanged"/>
-        <Label Content="Condition" HorizontalAlignment="Left" Height="31" Margin="191,45,0,0" VerticalAlignment="Top" Width="89"/>
+        <Label Content="色谱条件" HorizontalAlignment="Left" Height="31" Margin="191,45,0,0" VerticalAlignment="Top" Width="89"/>
         <TextBox x:Name="condition" TabIndex="2" HorizontalAlignment="Left" Height="25" Margin="191,81,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="137" VerticalContentAlignment="Center" GotFocus="itemName_GotFocus"/>
-        <Label Content="STD Type" HorizontalAlignment="Left" Height="31" Margin="362,45,0,0" VerticalAlignment="Top" Width="111"/>
+        <Label Content="STD类别" HorizontalAlignment="Left" Height="31" Margin="362,45,0,0" VerticalAlignment="Top" Width="111"/>
         <TextBox x:Name="stdType" TabIndex="3" HorizontalAlignment="Left" Height="25" Margin="362,81,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="137" VerticalContentAlignment="Center" KeyUp="Enter_KeyUp" GotFocus="itemName_GotFocus"/>
         <Button x:Name="btnOK"  TabIndex="5" Content="OK" HorizontalAlignment="Left" Height="33" Margin="550,45,0,0" VerticalAlignment="Top" Width="76" Click="btnOK_Click"/>
         <Button x:Name="btnCancel"  TabIndex="6" Content="Cancel" HorizontalAlignment="Left" Height="33" Margin="648,45,0,0" VerticalAlignment="Top" Width="76" Click="btnCancel_Click"/>
-        <Label Content="Project " HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="项目" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lblProj" Content="lblProj" HorizontalAlignment="Left" Margin="111,10,0,0" VerticalAlignment="Top" Width="463"/>
 
     </Grid>

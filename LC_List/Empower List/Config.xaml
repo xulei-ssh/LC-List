@@ -22,26 +22,26 @@
     </Window.Resources>
     <Grid>
         <TabControl HorizontalAlignment="Left" Height="440" Margin="10,10,0,0" VerticalAlignment="Top" Width="376">
-            <TabItem x:Name="tUAC" Header="UAC">
+            <TabItem x:Name="tUAC" Header="用户账户控制">
                 <Grid Background="#FFE5E5E5">
                     <DataGrid x:Name="userListGrid" HorizontalAlignment="Left" Height="324" Margin="19,19,0,0" VerticalAlignment="Top" Width="341" CanUserResizeColumns="False" CanUserSortColumns="False" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False" MouseRightButtonUp="userListGrid_MouseRightButtonUp" CanUserAddRows="False" CanUserDeleteRows="False" SelectionChanged="userListGrid_SelectionChanged">
                         <DataGrid.Columns>
-                            <DataGridTextColumn x:Name="name" Header="Username" Width="100" Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
-                            <DataGridComboBoxColumn x:Name="Group" Width="80" Header="Group" SelectedItemBinding="{Binding Group, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={StaticResource keyUserGroup}}"/>
-                            <DataGridComboBoxColumn x:Name="Status" Width="80" Header="Status" SelectedItemBinding="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={StaticResource keyUserStatus}}"/>
+                            <DataGridTextColumn x:Name="name" Header="用户名" Width="100" Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
+                            <DataGridComboBoxColumn x:Name="Group" Width="80" Header="用户组" SelectedItemBinding="{Binding Group, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={StaticResource keyUserGroup}}"/>
+                            <DataGridComboBoxColumn x:Name="Status" Width="80" Header="状态" SelectedItemBinding="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={StaticResource keyUserStatus}}"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Button x:Name="btnSaveA" Content="Save" HorizontalAlignment="Left" Height="30" Margin="272,360,0,0" VerticalAlignment="Top" Width="70" Click="btnSaveA_Click"/>
-                    <Button x:Name="btnReset" Content="Reset" HorizontalAlignment="Left" Height="30" Margin="19,360,0,0" VerticalAlignment="Top" Width="70" Click="btnReset_Click"/>
-                    <Button x:Name="btnAddUser" Content="Add" HorizontalAlignment="Left" Height="30" Margin="197,360,0,0" VerticalAlignment="Top" Width="70" Click="btnAddUser_Click"/>
+                    <Button x:Name="btnSaveA" Content="保存" HorizontalAlignment="Left" Height="30" Margin="272,360,0,0" VerticalAlignment="Top" Width="70" Click="btnSaveA_Click"/>
+                    <Button x:Name="btnReset" Content="重置密码" HorizontalAlignment="Left" Height="30" Margin="19,360,0,0" VerticalAlignment="Top" Width="70" Click="btnReset_Click"/>
+                    <Button x:Name="btnAddUser" Content="添加用户" HorizontalAlignment="Left" Height="30" Margin="197,360,0,0" VerticalAlignment="Top" Width="70" Click="btnAddUser_Click"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="tSwitch"  Header="Function Switch">
+            <TabItem x:Name="tSwitch"  Header="功能开关">
                 <Grid Background="#FFE5E5E5">
-                    <CheckBox x:Name="S1" Content="Allow user to change runtime in method preview" HorizontalAlignment="Left" Margin="8,13,0,0" VerticalAlignment="Top" Checked="S1_Checked" Unchecked="S1_Unchecked"/>
-                    <CheckBox x:Name="S2" Content="Allow user to change sample name in final sequence list" HorizontalAlignment="Left" Margin="8,48,0,0" VerticalAlignment="Top" Checked="S2_Checked" Unchecked="S2_Unchecked"/>
-                    <CheckBox x:Name="S3" Content="Allow user to change runtime in final sequence list" HorizontalAlignment="Left" Margin="8,83,0,0" VerticalAlignment="Top" Checked="S3_Checked" Unchecked="S3_Unchecked"/>
-                    <Button x:Name="btnSaveB" Content="Save" HorizontalAlignment="Left" Height="30" Margin="272,360,0,0" VerticalAlignment="Top" Width="70" Click="btnSaveB_Click"/>
+                    <CheckBox x:Name="S1" Content="允许改变方法预览中的时间" HorizontalAlignment="Left" Margin="8,13,0,0" VerticalAlignment="Top" Checked="S1_Checked" Unchecked="S1_Unchecked"/>
+                    <CheckBox x:Name="S2" Content="允许改变最终序列表中的名称" HorizontalAlignment="Left" Margin="8,48,0,0" VerticalAlignment="Top" Checked="S2_Checked" Unchecked="S2_Unchecked"/>
+                    <CheckBox x:Name="S3" Content="允许改变最终序列表中的时间" HorizontalAlignment="Left" Margin="8,83,0,0" VerticalAlignment="Top" Checked="S3_Checked" Unchecked="S3_Unchecked"/>
+                    <Button x:Name="btnSaveB" Content="保存" HorizontalAlignment="Left" Height="30" Margin="272,360,0,0" VerticalAlignment="Top" Width="70" Click="btnSaveB_Click"/>
 
                 </Grid>
             </TabItem>

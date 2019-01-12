@@ -32,8 +32,8 @@ namespace Empower_List
             if (cProj.SelectedIndex != -1)
             {
                 string fullProt = database[cProj.SelectedValue.ToString()].Protocol;
-                tProt.Text = fullProt.Split(' ')[0];
-                tVer.Text = fullProt.Split(' ')[1].Split('.')[1];
+                tProt.Text = fullProt.Substring(0, fullProt.LastIndexOf(' '));
+                tVer.Text = fullProt.Substring(fullProt.LastIndexOf(' ') + 5, fullProt.Length - fullProt.LastIndexOf(' ') - 5);
                 cItem.SelectedIndex = -1;
                 tSTD.Text = "";
                 tCondition.Text = "";
@@ -214,6 +214,7 @@ namespace Empower_List
                 tVer.IsEnabled = false;
                 tCondition.IsEnabled = false;
                 tSTD.IsEnabled = false;
+                tName.IsEnabled = false;
             }
         }
         private void g_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -231,5 +232,6 @@ namespace Empower_List
                 database[cProj.SelectedValue.ToString()].ProductName = tName.Text;
             }
         }
+
     }
 }

@@ -163,7 +163,7 @@ namespace Empower_List
             gz.Write(arr1, 0, arr1.Length);
             gz.Close();
             ms1.Close();
-            File.Delete(location);
+            File.Move(location, location.Replace("ds", "Backup\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + DateTime.Now.Millisecond.ToString()));
             File.Move(tempFileLocation, location);
         }
         public static bool SaveList(string proj, List<string> itemsDone, List<Item> items, Dictionary<int, string> stdSuffix, List<ObservableCollection<ListItem>> lists, List<string> lots, string fileName)
@@ -293,11 +293,11 @@ namespace Empower_List
             string shortFileName = filename.Substring(filename.LastIndexOf("\\") + 1, filename.Length - filename.LastIndexOf("\\") - 5);
             if (temp == "")
             {
-                temp = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\" + shortFileName + "_" + rnd.Next().ToString() + ".docx";
+                temp = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\" + shortFileName + "_" + rnd.Next(0,500).ToString() + ".docx";
             }
             else
             {
-                temp = temp + "\\" + shortFileName + "_" + rnd.Next().ToString() + ".docx";
+                temp = temp + "\\" + shortFileName + "_" + rnd.Next(0,500).ToString() + ".docx";
             }
             using (DocX document = DocX.Create(temp, DocumentTypes.Document))
             {
@@ -353,8 +353,8 @@ namespace Empower_List
                 }
                 document.InsertParagraph().InsertTableAfterSelf(t);
                 document.Save();
-                System.Diagnostics.Process.Start("winword.exe", temp);
             }
+            System.Diagnostics.Process.Start("winword.exe", temp);
         }
         public static Dictionary<string, string> GenSyn()
         {
@@ -468,13 +468,13 @@ namespace Empower_List
             {
                 if ((result1[i].Name.EndsWith("-S") || result1[i].Name.EndsWith("-Y")) && (result2[result2.Count - 1].Name.EndsWith("-S")) || (result2[result2.Count - 1].Name.EndsWith("-Y")))
                 {
-                    result2[result2.Count - 1].Name = result2[result2.Count - 1].Name.Replace("-S", " " + result1[i].Name.Substring(0, result1[i].Name.Length - 2) + "-S");
-                    result2[result2.Count - 1].Name = result2[result2.Count - 1].Name.Replace("-Y", " " + result1[i].Name.Substring(0, result1[i].Name.Length - 2) + "-S");
+                    result2[result2.Count - 1].Name = result2[result2.Count - 1].Name.Replace("-S", "\0" + result1[i].Name.Substring(0, result1[i].Name.Length - 2) + "-S");
+                    result2[result2.Count - 1].Name = result2[result2.Count - 1].Name.Replace("-Y", "\0" + result1[i].Name.Substring(0, result1[i].Name.Length - 2) + "-S");
                     result2[result2.Count - 1].Count += result1[i].Count;
                 }
                 else if (result1[i].Name.EndsWith("-H1") && result2[result2.Count - 1].Name.EndsWith("-H1"))
                 {
-                    result2[result2.Count - 1].Name = result2[result2.Count - 1].Name.Replace("-H1", " " + result1[i].Name.Substring(0, result1[i].Name.Length - 3) + "-H1");
+                    result2[result2.Count - 1].Name = result2[result2.Count - 1].Name.Replace("-H1", "\0" + result1[i].Name.Substring(0, result1[i].Name.Length - 3) + "-H1");
                     result2[result2.Count - 1].Count += result1[i].Count;
                 }
                 else
@@ -521,7 +521,7 @@ namespace Empower_List
         }
         public static string SimplifyLotForTable(string e)
         {
-            string[] splitLot = e.Split(' ');
+            string[] splitLot = e.Split('\0');
             if (splitLot.Length == 1) return e;
             List<string> lots = new List<string>();
             lots.Add(splitLot[0].Trim());

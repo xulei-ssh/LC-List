@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="AddUser" Height="62.022" Width="419.126" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
-        <Label Content="Username" HorizontalAlignment="Left" Margin="24,20,0,0" VerticalAlignment="Top"/>
+        <Label Content="用户名" HorizontalAlignment="Left" Margin="24,20,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="tName" HorizontalAlignment="Left" Height="23" Margin="111,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TabIndex="-5" VerticalContentAlignment="Center"/>
         <Button x:Name="btnOK" Content="OK" HorizontalAlignment="Left" Height="23" Margin="256,22,0,0" VerticalAlignment="Top" Width="62" IsDefault="True" TabIndex="2" Click="btnOK_Click"/>
         <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Left" Height="23" Margin="323,22,0,0" VerticalAlignment="Top" Width="62" TabIndex="3" IsCancel="True" Click="btnCancel_Click"/>

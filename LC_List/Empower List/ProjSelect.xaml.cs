@@ -20,11 +20,11 @@ namespace Empower_List
         {
             InitializeComponent();
             var version = Assembly.GetExecutingAssembly().GetName().Version;
-            Title = "Injection List " + "Ver " + version.Major + "." + version.Minor + "." + version.Revision;
+            Title = "序列表编辑器 " + version.Major + "." + version.Minor + "." + version.Revision;
             Parent = parent;
             if(!File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + @"ds"))
             {
-                MessageBox.Show("Cannot find database file.");
+                MessageBox.Show("找不到数据库\n请确认网络连接");
                 Hide();
                 return;
             }
@@ -57,6 +57,9 @@ namespace Empower_List
             ModifySwitch(true);
             tasks = null;
             openedDetails = false;
+            cNewVial.IsEnabled = true;
+            cNewVial.IsChecked = false;
+
         }
         private void comboItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -96,16 +99,28 @@ namespace Empower_List
                 uTime.Text = "";
                 if (listItems.SelectedValue.ToString() == "Related Substance" || listItems.SelectedValue.ToString() == "Assay")
                 {
-                    radioNew.Content = "Start this item as new line";
+                    radioNew.Content = "项目从下一个空列开始";
                 }
                 else
                 {
-                    radioNew.Content = "Start samples as new line";
+                    radioNew.Content = "样品从下一个空列开始";
+                    
                 }
+                if (listItems.SelectedValue.ToString() == "Related Substance")
+                {
+                    cNewVial.IsChecked = false;
+                    cNewVial.IsEnabled = false;
+                }
+                else
+                {
+                    cNewVial.IsEnabled = true;
+                    cNewVial.IsChecked = database[comboProj.SelectedValue.ToString()][listItems.SelectedValue.ToString()].NewStd;
+                }
+                
             }
             else
             {
-                preview.Header = "Method Preview";
+                preview.Header = "方法预览";
                 uTime.Text = "";
                 methodGrid.ItemsSource = null;
             }
@@ -115,7 +130,7 @@ namespace Empower_List
             double temp;
             if (!double.TryParse(uTime.Text, out temp))
             {
-                MessageBox.Show("Invalid time", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("运行时间格式错误", "时间无效", MessageBoxButton.OK, MessageBoxImage.Error);
                 uTime.SelectAll();
                 uTime.Focus();
             }
@@ -150,28 +165,23 @@ namespace Empower_List
         private void btnLotDetail_Click(object sender, RoutedEventArgs e)
         {
             if (tasks == null || textLots.Text == "" || listItems.Items == null || listItems.Items.Count == 0) return;
-            if (!comboItems.IsEnabled || MessageBox.Show("Please confirm Lot, Item and Method information before customizing.\nNo further change could be made if continue.", "Confirm", MessageBoxButton.OKCancel, MessageBoxImage.Information) == MessageBoxResult.OK)
+            if (openedDetails == false)
             {
-                if (openedDetails == false)
-                {
-                    UpdateItemEachLot();
-                    openedDetails = true;
-                }
-                ModifySwitch(false);
-                string[] headers = new string[listItems.Items.Count];
-                listItems.Items.CopyTo(headers, 0);
-                ItemEditor ie = new ItemEditor(this, headers, tasks);
-                ie.Show();
-                IsEnabled = false;
+                UpdateItemEachLot();
+                openedDetails = true;
             }
+            ModifySwitch(false);
+            string[] headers = new string[listItems.Items.Count];
+            listItems.Items.CopyTo(headers, 0);
+            ItemEditor ie = new ItemEditor(this, headers, tasks);
+            ie.Show();
+            IsEnabled = false;
         } 
         private void ModifySwitch(bool mode)
         {
             textLots.IsEnabled = mode;
             comboItems.IsEnabled = mode;
             listItems.IsEnabled = mode;
-            textSkip.IsEnabled = mode;
-            preview.IsEnabled = mode;
         }
         private void UpdateItemEachLot()
         {
@@ -199,30 +209,25 @@ namespace Empower_List
             // Check skip Vial 
             if (!SkipVerify())
             {
-                MessageBox.Show("Invalid skipped vial", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("跳过瓶号必须为数字或1:A,1型", "跳过瓶号无效", MessageBoxButton.OK, MessageBoxImage.Error);
                 textSkip.SelectAll();
                 textSkip.Focus();
                 return;
             }
-            if (!comboItems.IsEnabled || MessageBox.Show("Please confirm Lot, Item and Method information before generating.\nNo further change could be made if continue.", "Confirm", MessageBoxButton.OKCancel, MessageBoxImage.Information) == MessageBoxResult.OK)
+            if (openedDetails == false)
             {
-                if (openedDetails == false)
-                {
-                    UpdateItemEachLot();
-                    openedDetails = true;
-                }
-                ModifySwitch(false);
-                string[] headers = new string[listItems.Items.Count];
-                listItems.Items.CopyTo(headers, 0);
-                var lots = textLots.Text.Split('\r', '\n');
-                FinalList fl = new FinalList(this, comboProj.SelectedValue.ToString(), database[comboProj.SelectedValue.ToString()], headers, tasks, cEleven.IsChecked == true ? true : false, cMax.SelectedValue.ToString(), textSkip.Text.Trim(),lots);
-                fl.listName.IsReadOnly = !config[1];
-                fl.listTime.IsReadOnly = !config[2];
-                fl.Show();
-                IsEnabled = false;
-                
-                
+                UpdateItemEachLot();
+                openedDetails = true;
             }
+            ModifySwitch(false);
+            string[] headers = new string[listItems.Items.Count];
+            listItems.Items.CopyTo(headers, 0);
+            var lots = textLots.Text.Split('\r', '\n');
+            FinalList fl = new FinalList(this, comboProj.SelectedValue.ToString(), database[comboProj.SelectedValue.ToString()], headers, tasks, cEleven.IsChecked == true ? true : false, cMax.SelectedValue.ToString(), textSkip.Text.Trim(), lots);
+            fl.listName.IsReadOnly = !config[1];
+            fl.listTime.IsReadOnly = !config[2];
+            fl.Show();
+            IsEnabled = false;
         }
         private void uTime_KeyUp(object sender, KeyEventArgs e)
         {
@@ -239,31 +244,52 @@ namespace Empower_List
         {
             if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
             {
-                cLot.IsChecked = cLot.IsChecked == true ? false : true;
+                cLot.IsChecked = !cLot.IsChecked;
             }
-            if (e.Key == Key.Enter && cLot.IsChecked == true ? true : false)
+            if (e.Key == Key.Enter && (bool)cLot.IsChecked)
             {
                 if (textLots.SelectionStart != textLots.Text.Length)
                 {
                     return;
                 }
                 //Get last line of previous
-
                 string x = textLots.GetLineText(textLots.GetLastVisibleLineIndex() - 1);
+
+
+
                 //假定开始都是数字，获取第一个不是数字的部分,将之后的保存
-                string suffix = "";
+                string suffix = "", prefix = "";
+                bool prefixDone = false;
+                int startIndex = 0;
                 for (int i = 0; i < x.Length; i++)
                 {
                     if (!int.TryParse(x[i].ToString(), out int q))
                     {
-                        suffix = x.Substring(i, x.Length - i);
-                        x = x.Substring(0, i);
-                        break;
+                        if (!prefixDone)
+                        {
+                            prefix += x[i];
+                        }
+                        else
+                        {
+                            suffix = x.Substring(i, x.Length - i);
+                            x = x.Substring(startIndex, i - startIndex);
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if (!prefixDone) startIndex = i;
+                        if (i == x.Length - 1)
+                        {
+                            x = x.Substring(startIndex, i - startIndex + 1);
+                            break;
+                        }
+                        prefixDone = true;
                     }
                 }
                 if (x == "") return;
                 x = (long.Parse(x) + 1).ToString();
-                x += suffix;
+                x = prefix + x + suffix;
                 x = x.Substring(0, x.Length - 2);
                 textLots.Text += x;
                 textLots.Select(textLots.Text.Length, 0);
@@ -314,6 +340,23 @@ namespace Empower_List
                 if (c < 1 || c > 11) return false;
             }
             return true;
+        }
+
+        private void cNewVial_Checked(object sender, RoutedEventArgs e)
+        {
+            if (comboProj.SelectedIndex != -1 && listItems.SelectedIndex != -1 && cNewVial.IsEnabled)
+            {
+                database[comboProj.SelectedValue.ToString()][listItems.SelectedValue.ToString()].NewStd = true;
+            }
+        }
+
+        private void cNewVial_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (comboProj.SelectedIndex != -1 && listItems.SelectedIndex != -1 && cNewVial.IsEnabled)
+            {
+                database[comboProj.SelectedValue.ToString()][listItems.SelectedValue.ToString()].NewStd = false;
+            }
+
         }
     }
 }

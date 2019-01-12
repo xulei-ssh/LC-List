@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Empower_List"
         mc:Ignorable="d"
-        Title="Save As" Height="152.732" Width="478.142" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+        Title="另存为" Height="152.732" Width="478.142" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Grid>
-        <Label Content="File name" HorizontalAlignment="Left" Margin="23,24,0,0" VerticalAlignment="Top" FontSize="14"/>
+        <Label Content="文件名" HorizontalAlignment="Left" Margin="23,24,0,0" VerticalAlignment="Top" FontSize="14"/>
         <TextBox x:Name="tName" HorizontalAlignment="Left" Height="28" Margin="123,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="322" FontSize="14" TabIndex="1" VerticalContentAlignment="Center" PreviewKeyDown="tName_KeyDown"/>
-        <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Left" Height="29" Margin="144,71,0,0" VerticalAlignment="Top" Width="70" Click="btnSave_Click" IsDefault="True"/>
-        <Button Content="Cancel" HorizontalAlignment="Left" Margin="265,71,0,0" VerticalAlignment="Top" Width="70" Height="29" Click="btnCancel_Click" IsCancel="True"/>
+        <Button x:Name="btnSave" Content="保存" HorizontalAlignment="Left" Height="29" Margin="144,71,0,0" VerticalAlignment="Top" Width="70" Click="btnSave_Click" IsDefault="True"/>
+        <Button Content="取消" HorizontalAlignment="Left" Margin="265,71,0,0" VerticalAlignment="Top" Width="70" Height="29" Click="btnCancel_Click" IsCancel="True"/>
 
     </Grid>
 </Window>

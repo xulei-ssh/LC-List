@@ -438,7 +438,7 @@ namespace Empower_List
                                     if (writeSTD)
                                     {
                                         VialConfirm();
-                                        Add(new ListItem(currentVial.ToString(), inj, FullList1.Last().Name.Replace('1', inj.Name.Contains("STD2") ? '2' : '3')));
+                                        Add(new ListItem(currentVial.ToString(), inj, FullList1.Last().Name.Replace("STD2","STD3").Replace("STD1", "STD2")));
                                         currentVial++;
                                     }
                                 }
@@ -496,7 +496,7 @@ namespace Empower_List
                                 Add(new ListItem(currentVial.ToString(), item.Injs.Last(), lot + suf + (i + 1)));
                                 currentVial++;
                             }
-                            if (item.Injs.Last().Volume < 50)
+                            if (!item.NewStd)
                             {
                                 Add(std1);
                             }
@@ -523,7 +523,16 @@ namespace Empower_List
                                     Add(new ListItem(currentVial.ToString (), item.Injs.Last(), lot + "-HJ" + (c * 10 + i + 1)));
                                     currentVial++;
                                 }
-                                Add(std1);
+                                if (!item.NewStd)
+                                {
+                                    Add(std1);
+                                }
+                                else
+                                {
+                                    VialConfirm();
+                                    Add(std1.IntertSTD1ForDissolutionOfLargeInjAmount(currentVial));
+                                    currentVial++;
+                                }
                             }
                         }
                         else
@@ -534,7 +543,16 @@ namespace Empower_List
                                 Add(new ListItem(currentVial.ToString(), item.Injs.Last(), lot + "-HJ" + (i + 1)));
                                 currentVial++;
                             }
-                            Add(std1);
+                            if (!item.NewStd)
+                            {
+                                Add(std1);
+                            }
+                            else
+                            {
+                                VialConfirm();
+                                Add(std1.IntertSTD1ForDissolutionOfLargeInjAmount(currentVial));
+                                currentVial++;
+                            }
                         }
                         break;
                 }

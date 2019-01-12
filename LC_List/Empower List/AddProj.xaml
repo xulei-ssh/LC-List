@@ -8,15 +8,15 @@
         mc:Ignorable="d"
         Title="Add Project" Height="154.289" FontSize="14" Width="569.742" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None">
     <Grid>
-        <Label Content="Project Name" HorizontalAlignment="Left" Height="31" Margin="16,10,0,0" VerticalAlignment="Top" Width="101"/>
+        <Label Content="品种代号" HorizontalAlignment="Left" Height="31" Margin="16,10,0,0" VerticalAlignment="Top" Width="101"/>
         <TextBox x:Name="projName" TabIndex="1" HorizontalAlignment="Left" Height="25" Margin="16,46,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="182" VerticalContentAlignment="Center" GotFocus="projVer_GotFocus" TextChanged="projVer_GotFocus"/>
-        <Label Content="Protocol" HorizontalAlignment="Left" Height="31" Margin="16,83,0,0" VerticalAlignment="Top" Width="67"/>
+        <Label Content="SOP/方案" HorizontalAlignment="Left" Height="31" Margin="16,83,0,0" VerticalAlignment="Top" Width="86"/>
         <TextBox x:Name="projProt" TabIndex="3" HorizontalAlignment="Left" Height="25" Margin="16,119,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="182" VerticalContentAlignment="Center" GotFocus="projVer_GotFocus" TextChanged="projVer_GotFocus"/>
-        <Label Content="Version" HorizontalAlignment="Left" Height="31" Margin="229,83,0,0" VerticalAlignment="Top" Width="71"/>
+        <Label Content="版本" HorizontalAlignment="Left" Height="31" Margin="229,83,0,0" VerticalAlignment="Top" Width="71"/>
         <TextBox x:Name="projVer" TabIndex="4" HorizontalAlignment="Left" Height="25" Margin="229,119,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="182" VerticalContentAlignment="Center" GotFocus="projVer_GotFocus" TextChanged="projVer_GotFocus"/>
         <Button x:Name="btnOK" Content="OK" HorizontalAlignment="Left" Height="33" Margin="459,37,0,0" VerticalAlignment="Top" Width="76" Click="btnOK_Click"/>
         <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Left" Height="33" Margin="459,98,0,0" VerticalAlignment="Top" Width="76" Click="btnCancel_Click"/>
-        <Label Content="Product Name" HorizontalAlignment="Left" Height="31" Margin="229,10,0,0" VerticalAlignment="Top" Width="144"/>
+        <Label Content="品名" HorizontalAlignment="Left" Height="31" Margin="229,10,0,0" VerticalAlignment="Top" Width="144"/>
         <TextBox x:Name="productName" TabIndex="2" HorizontalAlignment="Left" Height="25" Margin="229,46,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="182" VerticalContentAlignment="Center" GotFocus="projVer_GotFocus" TextChanged="projVer_GotFocus"/>
 
     </Grid>

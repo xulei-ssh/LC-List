@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Empower_List"
         mc:Ignorable="d"
-        Title="Lot and Item Details" Height="365.6" Width="744.613" Closing="Window_Closing" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="自定义项目" Height="365.6" Width="744.613" Closing="Window_Closing" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <DataGrid x:Name="grid" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="276" Margin="10,10,0,0" VerticalAlignment="Top" Width="718" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" CanUserAddRows="False" Unloaded="grid_Unloaded">
             <DataGrid.ColumnHeaderStyle>
@@ -22,7 +22,7 @@
                 <DataGridCheckBoxColumn x:Name="Col4" Width="130" Binding="{Binding Items[3], Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserReorder="False" CanUserResize="False" CanUserSort="True"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Label Content="Tip: Click column header to switch all item applications." HorizontalAlignment="Left" Margin="10,291,0,0" VerticalAlignment="Top" Width="718"/>
+        <Label Content="提示：点击表头可全部勾选/取消" HorizontalAlignment="Left" Margin="10,291,0,0" VerticalAlignment="Top" Width="718"/>
 
     </Grid>
 </Window>

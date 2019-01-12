@@ -5,15 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Empower_List"
         mc:Ignorable="d"
-        Title="Set Password" FontSize="14" Height="276.23" Width="680.328" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+        Title="设置密码" FontSize="14" Height="208.808" Width="529.047" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Grid>
-        <Label Content="You need to type in your password again at first login to complete user account settings." HorizontalAlignment="Left" Margin="37,25,0,0" VerticalAlignment="Top"/>
-        <Label Content="Username" HorizontalAlignment="Left" Margin="37,72,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="lblName" Content="Label" HorizontalAlignment="Left" Margin="260,72,0,0" VerticalAlignment="Top"/>
-        <Label Content="Password (Retype)" HorizontalAlignment="Left" Margin="37,123,0,0" VerticalAlignment="Top"/>
-        <PasswordBox x:Name="pass" TabIndex="1" HorizontalAlignment="Left" Height="28" Margin="260,123,0,0" VerticalAlignment="Top" Width="301" VerticalContentAlignment="Center" GotFocus="pass_GotFocus" LostFocus="pass_LostFocus"/>
-        <Button x:Name="btnOK" TabIndex="2" Content="OK" HorizontalAlignment="Left" Height="32" Margin="193,185,0,0" VerticalAlignment="Top" Width="86" IsDefault="True"/>
-        <Button x:Name="btnCancel" TabIndex="3" Content="Cancel" HorizontalAlignment="Left" Height="32" Margin="356,185,0,0" VerticalAlignment="Top" Width="86" IsCancel="True"/>
+        <Label Content="请再次输入您的密码" HorizontalAlignment="Left" Margin="37,74,0,0" VerticalAlignment="Top"/>
+        <Label Content="用户名" HorizontalAlignment="Left" Margin="37,23,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblName" Content="Label" HorizontalAlignment="Left" Margin="193,23,0,0" VerticalAlignment="Top"/>
+        <PasswordBox x:Name="pass" TabIndex="1" HorizontalAlignment="Left" Height="28" Margin="193,74,0,0" VerticalAlignment="Top" Width="244" VerticalContentAlignment="Center" PasswordChanged="pass_PasswordChanged"/>
+        <Button x:Name="btnOK" IsEnabled="False" TabIndex="2" Content="OK" HorizontalAlignment="Left" Height="32" Margin="124,126,0,0" VerticalAlignment="Top" Width="86" IsDefault="True" Click="btnOK_Click"/>
+        <Button x:Name="btnCancel" TabIndex="3" Content="Cancel" HorizontalAlignment="Left" Height="32" Margin="287,126,0,0" VerticalAlignment="Top" Width="86" IsCancel="True"/>
+        <Label x:Name="lblTick" Content="" HorizontalAlignment="Left" Margin="442,74,0,0" VerticalAlignment="Top" Width="71"/>
 
     </Grid>
 </Window>

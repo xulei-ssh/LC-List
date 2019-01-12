@@ -5,23 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Empower_List"
         mc:Ignorable="d"
-        Title="List Editor -- Basic" FontSize="13" FontFamily="Segoe UI" Height="537.868" Width="886.4" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" >
+        Title="序列表编辑器" FontSize="13" FontFamily="Segoe UI" Height="537.868" Width="886.4" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" >
     <Grid>
-        <Label Content="Project" HorizontalAlignment="Left" Height="31" Margin="10,10,0,0" VerticalAlignment="Top" Width="68" FontSize="13" FontFamily="Segoe UI"/>
-        <ComboBox x:Name="comboProj" HorizontalAlignment="Left" Height="31" Margin="78,10,0,0" VerticalAlignment="Top" Width="164" VerticalContentAlignment="Center" SelectionChanged="comboProj_SelectionChanged" FontFamily="Segoe UI" FontSize="13" TabIndex="1"/>
+        <Label Content="品名" HorizontalAlignment="Left" Height="31" Margin="10,10,0,0" VerticalAlignment="Top" Width="68" FontSize="13" FontFamily="Segoe UI"/>
+        <ComboBox x:Name="comboProj" HorizontalAlignment="Left" Height="31" Margin="56,10,0,0" VerticalAlignment="Top" Width="164" VerticalContentAlignment="Center" SelectionChanged="comboProj_SelectionChanged" FontFamily="Segoe UI" FontSize="13" TabIndex="1"/>
         <Label x:Name="lblProtocol" Foreground="Red" Content="" HorizontalAlignment="Left" Height="31" Margin="247,10,0,0" VerticalAlignment="Top" Width="187" FontSize="13" FontFamily="Segoe UI"/>
-        <Label Content="Lot #" HorizontalAlignment="Left" Height="31" Margin="10,46,0,0" VerticalAlignment="Top" Width="68" FontSize="13" FontFamily="Segoe UI"/>
+        <Label Content="批号" HorizontalAlignment="Left" Height="31" Margin="10,46,0,0" VerticalAlignment="Top" Width="68" FontSize="13" FontFamily="Segoe UI"/>
         <TextBox x:Name="textLots" HorizontalAlignment="Left" Height="329" Margin="10,82,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250" AcceptsReturn="True" FontSize="13" FontFamily="Segoe UI" LostFocus="textLots_LostFocus" TabIndex="2" KeyUp="textLots_KeyUp"/>
         <ListBox x:Name="listItems" HorizontalAlignment="Left" Height="140" Margin="273,123,0,0" VerticalAlignment="Top" Width="169" FontSize="13" SelectionChanged="listItems_SelectionChanged" FontFamily="Segoe UI" LostFocus="listItems_LostFocus" TabIndex="4"/>
         <ComboBox x:Name="comboItems" HorizontalAlignment="Left" Height="36" Margin="273,82,0,0" VerticalAlignment="Top" Width="169" VerticalContentAlignment="Center" SelectionChanged="comboItems_SelectionChanged" FontSize="13" FontFamily="Segoe UI" TabIndex="3"/>
-        <Label Content="Item(s)" HorizontalAlignment="Left" Height="31" Margin="265,46,0,0" VerticalAlignment="Top" Width="68" FontSize="13" FontFamily="Segoe UI"/>
-        <Label Content="Skip Vial" HorizontalAlignment="Left" Height="31" Margin="273,339,0,0" VerticalAlignment="Top" Width="60" FontSize="13" FontFamily="Segoe UI"/>
+        <Label Content="项目" HorizontalAlignment="Left" Height="31" Margin="265,46,0,0" VerticalAlignment="Top" Width="68" FontSize="13" FontFamily="Segoe UI"/>
+        <Label Content="跳过瓶号" HorizontalAlignment="Left" Height="31" Margin="273,339,0,0" VerticalAlignment="Top" Width="60" FontSize="13" FontFamily="Segoe UI"/>
         <TextBox x:Name="textSkip" HorizontalAlignment="Left" Height="31" Margin="344,339,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" FontSize="13" VerticalContentAlignment="Center" FontFamily="Segoe UI" TabIndex="9"/>
-        <GroupBox x:Name="preview" Header="Method Preview" HorizontalAlignment="Left" Height="402" Margin="457,10,0,0" VerticalAlignment="Top" Width="413" FontSize="13" FontFamily="Segoe UI">
+        <GroupBox x:Name="preview" Header="方法预览" HorizontalAlignment="Left" Height="402" Margin="457,10,0,0" VerticalAlignment="Top" Width="413" FontSize="13" FontFamily="Segoe UI">
             <Grid HorizontalAlignment="Left" Height="374" Margin="4,0,0,0" VerticalAlignment="Top" Width="392">
-                <RadioButton x:Name="radioNormal" Content="Normal" HorizontalAlignment="Left" Margin="143,16,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" IsChecked="True" Click="radioNormal_Click" TabIndex="5"/>
-                <RadioButton x:Name="radioNew" Content="Sample at new line" HorizontalAlignment="Left" Margin="218,16,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Click="radioNew_Click" TabIndex="6"/>
-                <Label Content="Numbering Mode" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                <RadioButton x:Name="radioNormal" Content="顺序编号" HorizontalAlignment="Left" Margin="110,16,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" IsChecked="True" Click="radioNormal_Click" TabIndex="5"/>
+                <RadioButton x:Name="radioNew" Content="样品从下一个空列开始" HorizontalAlignment="Left" Margin="195,16,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Click="radioNew_Click" TabIndex="6"/>
+                <Label Content="项目编号方式" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                 <DataGrid x:Name="methodGrid" HorizontalAlignment="Left" Height="264" Margin="19,82,0,0" VerticalAlignment="Top" Width="363" AutoGenerateColumns="False" CanUserResizeColumns="False" CanUserSortColumns="False" CanUserResizeRows="False" CanUserReorderColumns="False" TabIndex="8" CanUserAddRows="False" CanUserDeleteRows="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn x:Name="injVol" Header="Volume" Width="70" Binding="{Binding Volume, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
@@ -31,22 +31,26 @@
                     </DataGrid.Columns>
 
                 </DataGrid>
-                <Label x:Name="lblRT" Content="Set time to (min)" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top"/>
-                <TextBox x:Name="uTime" HorizontalAlignment="Left" Height="27" Margin="121,50,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="77" RenderTransformOrigin="-0.181,0.333" VerticalContentAlignment="Center" TabIndex="7" KeyUp="uTime_KeyUp"/>
-                <Button x:Name="SetTime" Content="Set" HorizontalAlignment="Left" Height="27" Margin="203,50,0,0" VerticalAlignment="Top" Width="46" Click="SetTime_Click"/>
+                <Label x:Name="lblRT" Content="时间设置(min)" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="uTime" HorizontalAlignment="Left" Height="27" Margin="121,50,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="51" RenderTransformOrigin="-0.181,0.333" VerticalContentAlignment="Center" TabIndex="7" KeyUp="uTime_KeyUp"/>
+                <Button x:Name="SetTime" Content="OK" HorizontalAlignment="Left" Height="27" Margin="177,50,0,0" VerticalAlignment="Top" Width="42" Click="SetTime_Click"/>
+                <CheckBox x:Name="cNewVial" Content="插入STD1为新进样瓶" HorizontalAlignment="Left" Margin="232,56,0,0" VerticalAlignment="Top" IsEnabled="False" IsChecked="{Binding NewStd, Mode=TwoWay}" Checked="cNewVial_Checked" Unchecked="cNewVial_Unchecked"/>
             </Grid>
         </GroupBox>
-        <Button x:Name="btnLotDetail" Content="Customize Items" HorizontalAlignment="Left" Height="32" Margin="493,449,0,0" VerticalAlignment="Top" Width="113" FontFamily="Segoe UI" FontSize="13" Click="btnLotDetail_Click"/>
-        <Button x:Name="btnGen" Content="Generate" HorizontalAlignment="Left" Height="32" Margin="761,449,0,0" VerticalAlignment="Top" Width="79" FontFamily="Segoe UI" FontSize="13" Click="btnGen_Click"/>
-        <GroupBox Header="Tip" FontSize="13" FontFamily="Segoe UI" HorizontalAlignment="Left" Height="84" Margin="10,417,0,0" VerticalAlignment="Top" Width="450">
+        <Rectangle HorizontalAlignment="Left" Height="77" Margin="476,422,0,0" Stroke="#FFD5DFE5" VerticalAlignment="Top" Width="394" RadiusX="4" RadiusY="4"/>
+
+        <Button x:Name="btnLotDetail" Content="自定义项目" HorizontalAlignment="Left" Height="32" Margin="649,449,0,0" VerticalAlignment="Top" Width="87" FontFamily="Segoe UI" FontSize="13" Click="btnLotDetail_Click"/>
+        <Button x:Name="btnGen" Content="生成" HorizontalAlignment="Left" Height="32" Margin="750,449,0,0" VerticalAlignment="Top" Width="79" FontFamily="Segoe UI" FontSize="13" Click="btnGen_Click"/>
+        <GroupBox Header="提示" FontSize="13" FontFamily="Segoe UI" HorizontalAlignment="Left" Height="84" Margin="10,417,0,0" VerticalAlignment="Top" Width="450">
             <TextBox x:Name="tip" HorizontalAlignment="Left" Height="65" TextWrapping="Wrap" VerticalAlignment="Top" Width="430" Margin="0,0,0,0" AcceptsReturn="True" AllowDrop="False" IsReadOnly="True" BorderThickness="0"/>
         </GroupBox>
-        <Button x:Name="btnReset" Content="Reset" HorizontalAlignment="Left" Height="32" Margin="663,449,0,0" VerticalAlignment="Top" Width="79" FontFamily="Segoe UI" FontSize="13" Click="btnReset_Click"/>
-        <CheckBox x:Name="cLot" Content="Smart Lot# Filling (Ctrl)" HorizontalAlignment="Left" Margin="273,276,0,0" VerticalAlignment="Top" FontSize="13" FontFamily="Segoe UI" Width="169" IsChecked="True"/>
-        <CheckBox x:Name="cEleven" Content="1:A,1 Style Numbering" FontFamily="Segoe UI" FontSize="13" HorizontalAlignment="Left" Margin="273,307,0,0" VerticalAlignment="Top" Click="cEleven_Click"/>
-        <Label Content="Max Vial" HorizontalAlignment="Left" Height="31" Margin="273,380,0,0" VerticalAlignment="Top" Width="60" FontSize="13" FontFamily="Segoe UI"/>
+        <Button x:Name="btnReset" Content="重置" HorizontalAlignment="Left" Height="32" Margin="493,449,0,0" VerticalAlignment="Top" Width="79" FontFamily="Segoe UI" FontSize="13" Click="btnReset_Click"/>
+        <CheckBox x:Name="cLot" Content="批号自动填充(Ctrl切换)" HorizontalAlignment="Left" Margin="273,276,0,0" VerticalAlignment="Top" FontSize="13" FontFamily="Segoe UI" Width="169" IsChecked="True"/>
+        <CheckBox x:Name="cEleven" Content="1:A,1型编号" FontFamily="Segoe UI" FontSize="13" HorizontalAlignment="Left" Margin="273,307,0,0" VerticalAlignment="Top" Click="cEleven_Click"/>
+        <Label Content="最大瓶号" HorizontalAlignment="Left" Height="31" Margin="273,380,0,0" VerticalAlignment="Top" Width="60" FontSize="13" FontFamily="Segoe UI"/>
         <ComboBox x:Name="cMax" HorizontalAlignment="Left" Height="36" Margin="344,376,0,0" VerticalAlignment="Top" Width="98" VerticalContentAlignment="Center" SelectionChanged="comboItems_SelectionChanged" FontSize="13" FontFamily="Segoe UI" TabIndex="3"/>
-        <Label Content="注：方法预览中的sp, spX, spY均为样品溶液的代称" HorizontalAlignment="Left" Margin="493,380,0,0" VerticalAlignment="Top" Width="347"/>
+        <Label Content="注：方法预览中的sp, spS, spY均为样品溶液的代称" HorizontalAlignment="Left" Margin="493,380,0,0" VerticalAlignment="Top" Width="347"/>
+        <Label Content="请确认输入无误后再点击！" HorizontalAlignment="Left" Height="27" Margin="655,422,0,0" VerticalAlignment="Top" Width="171"/>
 
     </Grid>
 </Window>
