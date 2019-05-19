@@ -4,6 +4,8 @@ using System.Windows.Media;
 using System.Reflection;
 using System.IO;
 using System.Windows;
+//using System.Drawing;
+using System.Windows.Media.Imaging;
 namespace Empower_List
 {
     public partial class MainWindow : Window
@@ -12,6 +14,12 @@ namespace Empower_List
         public MainWindow()
         {
             InitializeComponent();
+
+            ImageBrush backgroundBrush = new ImageBrush();
+            backgroundBrush.ImageSource = new BitmapImage(new Uri(ConfigParser.ParseConfigFile("Background"), UriKind.Relative));
+            backgroundBrush.Opacity = 100;
+            Background = backgroundBrush;
+
             defaultBrush = btnMethod.Foreground;
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             lblVer.Content = "ver " + version.Major + "." + version.Minor + "." + version.Revision;

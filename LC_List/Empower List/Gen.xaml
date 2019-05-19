@@ -7,12 +7,15 @@
         mc:Ignorable="d"
         Title="输出至Word" Height="405.192" Width="427.322" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" FontSize="14">
     <Grid>
-        <ListBox x:Name="seqList" HorizontalAlignment="Left" Height="291" Margin="10,10,0,0" VerticalAlignment="Top" Width="392" PreviewMouseDoubleClick="seqList_PreviewMouseDoubleClick"/>
+        <ListBox x:Name="seqList" HorizontalAlignment="Left" Height="268" Margin="10,33,0,0" VerticalAlignment="Top" Width="392" PreviewMouseDoubleClick="seqList_PreviewMouseDoubleClick"/>
         <Label Content="起始于" HorizontalAlignment="Left" Height="30" Margin="10,323,0,0" VerticalAlignment="Top" Width="67"/>
         <TextBox x:Name="tIndex" HorizontalAlignment="Left" Height="30" Margin="74,323,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="48" VerticalContentAlignment="Center" PreviewKeyUp="tIndex_PreviewKeyUp" KeyUp="tIndex_KeyUp"/>
         <Button x:Name="btnOK" Content="OK" HorizontalAlignment="Left" Height="30" Margin="347,323,0,0" VerticalAlignment="Top" Width="55" Click="btnOK_Click"/>
         <Label Content="字体" HorizontalAlignment="Left" Height="30" Margin="135,323,0,0" VerticalAlignment="Top" Width="46"/>
         <TextBox x:Name="tFont" HorizontalAlignment="Left" Height="30" Margin="181,323,0,0" TextWrapping="Wrap" Text="楷体_GB2312" VerticalContentAlignment="Center" VerticalAlignment="Top" Width="161"/>
+        <Label Content="请选择序列表文件" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" Width="126"/>
+        <RadioButton x:Name="radioAll" Content="所有" HorizontalAlignment="Left" Margin="141,10,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Checked="radioAll_Checked"/>
+        <RadioButton x:Name="radioRecent" Content="最近10日内" IsChecked="True" HorizontalAlignment="Left" Margin="197,11,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Checked="radioRecent_Checked"/>
 
     </Grid>
 </Window>

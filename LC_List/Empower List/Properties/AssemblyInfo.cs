@@ -10,9 +10,9 @@ using System.Windows;
 [assembly: AssemblyTitle("List Wizard")]
 [assembly: AssemblyDescription("A handy tool for LC list editing")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("N/A")]
 [assembly: AssemblyProduct("List Wizard")]
-[assembly: AssemblyCopyright("Copyright ©  2018 XuLei")]
+[assembly: AssemblyCopyright("Copyright ©  2018-2019 XuLei")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,5 +51,5 @@ using System.Windows;
 // 可以指定所有值，也可以使用以下所示的 "*" 预置版本号和修订号
 // 方法是按如下所示使用“*”: :
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.3.0.13")]
-[assembly: AssemblyFileVersion("1.3.0.13")]
+[assembly: AssemblyVersion("1.3.0.17")]
+[assembly: AssemblyFileVersion("1.3.0.17")]

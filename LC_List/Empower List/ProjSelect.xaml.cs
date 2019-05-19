@@ -143,8 +143,8 @@ namespace Empower_List
                     {
                         item.Time = time;
                     }
+                    methodGrid.ItemsSource = database[comboProj.SelectedValue.ToString()][listItems.SelectedValue.ToString()].Injs;
                 }
-                methodGrid.ItemsSource = database[comboProj.SelectedValue.ToString()][listItems.SelectedValue.ToString()].Injs;
             }
         }
         private void radioNormal_Click(object sender, RoutedEventArgs e)

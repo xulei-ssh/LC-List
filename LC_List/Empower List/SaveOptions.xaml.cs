@@ -1,15 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 using System.IO;
 
@@ -52,32 +44,32 @@ namespace Empower_List
         {
             if (tName.Text.Trim().Length == 0)
             {
-                MessageBox.Show("Invalid Name.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("文件名无效", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 tName.Focus();
                 return;
             }
             if (!CheckFile(tName.Text.Trim()))
             {
-                MessageBox.Show("Name already occupied.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("与已有文件重名，请重新命名", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 tName.Focus();
                 return;
             }
             if (tName.Text.Trim().Contains(" ")||tName.Text.Trim().Contains("\\")|| tName.Text.Trim().Contains("/") || tName.Text.Trim().Contains(":") || tName.Text.Trim().Contains("*") || tName.Text.Trim().Contains("?") || tName.Text.Trim().Contains("\"") || tName.Text.Trim().Contains("<") || tName.Text.Trim().Contains(">") || tName.Text.Trim().Contains("|"))
             {
-                var r = MessageBox.Show("Name cannot contain the following:\n\\ / : * ? \" < > | <space>", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                var r = MessageBox.Show("文件名不能包含以下字符:\n\\ / : * ? \" < > | <空格>", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 tName.Focus();
                 return;
             }
             if (ConfigParser.SaveList(ProjName, ItemsDone, Items, StdSuffix, Lists, Lots, tName.Text.Trim()))
             {
-                MessageBox.Show("List saved.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("保存成功", "完成", MessageBoxButton.OK, MessageBoxImage.Information);
                 Parent.IsEnabled = true;
                 Parent.Show();
                 Close();
             }
             else
             {
-                MessageBox.Show("Save operation failed due to unknown reasons.", "Save failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("出现未预料的异常，无法保存。请联系管理员。", "保存失败", MessageBoxButton.OK, MessageBoxImage.Error);
                 tName.Focus();
             }
 

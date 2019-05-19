@@ -6,7 +6,9 @@ using System.IO;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Text;
 using WordPlugin;
+using System.Diagnostics;
 
 namespace Empower_List
 {
@@ -216,6 +218,7 @@ namespace Empower_List
                         if (i != "") s += "<Lot l=\"" + i + "\"/>";
                     }
                     s += "</Lots></ListDocument>";
+                    s = s.Replace("&","[and_placeholder]");
                     writer.Write(s);
                     writer.Flush();
                     stream.Position = 0;
@@ -315,7 +318,7 @@ namespace Empower_List
                 var p = document.InsertParagraph();
                 // Append some text and add formatting.
                 p.Append("批号：\t").Font(new Font(fontName)).FontSize(13);
-                p.Append(ParseLotReport(lots)).Font(new Font(fontName)).FontSize(13);
+                p.Append(ParseLotReport(lots).Replace("[and_placeholder]", "&")).Font(new Font(fontName)).FontSize(13);
                 //End of Lot
                 //Start of Table
                 var t = document.AddTable(1, 3);
@@ -346,7 +349,7 @@ namespace Empower_List
                     var c = t.InsertRow();
                     c.Cells[0].Paragraphs[0].Append(strIndex, f);
                     c.Cells[0].VerticalAlignment = VerticalAlignment.Center;
-                    c.Cells[1].Paragraphs[0].Append(inj.Name == "" ? "" : ParseInjName(inj.Name), f);
+                    c.Cells[1].Paragraphs[0].Append(inj.Name == "" ? "" : ParseInjName(inj.Name).Replace("[and_placeholder]", "&"), f);
                     c.Cells[1].VerticalAlignment = VerticalAlignment.Center;
                     c.Cells[2].Paragraphs[0].Append("--", f);
                     c.Cells[2].VerticalAlignment = VerticalAlignment.Center;
@@ -587,38 +590,65 @@ namespace Empower_List
                 }
             }
             specifications.Add(new NameConfig(lots[lots.Count - 1], lots[lots.Count - 1].Contains("(") ? true : false));
-            //result += specifications[0].Lot;
-            //for (int i = 1; i < specifications.Count; i++)
-            //{
-            //    if (specifications[i].IsStable == specifications[i - 1].IsStable)
-            //    {
-            //        result += " " + specifications[i].Lot;
-            //        if (specifications[i].Lot.Contains("("))
-            //        {
-            //            result += "\r\t\t";
-            //        }
-            //    }
-            //    else
-            //    {
-            //        result += "\r\t\t" + specifications[i].Lot;
-            //    }
-            //}
             result += specifications[0].Lot;
- 
             for (int i = 1; i < specifications.Count; i++)
             {
-                if (specifications[i].IsStable != specifications[i - 1].IsStable || (specifications[i].IsStable == specifications[i - 1].IsStable && specifications[i].Lot.Contains("(")))
+                if (!specifications[i].IsStable && !specifications[i - 1].IsStable)
                 {
-                    result += (result.EndsWith("\t") ? "" : " ") + specifications[i].Lot + "\r\t\t";
+                    result += " " + specifications[i].Lot;
+                }
+                else if ((specifications[i].IsStable && !specifications[i - 1].IsStable) || (!specifications[i].IsStable && specifications[i - 1].IsStable))
+                {
+                    result += "\r\t\t" + specifications[i].Lot;
                 }
                 else
-                {
-                    result += (result.EndsWith("\t") ? "" : " ") + specifications[i].Lot;
-                }
+                {   //Both stable lots
+                    if (specifications[i - 1].Lot.Contains("("))
+                    {
+                        result += "\r\t\t";
+                    }
+                    if (specifications[i].Lot.Contains("("))
+                    {
+                        result += (result.EndsWith("\t") ? "" : " ") + specifications[i].Lot;
+                    }
+                    else
+                    {
+                        result += (result.EndsWith("\t") ? "" : " ") + specifications[i].Lot;
 
+                    }
+                }
             }
             if (result.EndsWith("\r\t\t")) result = result.Substring(0, result.Length - 3);
             return result;
+        }
+        public static string ParseConfigFile(string pattern)
+        {
+
+            FileStream srcFs = File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + @"Config");
+            GZipStream g = new GZipStream(srcFs, CompressionMode.Decompress);             //compress stream
+            MemoryStream ms = new MemoryStream();
+            byte[] bytes = new byte[40960];
+            int n;
+            while ((n = g.Read(bytes, 0, bytes.Length)) > 0)
+            {
+                ms.Write(bytes, 0, n);
+            }
+            g.Close();
+            ms.Position = 0;
+            byte[] eData = ms.ToArray();
+            for (int i = 0; i < eData.Length; i++)
+            {
+                eData[i] = (byte)(eData[i] - i);
+            }
+            ms = new MemoryStream(eData);
+            string[] configs = Encoding.UTF8.GetString(eData).Split('\n');
+            Dictionary<string, string> configsDict = new Dictionary<string, string>();
+            foreach (var c in configs)
+            {
+                configsDict.Add(c.Split('=')[0].ToUpper(), c.Split('=')[1].ToUpper());
+            }
+
+            return configsDict[pattern.ToUpper()];
         }
     }
     public class ListInj

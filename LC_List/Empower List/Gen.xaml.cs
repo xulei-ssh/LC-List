@@ -10,19 +10,12 @@ namespace Empower_List
 {
     public partial class Gen : Window
     {
-        MainWindow Parent;
+        new MainWindow Parent;
         public Gen(MainWindow parent)
         {
             Parent = parent;
             InitializeComponent();
-            string[] files = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + "Sequences");
-            for (int i = 0; i < files.Length; i++)
-            {
-                files[i] = files[i].Substring(files[i].LastIndexOf("\\") + 1, files[i].Length - files[i].LastIndexOf("\\") - 5);
-            }
-            List<string> list = files.ToList();
-            list.Sort();
-            seqList.ItemsSource = list;
+            RefreshList(false);
         }
         protected override void OnClosing(CancelEventArgs e)
         {
@@ -70,6 +63,40 @@ namespace Empower_List
             {
                 btnOK_Click(this, null);
             }
+        }
+
+        private void radioAll_Checked(object sender, RoutedEventArgs e)
+        {
+            radioRecent.IsChecked = false;
+            RefreshList(true);
+        }
+
+        private void radioRecent_Checked(object sender, RoutedEventArgs e)
+        {
+            radioAll.IsChecked = false;
+            RefreshList(false);
+        }
+        private void RefreshList(bool isAll)
+        {
+            string[] files = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + "Sequences");
+            List<string> list = new List<string>();
+            for (int i = 0; i < files.Length; i++)
+            {
+                if (isAll || (!isAll && DateTime.Now - File.GetCreationTime(files[i]) <= TimeSpan.FromDays(10)))
+                {
+                    list.Add(files[i].Substring(files[i].LastIndexOf("\\") + 1, files[i].Length - files[i].LastIndexOf("\\") - 5));
+                }
+            }
+            list.Sort(new FileDateComparer());
+            seqList.ItemsSource = list;
+        }
+
+    }
+    public class FileDateComparer : IComparer<string>
+    {
+        public int Compare(string x, string y)
+        {
+            return -(int)(File.GetCreationTime(AppDomain.CurrentDomain.BaseDirectory + "Sequences\\" + x + ".elw") - File.GetCreationTime(AppDomain.CurrentDomain.BaseDirectory + "Sequences\\" + y + ".elw")).TotalMinutes;
         }
     }
 

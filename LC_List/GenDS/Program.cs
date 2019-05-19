@@ -61,14 +61,8 @@ namespace GenDS
                 FileStream fsw = File.Create(@"d:\1");
                 fsw.Write(eData, 0, eData.Length);
                 fsw.Close();
-
-
-
-
-                //dataFile.Load(ms);
                 srcFs.Close();
             }
-
             else if (sd == 2)
             {
                 MemoryStream stream = new MemoryStream();
@@ -90,15 +84,6 @@ namespace GenDS
                 gz.Close();
                 ms1.Close();
             }
-
-
-
-
-
-
-
-
-
             #region compression info
             //string sourceFile = @"d:\config";
             //string destFile = @"d:\ds";
