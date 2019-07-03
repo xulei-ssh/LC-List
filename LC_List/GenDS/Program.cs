@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Xml;
 using Microsoft.Office.Interop.Word;
 using System.Text.RegularExpressions;
+
 namespace GenDS
 {
     class Program
@@ -30,6 +31,18 @@ namespace GenDS
             //    re.Add(Regex.IsMatch(x, p));
             //    r++;
             //}
+
+
+            // Regex test
+
+            Regex reg = new Regex(@" ([L|A])([0-99])(\b)");
+
+            Match match = reg.Match("1123 L2");
+            Console.WriteLine(match.Groups[0].Value);
+
+
+
+
 
 
 

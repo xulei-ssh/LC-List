@@ -7,11 +7,12 @@
         mc:Ignorable="d"
         Title="序列表编辑器" FontSize="13" FontFamily="Segoe UI" Height="537.868" Width="886.4" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" >
     <Grid>
+        <Label x:Name="lotHint" Content="" HorizontalAlignment="Left" Height="282" Margin="10,108,0,0" VerticalAlignment="Top" Width="250" FontSize="12" FontWeight="Bold" Foreground="#FFB6AFAF"/>
         <Label Content="品名" HorizontalAlignment="Left" Height="31" Margin="10,10,0,0" VerticalAlignment="Top" Width="68" FontSize="13" FontFamily="Segoe UI"/>
         <ComboBox x:Name="comboProj" HorizontalAlignment="Left" Height="31" Margin="56,10,0,0" VerticalAlignment="Top" Width="164" VerticalContentAlignment="Center" SelectionChanged="comboProj_SelectionChanged" FontFamily="Segoe UI" FontSize="13" TabIndex="1"/>
         <Label x:Name="lblProtocol" Foreground="Red" Content="" HorizontalAlignment="Left" Height="31" Margin="247,10,0,0" VerticalAlignment="Top" Width="187" FontSize="13" FontFamily="Segoe UI"/>
         <Label Content="批号" HorizontalAlignment="Left" Height="31" Margin="10,46,0,0" VerticalAlignment="Top" Width="68" FontSize="13" FontFamily="Segoe UI"/>
-        <TextBox x:Name="textLots" HorizontalAlignment="Left" Height="329" Margin="10,82,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250" AcceptsReturn="True" FontSize="13" FontFamily="Segoe UI" LostFocus="textLots_LostFocus" TabIndex="2" KeyUp="textLots_KeyUp"/>
+        <TextBox x:Name="textLots" HorizontalAlignment="Left" Height="329" Margin="10,82,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250" AcceptsReturn="True" FontSize="13" FontFamily="Segoe UI" LostFocus="textLots_LostFocus" TabIndex="2" KeyUp="textLots_KeyUp" Background="{x:Null}"/>
         <ListBox x:Name="listItems" HorizontalAlignment="Left" Height="140" Margin="273,123,0,0" VerticalAlignment="Top" Width="169" FontSize="13" SelectionChanged="listItems_SelectionChanged" FontFamily="Segoe UI" LostFocus="listItems_LostFocus" TabIndex="4"/>
         <ComboBox x:Name="comboItems" HorizontalAlignment="Left" Height="36" Margin="273,82,0,0" VerticalAlignment="Top" Width="169" VerticalContentAlignment="Center" SelectionChanged="comboItems_SelectionChanged" FontSize="13" FontFamily="Segoe UI" TabIndex="3"/>
         <Label Content="项目" HorizontalAlignment="Left" Height="31" Margin="265,46,0,0" VerticalAlignment="Top" Width="68" FontSize="13" FontFamily="Segoe UI"/>

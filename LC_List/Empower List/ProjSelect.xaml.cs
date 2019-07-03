@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.IO;
 namespace Empower_List
 {
@@ -19,6 +20,8 @@ namespace Empower_List
         public ProjSelect(MainWindow parent)
         {
             InitializeComponent();
+            //Set lot hint
+            lotHint.Content = "稳定性简便输入格式：\n批号+空格+条件(A/L/T)+月份\n例如：\n\"111AK L3\"相当于111AK(25*60,3M)\n\"111AK A6\"相当于111AK(40*75,6M)\n\"111AK T44\"相当于111AK(30*65,44M)";
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             Title = "序列表编辑器 " + version.Major + "." + version.Minor + "." + version.Revision;
             Parent = parent;
@@ -36,7 +39,7 @@ namespace Empower_List
             methodGrid.IsReadOnly = !config[0];
             comboProj.Items.Clear();
             database.Keys.ToList().ForEach(x => comboProj.Items.Add(x));
-            tip.Text = "1: 请务必确认SOP版本；当前版本仅支持单张序列表\n2: 稳定性样品请用小括号注明贮存条件\n3: CDN溶出度不得与其他项使用同一个序列表";
+            tip.Text = "1: 请务必确认SOP版本；当前版本仅支持单张序列表\n2: 稳定性样品请用小括号注明贮存条件，或使用简便格式\n3: CDN溶出度不得与其他项使用同一个序列表";
             cMax.Items.Add(100);
             cMax.Items.Add(120);
             cMax.Items.Add(132);
@@ -185,12 +188,28 @@ namespace Empower_List
         }
         private void UpdateItemEachLot()
         {
+            Regex reg = new Regex(@" ([L|A|T])([0-9]{1,2})(\b)");
             tasks = new List<TaskSet>();
             foreach (var lot in textLots.Text.Split('\r','\n'))
             {
                 if (lot != "")
                 {
-                    tasks.Add(new TaskSet(lot, listItems.Items.Count));
+                    //
+                    Match match = reg.Match(lot);
+                    if (match.Success)
+                    {
+                        tasks.Add(new TaskSet(lot.Replace(" A", @"(40*75,")
+                            .Replace(" L", @"(25*60,")
+                            .Replace(" T", @"(30*65,") + "M)"
+                            , listItems.Items.Count));
+
+                    }
+                    else
+                    {
+                        tasks.Add(new TaskSet(lot, listItems.Items.Count));
+                    }
+                    //
+
                 }
             }          
         }
@@ -242,6 +261,8 @@ namespace Empower_List
         }
         private void textLots_KeyUp(object sender, KeyEventArgs e)
         {
+            lotHint.Visibility = textLots.Text == "" ? Visibility.Visible : Visibility.Hidden;
+
             if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
             {
                 cLot.IsChecked = !cLot.IsChecked;
@@ -287,8 +308,8 @@ namespace Empower_List
                         prefixDone = true;
                     }
                 }
-                if (x == "") return;
-                x = (long.Parse(x) + 1).ToString();
+                if (x.Trim() == "") return;
+                x = (long.Parse(x) + 1).ToString("D" + x.Length.ToString());
                 x = prefix + x + suffix;
                 x = x.Substring(0, x.Length - 2);
                 textLots.Text += x;

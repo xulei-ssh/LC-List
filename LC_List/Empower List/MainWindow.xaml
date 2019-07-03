@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="List Wizard - Eisai Edition" Height="438" Width="400" HorizontalAlignment="Left" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Grid Opacity="100">
-        <Label Content="List Wizard" HorizontalAlignment="Left" Height="44" Margin="62,19,0,0" VerticalAlignment="Top" Width="270" FontSize="25" FontFamily="Comic Sans MS" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" HorizontalContentAlignment="Center"/>
+        <Label Content="List Wizard" HorizontalAlignment="Left" Height="44" Margin="62,19,0,0" VerticalAlignment="Top" Width="270" FontSize="25" FontFamily="Segoe UI Symbol" Foreground="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" HorizontalContentAlignment="Center"/>
         <Label Content="Eisai Edition" HorizontalAlignment="Left" Margin="253,63,0,0" VerticalAlignment="Top" FontSize="18">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveBorderColorKey}}"/>

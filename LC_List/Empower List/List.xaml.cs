@@ -6,6 +6,7 @@ using System.Windows;
 using System.Collections.ObjectModel;
 using System.Text;
 using System;
+using System.Text.RegularExpressions;
 
 namespace Empower_List
 {
@@ -22,7 +23,7 @@ namespace Empower_List
         public ObservableCollection<ListItem> FullList1 { get; set; }
         public ObservableCollection<ListItem> FullList2 { get; set; }
         VialCondition[][] conditionList;
-        string[] lots;
+        string[] Lots;
        
         ListItem preservedSTD1;
         List<int> stdTypes;
@@ -40,7 +41,26 @@ namespace Empower_List
             std1StartVialsSuffix = new Dictionary<int, string>();
             currentVial = 1;
             STDenum = 0;
-            this.lots = lots;
+            //this.lots = lots;
+
+            // change lots abbr. to normal style
+            this.Lots = new string[lots.Length];
+            Regex reg = new Regex(@" ([L|A|T])([0-9]{1,2})(\b)");
+            for (int i = 0; i < lots.Length; i++)
+            {
+                Match match = reg.Match(lots[i]);
+                if (match.Success)
+                {
+                    Lots[i] = lots[i].Replace(" A", @"(40*75,")
+                        .Replace(" L", @"(25*60,")
+                        .Replace(" T", @"(30*65,") + "M)";
+                }
+                else
+                {
+                    Lots[i] = lots[i];
+                }
+            }
+            //test over
             this.isEleven = isEleven;
             this.invalid = invalid;
             this.maxVial = int.Parse(maxVial);
@@ -494,6 +514,7 @@ namespace Empower_List
                                 VialConfirm();
                                 string suf = item.Name == "Dissolution" ? "-R" : "-N";
                                 Add(new ListItem(currentVial.ToString(), item.Injs.Last(), lot + suf + (i + 1)));
+                                //Add(new ListItem(currentVial.ToString(), item.Injs.Last(), lot + suf + (i + 1)));
                                 currentVial++;
                             }
                             if (!item.NewStd)
@@ -509,50 +530,21 @@ namespace Empower_List
                         }
                         break;
                     case "Content Uniformity":
-                        if (projName == "MBL-ONCE")
+                        for (int i = 0; i < 10; i++)
                         {
-                            for (int c = 0; c < 3; c++)
-                            {
-                                if (item.NewLine)
-                                {
-                                    NewLineCurrentVial(isEleven ? 11 : 10);
-                                }
-                                for (int i = 0; i < 10; i++)
-                                {
-                                    VialConfirm();
-                                    Add(new ListItem(currentVial.ToString (), item.Injs.Last(), lot + "-HJ" + (c * 10 + i + 1)));
-                                    currentVial++;
-                                }
-                                if (!item.NewStd)
-                                {
-                                    Add(std1);
-                                }
-                                else
-                                {
-                                    VialConfirm();
-                                    Add(std1.IntertSTD1ForDissolutionOfLargeInjAmount(currentVial));
-                                    currentVial++;
-                                }
-                            }
+                            VialConfirm();
+                            Add(new ListItem(currentVial.ToString(), item.Injs.Last(), lot + "-HJ" + (i + 1).ToString ("D2")));
+                            currentVial++;
+                        }
+                        if (!item.NewStd)
+                        {
+                            Add(std1);
                         }
                         else
                         {
-                            for (int i = 0; i < 10; i++)
-                            {
-                                VialConfirm();
-                                Add(new ListItem(currentVial.ToString(), item.Injs.Last(), lot + "-HJ" + (i + 1)));
-                                currentVial++;
-                            }
-                            if (!item.NewStd)
-                            {
-                                Add(std1);
-                            }
-                            else
-                            {
-                                VialConfirm();
-                                Add(std1.IntertSTD1ForDissolutionOfLargeInjAmount(currentVial));
-                                currentVial++;
-                            }
+                            VialConfirm();
+                            Add(std1.IntertSTD1ForDissolutionOfLargeInjAmount(currentVial));
+                            currentVial++;
                         }
                         break;
                 }
@@ -717,7 +709,7 @@ namespace Empower_List
             lists.Add(FullList1);
             if (FullList2.Count != 0) lists.Add(FullList2);
 
-            SaveOptions so = new SaveOptions(this, projInfo.ProductName, items.ToList(), projInfo.Items, std1StartVialsSuffix, lists, lots.ToList());
+            SaveOptions so = new SaveOptions(this, projInfo.ProductName, items.ToList(), projInfo.Items, std1StartVialsSuffix, lists, Lots.ToList());
             so.Show();
             IsEnabled = false;
             Hide();

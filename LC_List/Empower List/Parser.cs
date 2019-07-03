@@ -204,7 +204,7 @@ namespace Empower_List
                         {
                             //设计溶出、含量均匀度、耐酸力的格式，仅第一针
                             string dissolutionIgnoredPattern = @"^*\-R[2-6]$";                               //所有 溶出的 非 R1结尾的
-                            string contentUniformityIgnoredPattern = @"^*\-HJ([1-9]{0,1}[02-9]$)";          //所有 含量均匀度的 非 1\21\31...结尾的
+                            string contentUniformityIgnoredPattern = @"^*\-HJ([0-9]{0,1}[02-9]$)";          //所有 含量均匀度的 非 1\21\31...结尾的
                             string acidIgnoredPattern = @"^*\-N[2-6]$";                                     //所有 耐酸力的 非 R1结尾的
                             if (!(Regex.IsMatch(j.Name, dissolutionIgnoredPattern) || Regex.IsMatch(j.Name, contentUniformityIgnoredPattern) || Regex.IsMatch(j.Name, acidIgnoredPattern)))
                             {
@@ -385,6 +385,7 @@ namespace Empower_List
             replacements.Add("-HJ21", "含量均匀度");
             replacements.Add("-HJ11", "含量均匀度");
             replacements.Add("-HJ1", "含量均匀度");
+            replacements.Add("-HJ01", "含量均匀度");
             replacements.Add("-N1", "耐酸力");
             replacements.Add("YSY", "预试液");
             replacements.Add("FL1", "辅料");
