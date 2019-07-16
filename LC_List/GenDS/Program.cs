@@ -35,6 +35,12 @@ namespace GenDS
 
             // Regex test
 
+            string contentUniformityIgnoredPattern = @"^*\-HJ([0-9]{0,1}[02-9]$)";          //所有 含量均匀度的 非 1\21\31...结尾的
+            Console.WriteLine(Regex.IsMatch("123-HJ02", contentUniformityIgnoredPattern));
+
+
+
+
             Regex reg = new Regex(@" ([L|A])([0-99])(\b)");
 
             Match match = reg.Match("1123 L2");

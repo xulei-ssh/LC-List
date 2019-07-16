@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Text;
 using WordPlugin;
-using System.Diagnostics;
 
 namespace Empower_List
 {
@@ -219,6 +218,7 @@ namespace Empower_List
                     }
                     s += "</Lots></ListDocument>";
                     s = s.Replace("&","[and_placeholder]");
+
                     writer.Write(s);
                     writer.Flush();
                     stream.Position = 0;
@@ -390,6 +390,8 @@ namespace Empower_List
             replacements.Add("YSY", "预试液");
             replacements.Add("FL1", "辅料");
             replacements.Add("-S", "有关物质");
+            replacements.Add("TW", "拖尾");
+
             foreach (var rep in replacements)
             {
                 if (input.Contains(rep.Key))
@@ -442,7 +444,7 @@ namespace Empower_List
                 {
                     result1.Add(new ListInj(6, i.Name));
                 }
-                else if (i.Name.EndsWith("-HJ1") || i.Name.EndsWith("-HJ11") || i.Name.EndsWith("-HJ21"))
+                else if (i.Name.EndsWith("-HJ01") || i.Name.EndsWith("-HJ11") || i.Name.EndsWith("-HJ21"))
                 {
                     result1.Add(new ListInj(10, i.Name));
                 }
@@ -496,9 +498,9 @@ namespace Empower_List
                 {
                     result2[i].Name = result2[i].Name.Substring(0, result2[i].Name.Length - 3) + "含量";
                 }
-                else if (result2[i].Name.EndsWith("-HJ1"))
+                else if (result2[i].Name.EndsWith("-HJ01"))
                 {
-                    result2[i].Name = result2[i].Name.Substring(0, result2[i].Name.Length - 4) + "含量均匀度";
+                    result2[i].Name = result2[i].Name.Substring(0, result2[i].Name.Length - 5) + "含量均匀度";
                 }
                 else if (result2[i].Name.EndsWith("-R1"))
                 {

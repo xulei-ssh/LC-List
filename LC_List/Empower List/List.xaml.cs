@@ -7,6 +7,9 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System;
 using System.Text.RegularExpressions;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+
 
 namespace Empower_List
 {
@@ -594,19 +597,9 @@ namespace Empower_List
             }
             if (data.Length == 0) return;
             data = data.Substring(0, data.Length - 2);
-            Clipboard.SetData(DataFormats.Text, data);
-        }
-        private void btnCopyB_Click(object sender, RoutedEventArgs e)
-        {
-            string data = "";
-            foreach (var p in FullList1)
-            {
-                data += p.Time + "\r\n";
-            }
-            if (data.Length == 0) return;
-            data = data.Substring(0, data.Length - 2);
-            Clipboard.SetData(DataFormats.Text, data);
+            lblCopy.Content = "已复制：前四列";
 
+            Clipboard.SetData(DataFormats.Text, data);
         }
         private void btnCopyC_Click(object sender, RoutedEventArgs e)
         {
@@ -617,6 +610,8 @@ namespace Empower_List
             }
             if (data.Length == 0) return;
             data = data.Substring(0, data.Length - 2);
+            lblCopy.Content = "已复制：全部";
+
             Clipboard.SetData(DataFormats.Text, data);
 
         }
@@ -713,6 +708,66 @@ namespace Empower_List
             so.Show();
             IsEnabled = false;
             Hide();
+        }
+        private void DataGridColumnHeader_Click(object sender, RoutedEventArgs e)
+        {
+            var columnHeader = sender as DataGridColumnHeader;
+            if (columnHeader != null)
+            {
+                string data = "";
+                switch (columnHeader.DisplayIndex)
+                {
+                    case 0:
+                        foreach (var p in FullList1)
+                        {
+                            data += p.Vial + "\r\n";
+                        }
+                        lblCopy.Content = "已复制：瓶号";
+                        break;
+                    case 1:
+                        foreach (var p in FullList1)
+                        {
+                            data += p.Vol + "\r\n";
+
+                        }
+                        lblCopy.Content = "已复制：进样量";
+
+                        break;
+                    case 2:
+                        foreach (var p in FullList1)
+                        {
+                            data += p.Count + "\r\n";
+                        }
+                        lblCopy.Content = "已复制：进样次数";
+
+                        break;
+                    case 3:
+                        foreach (var p in FullList1)
+                        {
+                            data += p.Name + "\r\n";
+                        }
+                        lblCopy.Content = "已复制：样品名称";
+
+                        break;
+                    case 4:
+                        foreach (var p in FullList1)
+                        {
+                            data += p.Time + "\r\n";
+                        }
+                        lblCopy.Content = "已复制：时间";
+
+                        break;
+                }
+                if (data.Length == 0) return;
+                data = data.Substring(0, data.Length - 2);
+                Clipboard.SetData(DataFormats.Text, data);
+            }
+        }
+
+        private void finalList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            finalList.SelectedItem = null;
+            finalList.SelectedIndex = -1;
         }
     }
     public class ListItem
