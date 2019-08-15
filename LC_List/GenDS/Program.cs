@@ -179,9 +179,11 @@ namespace GenDS
         public void CreateNewDocument(string filePath)
         {
             killWinWordProcess();
-            wordApp = new Microsoft.Office.Interop.Word.ApplicationClass();
-            wordApp.DisplayAlerts = WdAlertLevel.wdAlertsNone;
-            wordApp.Visible = false;
+            wordApp = new Microsoft.Office.Interop.Word.ApplicationClass
+            {
+                DisplayAlerts = WdAlertLevel.wdAlertsNone,
+                Visible = false
+            };
             object missing = System.Reflection.Missing.Value;
             object templateName = filePath;
             wordDoc = wordApp.Documents.Open(ref templateName, ref missing,

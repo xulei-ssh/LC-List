@@ -1,14 +1,13 @@
-﻿#define enable_mbl_once
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Collections.ObjectModel;
-using System.Text;
 using System;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.IO;
 
 
 namespace Empower_List
@@ -21,8 +20,8 @@ namespace Empower_List
         List<TaskSet> tasks;
         string projName;
         string invalid;
+        string first;
         bool isInListOne = true;
-        int maxVial;
         public ObservableCollection<ListItem> FullList1 { get; set; }
         public ObservableCollection<ListItem> FullList2 { get; set; }
         VialCondition[][] conditionList;
@@ -30,7 +29,7 @@ namespace Empower_List
        
         ListItem preservedSTD1;
         List<int> stdTypes;
-        public FinalList(ProjSelect parent, string projName, ProjectInfo projInfo, string[] items, List<TaskSet> tasks, bool isEleven, string maxVial, string invalid,string[] lots)
+        public FinalList(ProjSelect parent, string projName, ProjectInfo projInfo, string[] items, List<TaskSet> tasks, bool isEleven, string invalid,string[] lots,string firstVial)
         {
             Parent = parent;
             InitializeComponent();
@@ -42,9 +41,8 @@ namespace Empower_List
             FullList2 = new ObservableCollection<ListItem>();
             std1StartVials = new Dictionary<int, int>();
             std1StartVialsSuffix = new Dictionary<int, string>();
-            currentVial = 1;
+            currentVial = ParseInvalid(firstVial);
             STDenum = 0;
-            //this.lots = lots;
 
             // change lots abbr. to normal style
             this.Lots = new string[lots.Length];
@@ -63,18 +61,23 @@ namespace Empower_List
                     Lots[i] = lots[i];
                 }
             }
-            //test over
             this.isEleven = isEleven;
             this.invalid = invalid;
-            this.maxVial = int.Parse(maxVial);
+            this.first = firstVial;
             conditionList = new VialCondition[2][];
-            conditionList[0] = new VialCondition[this.maxVial];
-            conditionList[1] = new VialCondition[this.maxVial];
             for (int i = 0; i < conditionList.Length; i++)
             {
+                conditionList[i] = new VialCondition[300];
                 for (int j = 0; j < conditionList[i].Length; j++)
                 {
-                    conditionList[i][j] = VialCondition.Available;
+                    if (j < currentVial)
+                    {
+                        conditionList[i][j] = VialCondition.Used;
+                    }
+                    else
+                    {
+                        conditionList[i][j] = VialCondition.Available;
+                    }
                 }
             }
             preservedSTD1 = new ListItem();
@@ -332,11 +335,10 @@ namespace Empower_List
                 if (item.NewLine)
                 {
                     //先搜索是否有符合条件的连续Available，记录第一个Avail瓶号；如没有，搜索紧靠前面是否有符合条件的连续Preserved，记录第一个Avail瓶号；如都没有，则使用currentVial
-                    int availVial = 0;
-                    if ((FindAvailable(4, out availVial) || FindPreserved(4, out availVial)) && VialConfirm(availVial))
+                    if ((FindAvailable(4, out int availVial) || FindPreserved(4, out availVial)) && VialConfirm(availVial))
                     {
                         for (int i = 0; i < 4; i++)
-                        {                          
+                        {
                             Add(new ListItem((availVial + i).ToString(), item.Injs[i]));
                             if (i == 0) std1 = new ListItem((availVial + i).ToString(), item.Injs[i]);
                             conditionList[isInListOne ? 0 : 1][availVial - 1 + i] = VialCondition.Used;
@@ -376,8 +378,7 @@ namespace Empower_List
                     if (item.NewLine && specials.Count != countSTD)
                     {
                         //先搜索是否有符合条件的连续Available，记录第一个Avail瓶号；如没有，搜索紧靠前面是否有符合条件的连续Preserved，记录第一个Avail瓶号；如都没有，则使用currentVial
-                        int availVial = 0;
-                        if ((FindAvailable(specials.Count - countSTD, out availVial) || FindPreserved(specials.Count - countSTD, out availVial)) && VialConfirm(availVial))
+                        if ((FindAvailable(specials.Count - countSTD, out int availVial) || FindPreserved(specials.Count - countSTD, out availVial)) && VialConfirm(availVial))
                         {
                             for (int i = 0; i < specials.Count - countSTD; i++)
                             {
@@ -394,11 +395,10 @@ namespace Empower_List
                     if (item.NewLine)
                     {
                         //先搜索是否有符合条件的连续Available，记录第一个Avail瓶号；如没有，搜索紧靠前面是否有符合条件的连续Preserved，记录第一个Avail瓶号；如都没有，则使用currentVial
-                        int availVial = 0;
-                        if ((FindAvailable(count, out availVial) || FindPreserved(count, out availVial)) && VialConfirm(availVial))
+                        if ((FindAvailable(count, out int availVial) || FindPreserved(count, out availVial)) && VialConfirm(availVial))
                         {
                             int increment = 0;
-                            foreach(var inj in item.FindAll(false ).Where(x=>!x.Name.Contains ("FLD")))
+                            foreach (var inj in item.FindAll(false).Where(x => !x.Name.Contains("FLD")))
                             {
                                 if (inj.Name.Contains("STD1") && stdTypes.Count > 1)
                                 {
@@ -556,11 +556,6 @@ namespace Empower_List
         }
         private void VialConfirm()
         {
-            if (currentVial > maxVial)
-            {              
-                isInListOne = false;
-                currentVial = 1;
-            }
             while (currentVial == ParseInvalid(invalid))
             {
                 currentVial++;
@@ -569,7 +564,7 @@ namespace Empower_List
         }
         private bool VialConfirm(int vial)
         {
-            if (vial >= maxVial || vial == ParseInvalid(invalid) - 1)
+            if (vial == ParseInvalid(invalid) - 1)
             {
                 return false;
             }
@@ -581,11 +576,6 @@ namespace Empower_List
             {
                 conditionList[isInListOne ? 0 : 1][currentVial - 1] = VialCondition.Preserved;
                 currentVial++;
-                if (currentVial > maxVial)
-                {
-                    currentVial = 1;
-                    isInListOne = false;
-                }
             }
         }
         private void btnCopyA_Click(object sender, RoutedEventArgs e)
@@ -700,19 +690,79 @@ namespace Empower_List
         }
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            List<ObservableCollection<ListItem>> lists = new List<ObservableCollection<ListItem>>();
-            lists.Add(FullList1);
-            if (FullList2.Count != 0) lists.Add(FullList2);
+            //Auto save
+            //Get name
+            string saveName = projName + "_";
+            foreach (var item in items)
+            {
+                switch (item)
+                {
+                    case "Content Uniformity":
+                        saveName += "HJ";
+                        break;
+                    case "Assay":
+                        saveName += "H";
+                        break;
+                    case "Acid Tolerance":
+                        saveName += "A";
+                        break;
+                    case "Related Substance":
+                        saveName += "Y";
+                        break;
+                    case "Dissolution":
+                        saveName += "R";
+                        break;
+                }
+                saveName += "_";
+            }
+            saveName += DateTime.Now.Year.ToString().Substring(2, 2) + DateTime.Now.Month.ToString("D2") + DateTime.Now.Day.ToString("D2");
+            saveName = saveName.Replace("-", "_");
+            Clipboard.SetData(DataFormats.Text, saveName);
+            lblCopy.Content = "已复制：序列表名称";
+            // find whether contains same name
+            int fileCount = 3;
+            if (!CheckFile(saveName))
+            {
+                saveName += "_2";
+            }
+            while (!CheckFile(saveName))
+            {
+                string[] partials = saveName.Split('_');
+                saveName = "";
+                for (int i = 0; i < partials.Length - 1; i++)
+                {
+                    saveName += partials[i] + "_";
+                }
+                saveName += fileCount;
+                fileCount++;
+            }
+            if (ConfigParser.SaveList(projInfo.ProductName, items.ToList(), projInfo.Items, std1StartVialsSuffix, new List<ObservableCollection<ListItem>> { FullList1 }, Lots.ToList(), saveName))
+            {
+                MessageBox.Show("已保存为：" + saveName+"\n已复制本名称", "完成", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("出现未预料的异常，无法保存。请联系管理员。", "保存失败", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        private bool CheckFile(string name)
+        {
+            string folderLoc = AppDomain.CurrentDomain.BaseDirectory + "Sequences";
+            if (!Directory.Exists(folderLoc))
+            {
+                Directory.CreateDirectory(folderLoc);
+                return true;
+            }
+            if (File.Exists(folderLoc + @"\" + name + ".elw"))
+            {
+                return false;
+            }
+            return true;
 
-            SaveOptions so = new SaveOptions(this, projInfo.ProductName, items.ToList(), projInfo.Items, std1StartVialsSuffix, lists, Lots.ToList());
-            so.Show();
-            IsEnabled = false;
-            Hide();
         }
         private void DataGridColumnHeader_Click(object sender, RoutedEventArgs e)
         {
-            var columnHeader = sender as DataGridColumnHeader;
-            if (columnHeader != null)
+            if (sender is DataGridColumnHeader columnHeader)
             {
                 string data = "";
                 switch (columnHeader.DisplayIndex)
@@ -763,7 +813,6 @@ namespace Empower_List
                 Clipboard.SetData(DataFormats.Text, data);
             }
         }
-
         private void finalList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             finalList.SelectedItem = null;
@@ -796,8 +845,6 @@ namespace Empower_List
             Count = inj.Count;
             Name = name;
             Time = inj.Time;
-
-
         }
         public ListItem() { }
         public ListItem InsertSTD1()
@@ -814,6 +861,5 @@ namespace Empower_List
         Available,                          //空位，可用作插针
         Preserved,                          //空位，不可用作插针
         Used                                //已使用位
-
     }
 }

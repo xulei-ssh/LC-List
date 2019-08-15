@@ -48,10 +48,10 @@
         <Button x:Name="btnReset" Content="重置" HorizontalAlignment="Left" Height="32" Margin="493,449,0,0" VerticalAlignment="Top" Width="79" FontFamily="Segoe UI" FontSize="13" Click="btnReset_Click"/>
         <CheckBox x:Name="cLot" Content="批号自动填充(Ctrl切换)" HorizontalAlignment="Left" Margin="273,276,0,0" VerticalAlignment="Top" FontSize="13" FontFamily="Segoe UI" Width="169" IsChecked="True"/>
         <CheckBox x:Name="cEleven" Content="1:A,1型编号" FontFamily="Segoe UI" FontSize="13" HorizontalAlignment="Left" Margin="273,307,0,0" VerticalAlignment="Top" Click="cEleven_Click"/>
-        <Label Content="最大瓶号" HorizontalAlignment="Left" Height="31" Margin="273,380,0,0" VerticalAlignment="Top" Width="60" FontSize="13" FontFamily="Segoe UI"/>
-        <ComboBox x:Name="cMax" HorizontalAlignment="Left" Height="36" Margin="344,376,0,0" VerticalAlignment="Top" Width="98" VerticalContentAlignment="Center" SelectionChanged="comboItems_SelectionChanged" FontSize="13" FontFamily="Segoe UI" TabIndex="3"/>
+        <Label Content="首个瓶号" HorizontalAlignment="Left" Height="31" Margin="273,380,0,0" VerticalAlignment="Top" Width="60" FontSize="13" FontFamily="Segoe UI"/>
         <Label Content="注：方法预览中的sp, spS, spY均为样品溶液的代称" HorizontalAlignment="Left" Margin="493,380,0,0" VerticalAlignment="Top" Width="347"/>
         <Label Content="请确认输入无误后再点击！" HorizontalAlignment="Left" Height="27" Margin="655,422,0,0" VerticalAlignment="Top" Width="171"/>
+        <TextBox x:Name="textFirstVial" HorizontalAlignment="Left" Height="31" Margin="344,380,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" FontSize="13" VerticalContentAlignment="Center" FontFamily="Segoe UI" TabIndex="9"/>
 
     </Grid>
 </Window>

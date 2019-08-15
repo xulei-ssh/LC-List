@@ -27,7 +27,7 @@ namespace Empower_List
             Parent = parent;
             if(!File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + @"ds"))
             {
-                MessageBox.Show("找不到数据库\n请确认网络连接");
+                MessageBox.Show("找不到数据库","错误");
                 Hide();
                 return;
             }
@@ -40,14 +40,8 @@ namespace Empower_List
             comboProj.Items.Clear();
             database.Keys.ToList().ForEach(x => comboProj.Items.Add(x));
             tip.Text = "1: 请务必确认SOP版本；当前版本仅支持单张序列表\n2: 稳定性样品请用小括号注明贮存条件，或使用简便格式\n3: CDN溶出度不得与其他项使用同一个序列表";
-            cMax.Items.Add(100);
-            cMax.Items.Add(120);
-            cMax.Items.Add(132);
             #region delete after 2 list done
-            cMax.Items.Add(999);
-            cMax.IsEnabled = false;
 
-            cMax.SelectedIndex = 3;                 //0 after 2 list done
             #endregion
         }
         private void comboProj_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -130,8 +124,7 @@ namespace Empower_List
         }
         private void SetTime_Click(object sender, RoutedEventArgs e)
         {
-            double temp;
-            if (!double.TryParse(uTime.Text, out temp))
+            if (!double.TryParse(uTime.Text, out double temp))
             {
                 MessageBox.Show("运行时间格式错误", "时间无效", MessageBoxButton.OK, MessageBoxImage.Error);
                 uTime.SelectAll();
@@ -233,6 +226,14 @@ namespace Empower_List
                 textSkip.Focus();
                 return;
             }
+            if (!FirstVerify())
+            {
+                MessageBox.Show("开始瓶号必须为数字或1:A,1型", "开始瓶号无效", MessageBoxButton.OK, MessageBoxImage.Error);
+                textFirstVial.SelectAll();
+                textFirstVial.Focus();
+                return;
+            }
+
             if (openedDetails == false)
             {
                 UpdateItemEachLot();
@@ -242,7 +243,8 @@ namespace Empower_List
             string[] headers = new string[listItems.Items.Count];
             listItems.Items.CopyTo(headers, 0);
             var lots = textLots.Text.Split('\r', '\n');
-            FinalList fl = new FinalList(this, comboProj.SelectedValue.ToString(), database[comboProj.SelectedValue.ToString()], headers, tasks, cEleven.IsChecked == true ? true : false, cMax.SelectedValue.ToString(), textSkip.Text.Trim(), lots);
+
+            FinalList fl = new FinalList(this, comboProj.SelectedValue.ToString(), database[comboProj.SelectedValue.ToString()], headers, tasks, cEleven.IsChecked == true ? true : false, textSkip.Text.Trim(), lots, textFirstVial.Text.Trim());
             fl.listName.IsReadOnly = !config[1];
             fl.listTime.IsReadOnly = !config[2];
             fl.Show();
@@ -356,11 +358,39 @@ namespace Empower_List
                 splits[1] = splits[1].ToUpper();
                 if (splits[0] != "1" && splits[0] != "2") return false;
                 if (splits[1] != "A" && splits[1] != "B" && splits[1] != "C" && splits[1] != "D" && splits[1] != "E" && splits[1] != "F") return false;
-                int c = 0;
-                if (!int.TryParse(splits[2], out c)) return false;
+                if (!int.TryParse(splits[2], out int c)) return false;
                 if (c < 1 || c > 11) return false;
             }
             return true;
+        }
+        private bool FirstVerify()
+        {
+            if (textFirstVial.Text.Trim() == "") return true;
+            //数字瓶号
+            if (cEleven.IsChecked == false)
+            {
+                if (!int.TryParse(textFirstVial.Text.Trim(), out int temp))
+                {
+                    return false;
+                }
+            }
+            // 字母瓶号
+            else
+            {
+                string s = textFirstVial.Text.Trim();
+                //5位以下，无效
+                if (s.Length < 5) return false;
+                if (s[1] != ':' || s[3] != ',') return false;
+                var splits = s.Split(':', ',');
+                if (splits.Count() != 3) return false;
+                splits[1] = splits[1].ToUpper();
+                if (splits[0] != "1" && splits[0] != "2") return false;
+                if (splits[1] != "A" && splits[1] != "B" && splits[1] != "C" && splits[1] != "D" && splits[1] != "E" && splits[1] != "F") return false;
+                if (!int.TryParse(splits[2], out int c)) return false;
+                if (c < 1 || c > 11) return false;
+            }
+            return true;
+
         }
 
         private void cNewVial_Checked(object sender, RoutedEventArgs e)

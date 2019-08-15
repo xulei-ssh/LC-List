@@ -15,9 +15,11 @@ namespace Empower_List
         {
             InitializeComponent();
 
-            ImageBrush backgroundBrush = new ImageBrush();
-            backgroundBrush.ImageSource = new BitmapImage(new Uri(ConfigParser.ParseConfigFile("Background"), UriKind.Relative));
-            backgroundBrush.Opacity = 100;
+            ImageBrush backgroundBrush = new ImageBrush
+            {
+                ImageSource = new BitmapImage(new Uri(ConfigParser.ParseConfigFile("Background"), UriKind.Relative)),
+                Opacity = 100
+            };
             Background = backgroundBrush;
 
             defaultBrush = btnMethod.Foreground;

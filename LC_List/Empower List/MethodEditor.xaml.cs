@@ -77,7 +77,7 @@ namespace Empower_List
             if (VerifyList())
             {
                 ConfigParser.SaveDrug(database);
-                MessageBox.Show("Method Saved.", "Success", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.OK);
+                MessageBox.Show("方法已保存", "完成", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.OK);
             }
             else
             {
@@ -111,7 +111,7 @@ namespace Empower_List
         {
             if (cProj.SelectedIndex != -1)
             {
-                if (MessageBox.Show("Are you sure to delete Project: " + cProj.SelectedValue.ToString() + " ?\nThis action cannot be undone.", "Caution", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                if (MessageBox.Show("请确认删除：" + cProj.SelectedValue.ToString() , "注意", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
                     cItem.SelectedIndex = -1;
                     string currentIndex = cProj.SelectedValue.ToString();
@@ -131,7 +131,7 @@ namespace Empower_List
         {
             if (cProj.SelectedIndex != -1 && cItem.SelectedIndex != -1)
             {
-                if (MessageBox.Show("Are you sure to delete Item: " + cProj.SelectedValue.ToString() + " - " + cItem.SelectedValue.ToString() + " ?\nThis action cannot be undone.", "Caution", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                if (MessageBox.Show("请确认删除：" + cProj.SelectedValue.ToString() + " - " + cItem.SelectedValue.ToString(), "注意", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
                     database[cProj.SelectedValue.ToString()].Items.RemoveAll(x => x.Name == cItem.SelectedValue.ToString());
                     cItem.SelectedIndex = -1;
@@ -198,7 +198,7 @@ namespace Empower_List
         }
         public void AlertListError()
         {
-            MessageBox.Show("List must have a sample entry named \"spY\" (for Related Substance) or \"sp\" (for other Items).", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show("模板必须以spY或sp行结尾", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
         }
         public void SetAcccess()
         {

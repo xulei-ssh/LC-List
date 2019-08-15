@@ -15,7 +15,7 @@ namespace Empower_List
 {
     public partial class AddUser : Window
     {
-        Config Parent { get; set; }
+        new Config Parent { get; set; }
         List<UserInfo> Users { get; set; }
         public AddUser(Config parent,List<UserInfo> users)
         {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.IO;
@@ -28,17 +27,17 @@ namespace Empower_List
             int startIndex = 1;
             if (!(int.TryParse(tIndex.Text == "" ? "1" : tIndex.Text, out startIndex) && startIndex > 0))
             {
-                MessageBox.Show("Invalid starting index.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("无法识别的起始编号格式", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             if (seqList.Items.Count == 0 || seqList.SelectedIndex == -1)
             {
-                MessageBox.Show("Please select a list file.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("请选择文件", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + "Sequences\\" + seqList.SelectedItem.ToString() + ".elw"))
             {
-                MessageBox.Show("Unable to locate the selected file.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("找不到所需的文件", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -96,7 +95,7 @@ namespace Empower_List
     {
         public int Compare(string x, string y)
         {
-            return -(int)(File.GetCreationTime(AppDomain.CurrentDomain.BaseDirectory + "Sequences\\" + x + ".elw") - File.GetCreationTime(AppDomain.CurrentDomain.BaseDirectory + "Sequences\\" + y + ".elw")).TotalMinutes;
+            return -(int)(File.GetCreationTime(AppDomain.CurrentDomain.BaseDirectory + "Sequences\\" + x + ".elw") - File.GetCreationTime(AppDomain.CurrentDomain.BaseDirectory + "Sequences\\" + y + ".elw")).TotalMilliseconds;
         }
     }
 

@@ -6,7 +6,6 @@ namespace Empower_List
     public partial class NewUser : Window
     {
         new Auth Parent { get; set; }
-        bool swt = false;
         public NewUser(Auth parent)
         {
             InitializeComponent();
@@ -34,12 +33,12 @@ namespace Empower_List
         {
             if (pass.Password == Parent.tPass.Password)
             {
-                lblTick.Content = "PASS";
+                lblTick.Content = "匹配";
                 btnOK.IsEnabled = true;
             }
             else
             {
-                lblTick.Content = "FAILED";
+                lblTick.Content = "不匹配";
                 btnOK.IsEnabled = false;
             }
         }

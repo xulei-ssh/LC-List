@@ -1,22 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.IO;
 namespace Empower_List
 {
-    /// <summary>
-    /// Auth.xaml 的交互逻辑
-    /// </summary>
     public partial class Auth : Window
     {
         public new MainWindow Parent { get; set; }
@@ -55,7 +43,7 @@ namespace Empower_List
             {
                 tName.KeyUp -= tConfirm;
                 tPass.KeyUp -= tConfirm;
-                MessageBox.Show("Username and password are required", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("请输入用户名和密码", "登录失败", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             else
@@ -121,7 +109,7 @@ namespace Empower_List
             {
                 tName.KeyUp -= tConfirm;
                 tPass.KeyUp -= tConfirm;
-                MessageBox.Show("User account disabled.", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("用户账户被锁定", "登录失败", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             if (verified)
@@ -145,7 +133,7 @@ namespace Empower_List
             {
                 tName.KeyUp -= tConfirm;
                 tPass.KeyUp -= tConfirm;
-                MessageBox.Show("Invalid username and/or password.", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("无效的用户名或密码", "登录失败", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
