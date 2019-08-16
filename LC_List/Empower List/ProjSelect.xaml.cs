@@ -16,6 +16,7 @@ namespace Empower_List
         bool openedDetails = false;
         new MainWindow Parent { get; set; }
         List<bool> config;
+        PlateStyle plateStyle;
         //Dictionary<string, string[]> ItemEachLot;
         public ProjSelect(MainWindow parent)
         {
@@ -33,6 +34,8 @@ namespace Empower_List
             }
             database = ConfigParser.ParseDrug();
             config = ConfigParser.ParseConfig();
+            plateStyle100.IsChecked = true;
+            plateStyle = PlateStyle.Normal;
             lblRT.IsEnabled = config[0];
             uTime.IsEnabled = config[0];
             SetTime.IsEnabled = config[0];
@@ -244,7 +247,7 @@ namespace Empower_List
             listItems.Items.CopyTo(headers, 0);
             var lots = textLots.Text.Split('\r', '\n');
 
-            FinalList fl = new FinalList(this, comboProj.SelectedValue.ToString(), database[comboProj.SelectedValue.ToString()], headers, tasks, cEleven.IsChecked == true ? true : false, textSkip.Text.Trim(), lots, textFirstVial.Text.Trim());
+            FinalList fl = new FinalList(this, comboProj.SelectedValue.ToString(), database[comboProj.SelectedValue.ToString()], headers, tasks, plateStyle, textSkip.Text.Trim(), lots, textFirstVial.Text.Trim());
             fl.listName.IsReadOnly = !config[1];
             fl.listTime.IsReadOnly = !config[2];
             fl.Show();
@@ -339,7 +342,7 @@ namespace Empower_List
         {
             if (textSkip.Text.Trim() == "") return true;
             //数字瓶号
-            if (cEleven.IsChecked == false)
+            if (plateStyle == PlateStyle.Normal)
             {
                 if (!int.TryParse(textSkip.Text.Trim(), out int temp))
                 {
@@ -353,13 +356,13 @@ namespace Empower_List
                 //5位以下，无效
                 if (s.Length < 5) return false;
                 if (s[1] != ':' || s[3] != ',') return false;
-                var splits = s.Split(':', ',');             
+                var splits = s.Split(':', ',');
                 if (splits.Count() != 3) return false;
                 splits[1] = splits[1].ToUpper();
                 if (splits[0] != "1" && splits[0] != "2") return false;
                 if (splits[1] != "A" && splits[1] != "B" && splits[1] != "C" && splits[1] != "D" && splits[1] != "E" && splits[1] != "F") return false;
                 if (!int.TryParse(splits[2], out int c)) return false;
-                if (c < 1 || c > 11) return false;
+                if (c < 1 || (plateStyle == PlateStyle.NewA && c > 11) || (plateStyle == PlateStyle.NewB && c > 8)) return false;
             }
             return true;
         }
@@ -367,7 +370,7 @@ namespace Empower_List
         {
             if (textFirstVial.Text.Trim() == "") return true;
             //数字瓶号
-            if (cEleven.IsChecked == false)
+            if (plateStyle == PlateStyle.Normal)
             {
                 if (!int.TryParse(textFirstVial.Text.Trim(), out int temp))
                 {
@@ -387,7 +390,7 @@ namespace Empower_List
                 if (splits[0] != "1" && splits[0] != "2") return false;
                 if (splits[1] != "A" && splits[1] != "B" && splits[1] != "C" && splits[1] != "D" && splits[1] != "E" && splits[1] != "F") return false;
                 if (!int.TryParse(splits[2], out int c)) return false;
-                if (c < 1 || c > 11) return false;
+                if (c < 1 || (plateStyle == PlateStyle.NewA && c > 11) || (plateStyle == PlateStyle.NewB && c > 8)) return false;
             }
             return true;
 
@@ -410,5 +413,8 @@ namespace Empower_List
 
         }
 
+        private void plateStyle100_Checked(object sender, RoutedEventArgs e) => plateStyle = PlateStyle.Normal;
+        private void plateStyle132_Checked(object sender, RoutedEventArgs e) => plateStyle = PlateStyle.NewA;
+        private void plateStyle96_Checked(object sender, RoutedEventArgs e) => plateStyle = PlateStyle.NewB;
     }
 }

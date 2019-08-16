@@ -13,8 +13,8 @@
         <Label x:Name="lblProtocol" Foreground="Red" Content="" HorizontalAlignment="Left" Height="31" Margin="247,10,0,0" VerticalAlignment="Top" Width="187" FontSize="13" FontFamily="Segoe UI"/>
         <Label Content="批号" HorizontalAlignment="Left" Height="31" Margin="10,46,0,0" VerticalAlignment="Top" Width="68" FontSize="13" FontFamily="Segoe UI"/>
         <TextBox x:Name="textLots" HorizontalAlignment="Left" Height="329" Margin="10,82,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250" AcceptsReturn="True" FontSize="13" FontFamily="Segoe UI" LostFocus="textLots_LostFocus" TabIndex="2" KeyUp="textLots_KeyUp" Background="{x:Null}"/>
-        <ListBox x:Name="listItems" HorizontalAlignment="Left" Height="140" Margin="273,123,0,0" VerticalAlignment="Top" Width="169" FontSize="13" SelectionChanged="listItems_SelectionChanged" FontFamily="Segoe UI" LostFocus="listItems_LostFocus" TabIndex="4"/>
-        <ComboBox x:Name="comboItems" HorizontalAlignment="Left" Height="36" Margin="273,82,0,0" VerticalAlignment="Top" Width="169" VerticalContentAlignment="Center" SelectionChanged="comboItems_SelectionChanged" FontSize="13" FontFamily="Segoe UI" TabIndex="3"/>
+        <ListBox x:Name="listItems" HorizontalAlignment="Left" Height="137" Margin="273,114,0,0" VerticalAlignment="Top" Width="169" FontSize="13" SelectionChanged="listItems_SelectionChanged" FontFamily="Segoe UI" LostFocus="listItems_LostFocus" TabIndex="4"/>
+        <ComboBox x:Name="comboItems" HorizontalAlignment="Left" Height="27" Margin="273,82,0,0" VerticalAlignment="Top" Width="169" VerticalContentAlignment="Center" SelectionChanged="comboItems_SelectionChanged" FontSize="13" FontFamily="Segoe UI" TabIndex="3"/>
         <Label Content="项目" HorizontalAlignment="Left" Height="31" Margin="265,46,0,0" VerticalAlignment="Top" Width="68" FontSize="13" FontFamily="Segoe UI"/>
         <Label Content="跳过瓶号" HorizontalAlignment="Left" Height="31" Margin="273,339,0,0" VerticalAlignment="Top" Width="60" FontSize="13" FontFamily="Segoe UI"/>
         <TextBox x:Name="textSkip" HorizontalAlignment="Left" Height="31" Margin="344,339,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" FontSize="13" VerticalContentAlignment="Center" FontFamily="Segoe UI" TabIndex="9"/>
@@ -46,12 +46,14 @@
             <TextBox x:Name="tip" HorizontalAlignment="Left" Height="65" TextWrapping="Wrap" VerticalAlignment="Top" Width="430" Margin="0,0,0,0" AcceptsReturn="True" AllowDrop="False" IsReadOnly="True" BorderThickness="0"/>
         </GroupBox>
         <Button x:Name="btnReset" Content="重置" HorizontalAlignment="Left" Height="32" Margin="493,449,0,0" VerticalAlignment="Top" Width="79" FontFamily="Segoe UI" FontSize="13" Click="btnReset_Click"/>
-        <CheckBox x:Name="cLot" Content="批号自动填充(Ctrl切换)" HorizontalAlignment="Left" Margin="273,276,0,0" VerticalAlignment="Top" FontSize="13" FontFamily="Segoe UI" Width="169" IsChecked="True"/>
-        <CheckBox x:Name="cEleven" Content="1:A,1型编号" FontFamily="Segoe UI" FontSize="13" HorizontalAlignment="Left" Margin="273,307,0,0" VerticalAlignment="Top" Click="cEleven_Click"/>
+        <CheckBox x:Name="cLot" Content="批号自动填充(Ctrl切换)" HorizontalAlignment="Left" Margin="273,256,0,0" VerticalAlignment="Top" FontSize="13" FontFamily="Segoe UI" Width="169" IsChecked="True"/>
         <Label Content="首个瓶号" HorizontalAlignment="Left" Height="31" Margin="273,380,0,0" VerticalAlignment="Top" Width="60" FontSize="13" FontFamily="Segoe UI"/>
         <Label Content="注：方法预览中的sp, spS, spY均为样品溶液的代称" HorizontalAlignment="Left" Margin="493,380,0,0" VerticalAlignment="Top" Width="347"/>
         <Label Content="请确认输入无误后再点击！" HorizontalAlignment="Left" Height="27" Margin="655,422,0,0" VerticalAlignment="Top" Width="171"/>
         <TextBox x:Name="textFirstVial" HorizontalAlignment="Left" Height="31" Margin="344,380,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" FontSize="13" VerticalContentAlignment="Center" FontFamily="Segoe UI" TabIndex="9"/>
+        <RadioButton x:Name="plateStyle100"  Content="数字编号" HorizontalAlignment="Left" Margin="273,277,0,0" VerticalAlignment="Top" Checked="plateStyle100_Checked"/>
+        <RadioButton x:Name="plateStyle132" Content="1:A,1编号 (11*6*2)" HorizontalAlignment="Left" Margin="273,298,0,0" VerticalAlignment="Top" Checked="plateStyle132_Checked"/>
+        <RadioButton x:Name="plateStyle96" Content="1:A,1编号 (8*6*2)" HorizontalAlignment="Left" Margin="273,318,0,0" VerticalAlignment="Top" Checked="plateStyle96_Checked"/>
 
     </Grid>
 </Window>

@@ -29,7 +29,8 @@ namespace Empower_List
        
         ListItem preservedSTD1;
         List<int> stdTypes;
-        public FinalList(ProjSelect parent, string projName, ProjectInfo projInfo, string[] items, List<TaskSet> tasks, bool isEleven, string invalid,string[] lots,string firstVial)
+
+        public FinalList(ProjSelect parent, string projName, ProjectInfo projInfo, string[] items, List<TaskSet> tasks, PlateStyle plateStyle, string invalid,string[] lots,string firstVial)
         {
             Parent = parent;
             InitializeComponent();
@@ -61,7 +62,7 @@ namespace Empower_List
                     Lots[i] = lots[i];
                 }
             }
-            this.isEleven = isEleven;
+            this.plateStyle = plateStyle;
             this.invalid = invalid;
             this.first = firstVial;
             conditionList = new VialCondition[2][];
@@ -108,7 +109,7 @@ namespace Empower_List
         Dictionary<int, string> std1StartVialsSuffix;
         int currentVial = 1;
         int STDenum = 0;
-        bool isEleven = false;
+        PlateStyle plateStyle;
         private void Gen()
         {          
             //获取所有分离度信息
@@ -161,19 +162,19 @@ namespace Empower_List
                     }
                 }
             }
-            if (isEleven)
+            if (plateStyle != PlateStyle.Normal)
             {
                 for (int i = 0; i < FullList1.Count; i++)
                 {
-                    if (int.TryParse(FullList1[i].Vial,out int c))
+                    if (int.TryParse(FullList1[i].Vial, out int c))
                     {
-                        int currentIndex = int.Parse(FullList1[i].Vial)-1;
+                        int currentIndex = int.Parse(FullList1[i].Vial) - 1;
                         int colPerPlate = 6;
-                        int rowPerPlate = 11;
-                        int n1 = (currentIndex / (colPerPlate * rowPerPlate));                            //假设1个盘为11*6
-                        int n2 = n1 == 0 ? currentIndex / rowPerPlate : (currentIndex - colPerPlate * rowPerPlate) / rowPerPlate ;
-                        int n3 = currentIndex - n1  * colPerPlate * rowPerPlate - n2  * rowPerPlate;
-                        FullList1[i].Vial = (n1+1).ToString() + ":" + ((char)(n2 + 65)).ToString() + "," + (n3+1).ToString();
+                        int rowPerPlate = plateStyle == PlateStyle.NewA ? 11 : 8;
+                        int n1 = (currentIndex / (colPerPlate * rowPerPlate));
+                        int n2 = n1 == 0 ? currentIndex / rowPerPlate : (currentIndex - colPerPlate * rowPerPlate) / rowPerPlate;
+                        int n3 = currentIndex - n1 * colPerPlate * rowPerPlate - n2 * rowPerPlate;
+                        FullList1[i].Vial = (n1 + 1).ToString() + ":" + ((char)(n2 + 65)).ToString() + "," + (n3 + 1).ToString();
                     }
                 }
             }
@@ -183,7 +184,7 @@ namespace Empower_List
         {
             if (item.NewLine)
             {
-                NewLineCurrentVial(isEleven ? 11 : 10);
+                NewLineCurrentVial(plateStyle == PlateStyle.Normal ? 10 : (plateStyle == PlateStyle.NewA ? 11 : 8));
             }
             foreach (var inj in item.FindAll(false))
             {
@@ -233,7 +234,7 @@ namespace Empower_List
         {
             if (item.NewLine)
             {
-                NewLineCurrentVial(isEleven ? 11 : 10);
+                NewLineCurrentVial(plateStyle == PlateStyle.Normal ? 10 : (plateStyle == PlateStyle.NewA ? 11 : 8));
             }
             bool writeSTD = false;
             ListItem std1 = new ListItem();
@@ -484,7 +485,7 @@ namespace Empower_List
             {
                 if (item.NewLine)
                 {
-                    NewLineCurrentVial(isEleven ? 11 : 10);
+                    NewLineCurrentVial(plateStyle == PlateStyle.Normal ? 10 : (plateStyle == PlateStyle.NewA ? 11 : 8));
                 }
                 switch (item.Name)
                 {
@@ -497,7 +498,7 @@ namespace Empower_List
                             {
                                 if (item.NewLine)
                                 {
-                                    NewLineCurrentVial(isEleven ? 11 : 10);
+                                    NewLineCurrentVial(plateStyle == PlateStyle.Normal ? 10 : (plateStyle == PlateStyle.NewA ? 11 : 8));
                                 }
                                 for (int i = 0; i < 6; i++)
                                 {
@@ -629,7 +630,7 @@ namespace Empower_List
             if (exp == "") return 0;
             if (int.TryParse(exp, out int temp)) return int.Parse(exp);
             string[] splits = exp.Split(',', ':');
-            int plateAmp = (int.Parse(splits[0]) - 1) * 66;
+            int plateAmp = (int.Parse(splits[0]) - 1) * (plateStyle == PlateStyle.NewA ? 66 : 48);
             int colAmp = (Convert.ToInt32(splits[1].ToUpper()[0]) - 65) * 11;
             int rowAmp = int.Parse(splits[2]);
             return plateAmp + colAmp + rowAmp;
@@ -667,7 +668,7 @@ namespace Empower_List
             var currentList = isInListOne ? FullList1 : FullList2;
             //获取最大瓶号，表示成0开始的int
             if (currentList.Count == 0) return false;
-            int maxUsedOrPreservedVial = (currentList.Max(x => int.Parse(x.Vial)) / (isEleven ? 11 : 10) + 1) * (isEleven ? 11 : 10) - 1;
+            int maxUsedOrPreservedVial = (currentList.Max(x => int.Parse(x.Vial)) / (plateStyle == PlateStyle.Normal ? 10 : (plateStyle == PlateStyle.NewA ? 11 : 8)) + 1) * (plateStyle == PlateStyle.Normal ? 10 : (plateStyle == PlateStyle.NewA ? 11 : 8)) - 1;
             if (maxUsedOrPreservedVial < count) return false;
             for (int i = maxUsedOrPreservedVial - count + 1; i >= 0; i--)
             {
