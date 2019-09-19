@@ -444,7 +444,7 @@ namespace Empower_List
                 {
                     result1.Add(new ListInj(6, i.Name));
                 }
-                else if (i.Name.EndsWith("-HJ01") || i.Name.EndsWith("-HJ11") || i.Name.EndsWith("-HJ21"))
+                else if (i.Name.EndsWith("-HJ1") || i.Name.EndsWith("-HJ11") || i.Name.EndsWith("-HJ21"))
                 {
                     result1.Add(new ListInj(10, i.Name));
                 }
@@ -498,9 +498,9 @@ namespace Empower_List
                 {
                     result2[i].Name = result2[i].Name.Substring(0, result2[i].Name.Length - 3) + "含量";
                 }
-                else if (result2[i].Name.EndsWith("-HJ01"))
+                else if (result2[i].Name.EndsWith("-HJ1"))
                 {
-                    result2[i].Name = result2[i].Name.Substring(0, result2[i].Name.Length - 5) + "含量均匀度";
+                    result2[i].Name = result2[i].Name.Substring(0, result2[i].Name.Length - 4) + "含量均匀度";
                 }
                 else if (result2[i].Name.EndsWith("-R1"))
                 {

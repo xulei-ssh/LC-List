@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Empower_List"
         mc:Ignorable="d"
-        Title="序列表" Height="727.8" Width="455" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+        Title="序列表" Height="727.8" Width="456.2" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Grid>
-        <Button x:Name="btnCopyA" Content="复制前四列" HorizontalAlignment="Left" Height="30" Margin="168,10,0,0" VerticalAlignment="Top" Width="73" Click="btnCopyA_Click"/>
-        <Button x:Name="btnCopyC" Content="复制全部" HorizontalAlignment="Left" Height="30" Margin="246,10,0,0" VerticalAlignment="Top" Width="71" Click="btnCopyC_Click"/>
-        <DataGrid x:Name="finalList" HorizontalAlignment="Left" Height="645" Margin="10,45,0,0" VerticalAlignment="Top" Width="430" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" CanUserAddRows="False" SelectionMode="Single" SelectionChanged="finalList_SelectionChanged">
+        <Button x:Name="btnCopyA" Content="复制前四列" HorizontalAlignment="Left" Height="30" Margin="217,10,0,0" VerticalAlignment="Top" Width="73" Click="btnCopyA_Click"/>
+        <Button x:Name="btnCopyC" Content="复制全部列" HorizontalAlignment="Left" Height="30" Margin="295,10,0,0" VerticalAlignment="Top" Width="71" Click="btnCopyC_Click"/>
+        <DataGrid x:Name="finalList" HorizontalAlignment="Left" Height="610" Margin="10,80,0,0" VerticalAlignment="Top" Width="430" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" CanUserAddRows="False" SelectionMode="Single" SelectionChanged="finalList_SelectionChanged">
             <DataGrid.ColumnHeaderStyle>
                 <Style TargetType="DataGridColumnHeader">
                     <EventSetter Event="Click" Handler="DataGridColumnHeader_Click" />
@@ -23,10 +23,11 @@
                 <DataGridTextColumn x:Name="listTime"  Header="Time" Width="50" Binding="{Binding Time, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  IsReadOnly="True" CanUserReorder="False" CanUserResize="False" CanUserSort="False"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Label x:Name="TwoListLabel" Content="List" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="322,10,0,0" VerticalAlignment="Top" Height="30"/>
-        <RadioButton x:Name="TwoListA" Content="A" HorizontalAlignment="Left" Margin="356,10,0,0" VerticalAlignment="Top" IsChecked="True" Checked="TwoListA_Checked"/>
-        <RadioButton x:Name="TwoListB" Content="B" HorizontalAlignment="Left" Margin="356,26,0,0" VerticalAlignment="Top" Checked="TwoListB_Checked"/>
         <Button x:Name="btnSave" Content="保存" HorizontalAlignment="Left" Height="30" Margin="388,10,0,0" VerticalAlignment="Top" Width="52" Click="btnSave_Click"/>
-        <Label x:Name="lblCopy" Content="单击表头复制单独一列！" HorizontalAlignment="Left" Margin="8,12,0,0" VerticalAlignment="Top" Foreground="Red" FontSize="14"/>
+        <Label x:Name="lblCopy" Content="单击表头复制单独一列！" HorizontalAlignment="Left" Margin="8,12,0,0" VerticalAlignment="Top" Foreground="Red" FontSize="14" Width="155"/>
+        <Label Content="复制范围" HorizontalAlignment="Left" Margin="10,45,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Top" Width="69" Height="30" FontSize="14"/>
+        <RadioButton x:Name="radioAll" Content="全部" HorizontalAlignment="Left" Margin="92,52,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Top" IsChecked="True" FontSize="14"/>
+        <RadioButton x:Name="radioSys" Content="适用性" HorizontalAlignment="Left" Margin="163,52,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Top" IsChecked="False" FontSize="14"/>
+        <RadioButton x:Name="radioSample" Content="样品及之后" HorizontalAlignment="Left" Margin="246,52,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Top" IsChecked="False" FontSize="14"/>
     </Grid>
 </Window>

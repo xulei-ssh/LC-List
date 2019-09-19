@@ -8,29 +8,31 @@ using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.IO;
+using System.Drawing;
+using System.Data;
+using System.Windows.Media;
 
 
 namespace Empower_List
 {
-    public partial class FinalList:Window
+    public partial class FinalList : Window
     {
-        new ProjSelect Parent { get; set; }    
+        new ProjSelect Parent { get; set; }
         ProjectInfo projInfo;
         string[] items;
         List<TaskSet> tasks;
         string projName;
         string invalid;
         string first;
-        bool isInListOne = true;
         public ObservableCollection<ListItem> FullList1 { get; set; }
         public ObservableCollection<ListItem> FullList2 { get; set; }
         VialCondition[][] conditionList;
         string[] Lots;
-       
+
         ListItem preservedSTD1;
         List<int> stdTypes;
-
-        public FinalList(ProjSelect parent, string projName, ProjectInfo projInfo, string[] items, List<TaskSet> tasks, PlateStyle plateStyle, string invalid,string[] lots,string firstVial)
+        int sampleStartIndex = 0;
+        public FinalList(ProjSelect parent, string projName, ProjectInfo projInfo, string[] items, List<TaskSet> tasks, PlateStyle plateStyle, string invalid, string[] lots, string firstVial)
         {
             Parent = parent;
             InitializeComponent();
@@ -42,6 +44,7 @@ namespace Empower_List
             FullList2 = new ObservableCollection<ListItem>();
             std1StartVials = new Dictionary<int, int>();
             std1StartVialsSuffix = new Dictionary<int, string>();
+            this.plateStyle = plateStyle;
             currentVial = ParseInvalid(firstVial);
             STDenum = 0;
 
@@ -62,7 +65,7 @@ namespace Empower_List
                     Lots[i] = lots[i];
                 }
             }
-            this.plateStyle = plateStyle;
+            
             this.invalid = invalid;
             this.first = firstVial;
             conditionList = new VialCondition[2][];
@@ -83,25 +86,23 @@ namespace Empower_List
             }
             preservedSTD1 = new ListItem();
             Gen();
-            if (isInListOne)
+            for (int i = 0; i < FullList1.Count; i++)
             {
-                TwoListLabel.Visibility = Visibility.Hidden;
-                TwoListA.Visibility = Visibility.Hidden;
-                TwoListB.Visibility = Visibility.Hidden;
+                if (!SysCheck(FullList1[i]))
+                {
+                    sampleStartIndex = i;
+                    break;
+                }
             }
-            #region temp code, to be removed after compeleting 2-list settings
-            TwoListLabel.Visibility = Visibility.Hidden;
-            TwoListA.Visibility = Visibility.Hidden;
-            TwoListB.Visibility = Visibility.Hidden;
-            #endregion
             finalList.ItemsSource = FullList1;
+
 
         }
         protected override void OnClosing(CancelEventArgs e)
         {
             Parent.IsEnabled = true;
             //Parent.Show();
-            
+
             Hide();
             e.Cancel = true;
         }
@@ -111,7 +112,7 @@ namespace Empower_List
         int STDenum = 0;
         PlateStyle plateStyle;
         private void Gen()
-        {          
+        {
             //获取所有分离度信息
             List<Inj> FLDs = new List<Inj>();
             foreach (var i in items)
@@ -119,7 +120,7 @@ namespace Empower_List
                 Item it = projInfo[i];
                 foreach (var inj in it)
                 {
-                    if (inj.Name.Contains("FLD") && FLDs.Find(x => x.Name == inj.Name)==null)
+                    if (inj.Name.Contains("FLD") && FLDs.Find(x => x.Name == inj.Name) == null)
                     {
                         FLDs.Add(inj);
                     }
@@ -129,8 +130,8 @@ namespace Empower_List
             {
                 foreach (var fld in FLDs)
                 {
-                    VialConfirm();            
-                    Add(new ListItem(currentVial.ToString (), fld));
+                    VialConfirm();
+                    Add(new ListItem(currentVial.ToString(), fld));
                     currentVial++;
                 }
             }
@@ -138,8 +139,8 @@ namespace Empower_List
             stdTypes = new List<int>();
             foreach (var q in items)
             {
-                stdTypes.Add(projInfo[q].StdType);              
-            }          
+                stdTypes.Add(projInfo[q].StdType);
+            }
             stdTypes = stdTypes.Distinct().ToList();
             stdTypes.RemoveAll(x => x == 0);
             foreach (var item in items)
@@ -191,7 +192,7 @@ namespace Empower_List
                 if (!inj.Name.Contains("FLD"))
                 {
                     VialConfirm();
-                    Add(new ListItem(currentVial.ToString(), inj));            
+                    Add(new ListItem(currentVial.ToString(), inj));
                     currentVial++;
                 }
             }
@@ -205,27 +206,27 @@ namespace Empower_List
                         for (int j = 0; j < 3; j++)
                         {
                             VialConfirm();
-                            Add(new ListItem(currentVial.ToString (), sampleInjs[0], lot + "-" + (j + 1).ToString() + "-S"));
+                            Add(new ListItem(currentVial.ToString(), sampleInjs[0], lot + "-" + (j + 1).ToString() + "-S"));
                             currentVial++;
                             VialConfirm();
-                            Add(new ListItem(currentVial.ToString (), sampleInjs[0], lot + "-" + (j + 1).ToString() + "-Y"));
+                            Add(new ListItem(currentVial.ToString(), sampleInjs[0], lot + "-" + (j + 1).ToString() + "-Y"));
                             currentVial++;
                         }
                     }
                     else
                     {
                         VialConfirm();
-                        Add(new ListItem(currentVial.ToString (), sampleInjs[0], lot + "-S"));
+                        Add(new ListItem(currentVial.ToString(), sampleInjs[0], lot + "-S"));
                         currentVial++;
                         VialConfirm();
-                        Add(new ListItem(currentVial.ToString (), sampleInjs[1], lot + "-Y"));
+                        Add(new ListItem(currentVial.ToString(), sampleInjs[1], lot + "-Y"));
                         currentVial++;
                     }
                 }
                 else
                 {
                     VialConfirm();
-                    Add(new ListItem(currentVial.ToString (), sampleInjs[0], lot + "-Y"));
+                    Add(new ListItem(currentVial.ToString(), sampleInjs[0], lot + "-Y"));
                     currentVial++;
                 }
             }
@@ -254,7 +255,7 @@ namespace Empower_List
                         {
                             std1 = new ListItem(std1StartVials[item.StdType].ToString(), inj);
                         }
-                    }   
+                    }
                     //无STD1
                     else
                     {
@@ -300,16 +301,16 @@ namespace Empower_List
             int assayEnum = 0;
             foreach (var lot in lots)
             {
-                if ((assayEnum >= 9)||(assayEnum==8&&(lot.Contains ("(")||lot.Contains ("（"))))
+                if ((assayEnum >= 9) || (assayEnum == 8 && (lot.Contains("(") || lot.Contains("（"))))
                 {
                     Add(std1);
                     assayEnum = 0;
                 }
                 VialConfirm();
-                Add(new ListItem(currentVial.ToString (), item.Injs.Last(), lot + "-H1"));
+                Add(new ListItem(currentVial.ToString(), item.Injs.Last(), lot + "-H1"));
                 currentVial++;
                 VialConfirm();
-                Add(new ListItem(currentVial.ToString (), item.Injs.Last(), lot + "-H2"));
+                Add(new ListItem(currentVial.ToString(), item.Injs.Last(), lot + "-H2"));
                 currentVial++;
                 assayEnum += 2;
                 if (lot.Contains("(") || lot.Contains("（"))
@@ -342,7 +343,7 @@ namespace Empower_List
                         {
                             Add(new ListItem((availVial + i).ToString(), item.Injs[i]));
                             if (i == 0) std1 = new ListItem((availVial + i).ToString(), item.Injs[i]);
-                            conditionList[isInListOne ? 0 : 1][availVial - 1 + i] = VialCondition.Used;
+                            conditionList[0][availVial - 1 + i] = VialCondition.Used;
                         }
                         specialInsert = true;
                     }
@@ -384,7 +385,7 @@ namespace Empower_List
                             for (int i = 0; i < specials.Count - countSTD; i++)
                             {
                                 Add(new ListItem((availVial + i).ToString(), item.Injs[i]));
-                                conditionList[isInListOne ? 0 : 1][availVial - 1 + i] = VialCondition.Used;
+                                conditionList[0][availVial - 1 + i] = VialCondition.Used;
                             }
                             specialInsert = true;
                         }
@@ -409,7 +410,7 @@ namespace Empower_List
                                     std1StartVials.Add(item.StdType, currentVial);
                                     std1StartVialsSuffix.Add(item.StdType, "-" + (char)(STDenum + 65));
                                     STDenum++;
-                                    conditionList[isInListOne ? 0 : 1][availVial - 1 + increment] = VialCondition.Used;
+                                    conditionList[0][availVial - 1 + increment] = VialCondition.Used;
                                 }
                                 else
                                 {
@@ -422,7 +423,7 @@ namespace Empower_List
                                     {
                                         Add(new ListItem((availVial + increment).ToString(), inj));
                                     }
-                                    conditionList[isInListOne ? 0 : 1][availVial - 1 + increment] = VialCondition.Used;
+                                    conditionList[0][availVial - 1 + increment] = VialCondition.Used;
                                 }
                                 increment++;
                             }
@@ -462,7 +463,7 @@ namespace Empower_List
                                     if (writeSTD)
                                     {
                                         VialConfirm();
-                                        Add(new ListItem(currentVial.ToString(), inj, FullList1.Last().Name.Replace("STD2","STD3").Replace("STD1", "STD2")));
+                                        Add(new ListItem(currentVial.ToString(), inj, FullList1.Last().Name.Replace("STD2", "STD3").Replace("STD1", "STD2")));
                                         currentVial++;
                                     }
                                 }
@@ -537,7 +538,7 @@ namespace Empower_List
                         for (int i = 0; i < 10; i++)
                         {
                             VialConfirm();
-                            Add(new ListItem(currentVial.ToString(), item.Injs.Last(), lot + "-HJ" + (i + 1).ToString ("D2")));
+                            Add(new ListItem(currentVial.ToString(), item.Injs.Last(), lot + "-HJ" + (i + 1)));
                             currentVial++;
                         }
                         if (!item.NewStd)
@@ -561,7 +562,7 @@ namespace Empower_List
             {
                 currentVial++;
             }
-            conditionList[isInListOne ? 0 : 1][currentVial - 1] = VialCondition.Used;
+            conditionList[0][currentVial - 1] = VialCondition.Used;
         }
         private bool VialConfirm(int vial)
         {
@@ -575,29 +576,50 @@ namespace Empower_List
         {
             while (currentVial % baseNumber != 1)
             {
-                conditionList[isInListOne ? 0 : 1][currentVial - 1] = VialCondition.Preserved;
+                conditionList[0][currentVial - 1] = VialCondition.Preserved;
                 currentVial++;
             }
         }
         private void btnCopyA_Click(object sender, RoutedEventArgs e)
         {
             string data = "";
-            foreach (var p in FullList1)
+            int copyStartIndex = 0, copyEndIndex = FullList1.Count - 1;
+            if (radioSys.IsChecked == true)
             {
+                copyEndIndex = sampleStartIndex - 1;
+            }
+            else if (radioSample.IsChecked == true)
+            {
+                copyStartIndex = sampleStartIndex;
+            }
+            while (copyStartIndex <= copyEndIndex)
+            {
+                var p = FullList1[copyStartIndex];
                 data += p.Vial + "\t" + p.Vol + "\t" + p.Count + "\t" + p.Name + "\r\n";
+                copyStartIndex++;
             }
             if (data.Length == 0) return;
             data = data.Substring(0, data.Length - 2);
             lblCopy.Content = "已复制：前四列";
-
             Clipboard.SetData(DataFormats.Text, data);
         }
         private void btnCopyC_Click(object sender, RoutedEventArgs e)
         {
             string data = "";
-            foreach (var p in FullList1)
+            int copyStartIndex = 0, copyEndIndex = FullList1.Count - 1;
+            if (radioSys.IsChecked == true)
             {
+                copyEndIndex = sampleStartIndex - 1;
+            }
+            else if (radioSample.IsChecked == true)
+            {
+                copyStartIndex = sampleStartIndex;
+            }
+            while (copyStartIndex <= copyEndIndex)
+            {
+                var p = FullList1[copyStartIndex];
                 data += p.Vial + "\t" + p.Vol + "\t" + p.Count + "\t" + p.Name + "\t" + p.Time + "\r\n";
+                copyStartIndex++;
             }
             if (data.Length == 0) return;
             data = data.Substring(0, data.Length - 2);
@@ -616,14 +638,7 @@ namespace Empower_List
         }
         private void Add(ListItem item)
         {
-            if (isInListOne)
-            {
-                FullList1.Add(item);
-            }
-            else
-            {
-                FullList2.Add(item);
-            }
+            FullList1.Add(item);
         }
         private int ParseInvalid(string exp)
         {
@@ -631,7 +646,7 @@ namespace Empower_List
             if (int.TryParse(exp, out int temp)) return int.Parse(exp);
             string[] splits = exp.Split(',', ':');
             int plateAmp = (int.Parse(splits[0]) - 1) * (plateStyle == PlateStyle.NewA ? 66 : 48);
-            int colAmp = (Convert.ToInt32(splits[1].ToUpper()[0]) - 65) * 11;
+            int colAmp = (Convert.ToInt32(splits[1].ToUpper()[0]) - 65) * (plateStyle == PlateStyle.NewA ? 11 : 8);
             int rowAmp = int.Parse(splits[2]);
             return plateAmp + colAmp + rowAmp;
         }
@@ -639,7 +654,7 @@ namespace Empower_List
         {
             vial = 0;
             //限定范围：寻找当前FinalList中最大瓶号以内的
-            var currentList = isInListOne ? FullList1 : FullList2;
+            var currentList = FullList1;
             if (currentList.Count == 0) return false;
             int maxUsedVial = currentList.Max(x => int.Parse(x.Vial));
             if (maxUsedVial < count) return false;
@@ -648,24 +663,24 @@ namespace Empower_List
                 bool avail = true;
                 for (int j = 0; j < count; j++)
                 {
-                    if (conditionList[isInListOne ? 0 : 1][i + j] == VialCondition.Used)
+                    if (conditionList[0][i + j] == VialCondition.Used)
                     {
                         avail = false;
                         break;
                     }
                 }
-                if(avail)
+                if (avail)
                 {
                     vial = i + 1;
                     return true;
                 }
             }
-            return false;        
+            return false;
         }
         private bool FindPreserved(int count, out int vial)                     //Vial从1开始
         {
             vial = 0;
-            var currentList = isInListOne ? FullList1 : FullList2;
+            var currentList = FullList1;
             //获取最大瓶号，表示成0开始的int
             if (currentList.Count == 0) return false;
             int maxUsedOrPreservedVial = (currentList.Max(x => int.Parse(x.Vial)) / (plateStyle == PlateStyle.Normal ? 10 : (plateStyle == PlateStyle.NewA ? 11 : 8)) + 1) * (plateStyle == PlateStyle.Normal ? 10 : (plateStyle == PlateStyle.NewA ? 11 : 8)) - 1;
@@ -675,7 +690,7 @@ namespace Empower_List
                 bool avail = true;
                 for (int j = 0; j < count; j++)
                 {
-                    if (conditionList[isInListOne ? 0 : 1][i + j] == VialCondition.Used || conditionList[isInListOne ? 0 : 1][i + j] == VialCondition.Available)
+                    if (conditionList[0][i + j] == VialCondition.Used || conditionList[0][i + j] == VialCondition.Available)
                     {
                         avail = false;
                         break;
@@ -718,8 +733,6 @@ namespace Empower_List
             }
             saveName += DateTime.Now.Year.ToString().Substring(2, 2) + DateTime.Now.Month.ToString("D2") + DateTime.Now.Day.ToString("D2");
             saveName = saveName.Replace("-", "_");
-            Clipboard.SetData(DataFormats.Text, saveName);
-            lblCopy.Content = "已复制：序列表名称";
             // find whether contains same name
             int fileCount = 3;
             if (!CheckFile(saveName))
@@ -739,7 +752,7 @@ namespace Empower_List
             }
             if (ConfigParser.SaveList(projInfo.ProductName, items.ToList(), projInfo.Items, std1StartVialsSuffix, new List<ObservableCollection<ListItem>> { FullList1 }, Lots.ToList(), saveName))
             {
-                MessageBox.Show("已保存为：" + saveName+"\n已复制本名称", "完成", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("已保存为：" + saveName, "完成", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
@@ -766,44 +779,58 @@ namespace Empower_List
             if (sender is DataGridColumnHeader columnHeader)
             {
                 string data = "";
+                int copyStartIndex = 0, copyEndIndex = FullList1.Count - 1;
+                if (radioSys.IsChecked == true)
+                {
+                    copyEndIndex = sampleStartIndex - 1;
+                }
+                else if (radioSample.IsChecked == true)
+                {
+                    copyStartIndex = sampleStartIndex;
+                }
                 switch (columnHeader.DisplayIndex)
                 {
                     case 0:
-                        foreach (var p in FullList1)
+                        while (copyStartIndex <= copyEndIndex)
                         {
-                            data += p.Vial + "\r\n";
+                            data += FullList1[copyStartIndex].Vial + "\r\n";
+                            copyStartIndex++;
                         }
+                        
                         lblCopy.Content = "已复制：瓶号";
                         break;
                     case 1:
-                        foreach (var p in FullList1)
+                        while (copyStartIndex <= copyEndIndex)
                         {
-                            data += p.Vol + "\r\n";
-
+                            data += FullList1[copyStartIndex].Vol + "\r\n";
+                            copyStartIndex++;
                         }
                         lblCopy.Content = "已复制：进样量";
 
                         break;
                     case 2:
-                        foreach (var p in FullList1)
+                        while (copyStartIndex <= copyEndIndex)
                         {
-                            data += p.Count + "\r\n";
+                            data += FullList1[copyStartIndex].Count + "\r\n";
+                            copyStartIndex++;
                         }
                         lblCopy.Content = "已复制：进样次数";
 
                         break;
                     case 3:
-                        foreach (var p in FullList1)
+                        while (copyStartIndex <= copyEndIndex)
                         {
-                            data += p.Name + "\r\n";
+                            data += FullList1[copyStartIndex].Name + "\r\n";
+                            copyStartIndex++;
                         }
                         lblCopy.Content = "已复制：样品名称";
 
                         break;
                     case 4:
-                        foreach (var p in FullList1)
+                        while (copyStartIndex <= copyEndIndex)
                         {
-                            data += p.Time + "\r\n";
+                            data += FullList1[copyStartIndex].Time + "\r\n";
+                            copyStartIndex++;
                         }
                         lblCopy.Content = "已复制：时间";
 
@@ -812,6 +839,7 @@ namespace Empower_List
                 if (data.Length == 0) return;
                 data = data.Substring(0, data.Length - 2);
                 Clipboard.SetData(DataFormats.Text, data);
+
             }
         }
         private void finalList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -819,6 +847,15 @@ namespace Empower_List
             finalList.SelectedItem = null;
             finalList.SelectedIndex = -1;
         }
+        private bool SysCheck(ListItem item)
+        {
+            if (item.Name.EndsWith("-S") || item.Name.EndsWith("-Y") || item.Name.EndsWith("-HJ1") || item.Name.EndsWith("-H1") || item.Name.EndsWith("-R1") || item.Name.EndsWith("-N1"))
+            {
+                return false;
+            }
+            return true;
+        }
+
     }
     public class ListItem
     {
